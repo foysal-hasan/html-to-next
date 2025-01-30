@@ -36,11 +36,16 @@ export async function getHistoricalDNS(domain) {
       }
 
       const data = await res.json();
-      const records = data.records.map((record) => ({
-        ...record,
-        type,
-      }));
-      allRecords.push(...records);
+      if (data.records && Array.isArray(data.records)) {
+        const records = data.records.map((record) => ({
+          ...record,
+          type,
+          values: Array.isArray(record.values)
+            ? record.values
+            : [record.values].filter(Boolean),
+        }));
+        allRecords.push(...records);
+      }
 
       // Add delay between requests to avoid rate limiting
       await delay(1000); // 1 second delay between requests
@@ -59,8 +64,10 @@ export async function getHistoricalDNS(domain) {
     acc[date].push({
       type: record.type,
       lastSeen: record.last_seen,
-      organizations: record.organizations,
-      values: record.values,
+      organizations: record.organizations || [],
+      values: Array.isArray(record.values)
+        ? record.values
+        : [record.values].filter(Boolean),
     });
     return acc;
   }, {});

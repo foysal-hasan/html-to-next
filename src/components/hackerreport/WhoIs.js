@@ -11,7 +11,7 @@ export default async function WhoIs({ domain }) {
     if (res?.data?.length > 0 && res?.data[0]?.attributes) {
       whois = res?.data[0]?.attributes?.whois_map;
       // console.log(whois);
-      console.log(typeof whois);
+      // console.log(typeof whois);
     }
   } catch (err) {
     error = true;

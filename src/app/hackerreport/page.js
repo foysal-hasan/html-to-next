@@ -101,7 +101,7 @@ export default async function Hackerreport({ searchParams }) {
       <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
         <HomeReportHeader domain={domain} technologies={technologies} />
         <DNSRecords domain={domain} />
-        <WhoIs domain={domain} />
+        {/* <WhoIs domain={domain} /> */}
         <Subdomains domain={domain} />
         <HistoricalDNS domain={domain} />
         <IPs error={error} ips={scanDetails?.data?.connected_ip_info} />

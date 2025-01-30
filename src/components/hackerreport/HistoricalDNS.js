@@ -17,8 +17,52 @@ function LoadingState() {
   );
 }
 
+function EmptyState({ message }) {
+  return (
+    <div className="px-4 py-8 text-center">
+      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-800 mb-4">
+        <svg
+          className="w-8 h-8 text-gray-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+      </div>
+      <h3 className="text-lg font-medium text-white mb-2">
+        No Records Available
+      </h3>
+      <p className="text-gray-400">{message}</p>
+    </div>
+  );
+}
+
 async function DNSTable({ domain }) {
   const dnsRecords = await getHistoricalDNS(domain);
+
+  // Check if we have any records
+  if (!dnsRecords || Object.keys(dnsRecords).length === 0) {
+    return (
+      <EmptyState message="We couldn't retrieve the DNS records at this time. This might be due to rate limiting or no historical data available. Please try again later." />
+    );
+  }
+
+  const renderValues = (values) => {
+    if (!values) return "N/A";
+    if (!Array.isArray(values)) return JSON.stringify(values);
+
+    return values.map((value, idx) => (
+      <div key={`${JSON.stringify(value)}-${idx}`}>
+        {value.ip || value.target || value.txt || JSON.stringify(value)}
+      </div>
+    ));
+  };
 
   return (
     <div className="px-4 py-3 @container">
@@ -58,14 +102,7 @@ async function DNSTable({ domain }) {
                       {record.organizations?.join(", ") || "N/A"}
                     </td>
                     <td className="px-4 py-3 text-sm text-white">
-                      {record.values.map((value) => (
-                        <div key={JSON.stringify(value)}>
-                          {value.ip ||
-                            value.target ||
-                            value.txt ||
-                            JSON.stringify(value)}
-                        </div>
-                      ))}
+                      {renderValues(record.values)}
                     </td>
                     <td className="px-4 py-3 text-sm text-white">
                       {record.lastSeen}
