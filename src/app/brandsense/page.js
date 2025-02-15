@@ -1,6 +1,9 @@
 import DarkWebAndSocialMediaMentions from '@/components/brandsense/DarkWebAndSocialMediaMentions';
+import DomainImpersonation from '@/components/brandsense/DomainImpersonation';
 import DonutChart from '@/components/brandsense/DonutChart';
 import LeakedCredentials from '@/components/brandsense/LeakedCredentials';
+import PastebinMentionsSection from '@/components/brandsense/PastebinMentionsSection';
+import SensitiveInformation from '@/components/brandsense/SensitiveInformation';
 
 export default function Brandsense() {
   return (
@@ -13,11 +16,11 @@ export default function Brandsense() {
         </div>
         <DonutChart />
         {/* <Home /> */}
-        {/* <LeakedCredentials /> */}
+        <LeakedCredentials />
         <DarkWebAndSocialMediaMentions />
-        {/* <DomainImpersonation />
+      <DomainImpersonation />
         <PastebinMentionsSection />
-        <SensitiveInformation /> */}
+        <SensitiveInformation /> 
       </div>
     </div>
   );

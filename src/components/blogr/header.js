@@ -1,5 +1,6 @@
 import Link from "next/link";
-import SearchBar from "../SearchBar";
+
+
 
 export default function Header() {
   return (
@@ -99,7 +100,8 @@ export default function Header() {
               placeholder="Search"
               className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-white focus:outline-0 focus:ring-0 border-none bg-[#283139] h-full placeholder:text-[#9dabb9] px-4 rounded-l-none pl-2 text-base font-normal leading-normal"
             /> */}
-            <SearchBar />
+
+
           </div>
         </label>
 
