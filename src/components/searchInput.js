@@ -1,10 +1,14 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { setSearchQuery } from "@/lib/features/search/searchSlices";
+import { useAppDispatch } from "@/lib/hooks";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function Search() {
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState("");
+  const pathname = usePathname();
+  const dispatch = useAppDispatch()
+  const [localSearchQuery, setLocalSearchQuery] = useState("");
   const [error, setError] = useState("");
 
   const isValidDomain = (domain) => {
@@ -15,7 +19,7 @@ export default function Search() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const trimmedQuery = searchQuery.trim();
+    const trimmedQuery = localSearchQuery.trim();
 
     if (!trimmedQuery) {
       setError("Please enter a domain");
@@ -28,7 +32,8 @@ export default function Search() {
     }
 
     setError("");
-    router.push(`/hackerreport?domain=${encodeURIComponent(trimmedQuery)}`);
+    dispatch(setSearchQuery(trimmedQuery))
+    router.push(`${pathname}?domain=${encodeURIComponent(trimmedQuery)}`);
   };
 
   return (
@@ -58,9 +63,9 @@ export default function Search() {
               }`}
               type="text"
               placeholder="Search domain"
-              value={searchQuery}
+              value={localSearchQuery}
               onChange={(e) => {
-                setSearchQuery(e.target.value);
+                setLocalSearchQuery(e.target.value);
                 setError("");
               }}
             />

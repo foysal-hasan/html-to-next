@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { SearchFieldWrapper } from "../SearchField";
+
 
 export default function Header() {
   return (
@@ -73,8 +75,9 @@ export default function Header() {
 
       {/* Search and User Actions */}
       <div className="flex flex-1 justify-end gap-8">
+        <SearchFieldWrapper />
         {/* Search Bar */}
-        <label className="flex flex-col min-w-40 h-10 max-w-64">
+        {/* <label className="flex flex-col min-w-40 h-10 max-w-64">
           <div className="flex w-full flex-1 items-stretch rounded-xl h-full">
             <div className="text-[#9dabb9] flex border-none bg-[#283139] items-center justify-center pl-4 rounded-l-xl border-r-0">
               <svg
@@ -92,7 +95,7 @@ export default function Header() {
               className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-white focus:outline-0 focus:ring-0 border-none bg-[#283139] h-full placeholder:text-[#9dabb9] px-4 rounded-l-none pl-2 text-base font-normal leading-normal"
             />
           </div>
-        </label>
+        </label> */}
         {/* Help Button */}
         <button className="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 bg-[#283139] text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
           <div className="text-white">

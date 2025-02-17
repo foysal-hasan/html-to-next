@@ -1,5 +1,6 @@
 'use client';
 
+import { useAppSelector } from '@/lib/hooks';
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from 'chart.js';
 import { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
@@ -7,11 +8,11 @@ import { Doughnut } from 'react-chartjs-2';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const data = {
-  labels: ['BAD REPUTATION', 'HACKED WEBSITES', 'TORRENT'],
+  labels: ['LOW', 'MEDIUM', 'HIGH'],
   datasets: [
     {
-      data: [6, 1, 5],
-      backgroundColor: ['#FF0000', '#FF8C00', '#32CD32'],
+      data: [6.6, 1, 5],
+      backgroundColor: ['#32CD32', '#FF8C00', '#FF0000'],
       hoverOffset: 4,
     },
   ],
@@ -19,12 +20,26 @@ const data = {
 
 export default function ReputationDonutChart() {
   const [client, setClient] = useState(false);
+  const riskAnalysis = useAppSelector(state => state.posts.riskAnalysis)
+
+  const data = {
+    labels: ['LOW', 'MEDIUM', 'HIGH'],
+    datasets: [
+      {
+        data: [riskAnalysis.low, riskAnalysis.medium, riskAnalysis.high],
+        backgroundColor: ['#32CD32', '#FF8C00', '#FF0000'],
+        hoverOffset: 4,
+      },
+    ],
+  };
 
   useEffect(() => {
     setClient(true);
   }, []);
 
   if (!client) return null;
+
+  if (riskAnalysis.low <= 0 && riskAnalysis.medium <= 0 && riskAnalysis.high <= 0) return null;
 
   const options = {
     layout: {

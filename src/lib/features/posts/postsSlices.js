@@ -1,53 +1,83 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  posts: [],
-  normalizedPosts: [],
-  risksForPosts: [],
   riskAnalysis: {
     low: 0,
     medium: 0,
     high: 0,
-  }
+  },
+  instagramMentions: [],
+  twitterMentions: [],
+  facebookMentions: [],
+  telegramMentions: [],
+  darkWebXSSMentions: [],
+  darkWebFacebookMentions: [],
+  darkWebStealerMentions: []
+};
+
+const updateRiskAnalysis = (state) => {
+  const totalMentions = [
+    ...state.instagramMentions,
+    ...state.twitterMentions,
+    ...state.facebookMentions,
+    ...state.telegramMentions,
+    ...state.darkWebXSSMentions,
+    ...state.darkWebFacebookMentions,
+    ...state.darkWebStealerMentions
+  ].length;
+
+  state.riskAnalysis.low = totalMentions * 0.1;
+  state.riskAnalysis.medium = totalMentions * 0.3;
+  state.riskAnalysis.high = totalMentions * 0.6;
 };
 
 const postsSlice = createSlice({
   name: 'posts',
   initialState,
   reducers: {
-    setPosts(state, action) {
-      state.posts = action.payload;
+    setRiskAnalysis(state, action) {
+      state.riskAnalysis = action.payload;
     },
-    setNormalizedPosts(state, action) {
-      state.normalizedPosts = action.payload;
+    setInstagramMentions(state, action) {
+      state.instagramMentions = action.payload;
+      updateRiskAnalysis(state);
     },
-    setRisksForPosts(state, action) {
-      // console.log('from risks = ', action.payload);
-      
-      const posts = state?.normalizedPosts?.map(post => {
-        const risk = action?.payload?.find(risk => risk.id == post.id);
-        return {
-          ...post,
-          risk: risk ? risk.risk : null
-        };
-      });
-
-      // Compute risk counts
-      const riskCounts = { low: 0, medium: 0, high: 0 };
-      action.payload.forEach(({ risk }) => {
-        if (risk in riskCounts) {
-          riskCounts[risk]++;
-        }
-      });
-
-      state.posts = posts;
-      state.risksForPosts = [...state.risksForPosts, ...action.payload];
-      state.riskAnalysis = riskCounts;
+    setTwitterMentions(state, action) {
+      state.twitterMentions = action.payload;
+      updateRiskAnalysis(state);
     },
-    
+    setFacebookMentions(state, action) {
+      state.facebookMentions = action.payload;
+      updateRiskAnalysis(state);
+    },
+    setTelegramMentions(state, action) {
+      state.telegramMentions = action.payload;
+      updateRiskAnalysis(state);
+    },
+    setDarkWebXSSMentions(state, action) {
+      state.darkWebXSSMentions = action.payload;
+      updateRiskAnalysis(state);
+    },
+    setDarkWebFacebookMentions(state, action) {
+      state.darkWebFacebookMentions = action.payload;
+      updateRiskAnalysis(state);
+    },
+    setDarkWebStealerMentions(state, action) {
+      state.darkWebStealerMentions = action.payload;
+      updateRiskAnalysis(state);
+    }
   }
 });
 
-export const { setPosts, setNormalizedPosts, setRisksForPosts } = postsSlice.actions;
+export const { 
+  setRiskAnalysis,
+  setInstagramMentions, 
+  setTwitterMentions, 
+  setFacebookMentions, 
+  setTelegramMentions, 
+  setDarkWebXSSMentions, 
+  setDarkWebFacebookMentions, 
+  setDarkWebStealerMentions 
+} = postsSlice.actions;
 
 export default postsSlice.reducer;

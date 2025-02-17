@@ -34,7 +34,7 @@ const SearchField = () => {
       setLastSearchedQuery(searchQuery);
 
       // Push to new route
-      router.push(`/hackerreport?domain=${encodeURIComponent(searchQuery)}`);
+      router.push(`${pathname}?domain=${encodeURIComponent(searchQuery)}`);
 
       // Clear input
       setText('');

@@ -1,55 +1,36 @@
-'use client'
-import { useState } from 'react';
-import DarkWebAndSocialMediaMentionsCard from '@/components/brandsense/DarkWebAndSocialMediaMentionsCard';
-import { useAppSelector } from '@/lib/hooks';
-import filterPosts from '@/utils/filterPosts';
+import RenderPosts from "@/components/blogr/RenderPosts";
 
-export default function Blogr() {
-  const { posts } = useAppSelector(state => state.posts);
-  const [filters, setFilters] = useState({
-    startDate: '',
-    endDate: '',
-    riskLevel: ''
-  });
+const isValidDomain = (domain) => {
+  const domainRegex =
+    /^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
+  return domainRegex.test(domain);
+};
 
-  const filteredPosts = filterPosts(posts, filters);
+export default async function Blogr({ searchParams }) {
 
-  return (
-    <div className="gap-1 px-6 flex flex-1 justify-center items-start py-5">
-      <div className='max-w-4xl flex flex-col gap-10'>
-        <div className="flex gap-4 mb-4 justify-end flex-1">
-          <input
-            type="date"
-            placeholder="Start Date"
-            className="border p-2 rounded"
-            onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
-          />
-          <input
-            type="date"
-            placeholder="End Date"
-            className="border p-2 rounded"
-            onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
-          />
-          <select
-            className="border p-2 rounded"
-            onChange={(e) => setFilters({ ...filters, riskLevel: e.target.value })}
-          >
-            <option value="">All Risks</option>
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-          </select>
-        </div>
-        {filteredPosts?.map((post, index) => (
-          <DarkWebAndSocialMediaMentionsCard
-            key={index}
-            url={post.link}
-            date={post.date}
-            content={post.content}
-            risk={post.risk}
-          />
-        ))}
+  const search = await searchParams;
+  const domain = search?.domain ?? '';
+
+  if (!domain) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[90vh]">
+        <h1 className="text-white text-2xl mb-4">Enter a domain to search</h1>
+        <p className="text-gray-400">Example: example.com</p>
       </div>
-    </div>
-  );
+    );
+  }
+
+  if (!isValidDomain(domain)) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[90vh]">
+        <h1 className="text-white text-2xl mb-4">Invalid domain format</h1>
+        <p className="text-gray-400">
+          Please enter a valid domain (e.g., example.com)
+        </p>
+      </div>
+    );
+  }
+
+  return <RenderPosts domain={domain} />
+ 
 }
