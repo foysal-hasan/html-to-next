@@ -5,7 +5,25 @@ import pdfFonts from "pdfmake/build/vfs_fonts"; // Import fonts
 // pdfMake.vfs = pdfFonts.pdfMake.vfs; // Set the virtual file system for the fonts
 
 const ExportRiskPDF = () => {
-  const posts = useAppSelector((state) => state.posts.posts); // Use useAppSelector instead of useSelector
+  // const posts = useAppSelector((state) => state.posts.posts); // Use useAppSelector instead of useSelector
+  const posts = []
+
+  const instagramMentions = useAppSelector((state) => state.posts.instagramMentions); // Use useAppSelector instead of useSelector
+  const twitterMentions = useAppSelector((state) => state.posts.twitterMentions); // Use useAppSelector instead of useSelector
+  const facebookMentions = useAppSelector((state) => state.posts.facebookMentions); // Use useAppSelector instead of useSelector
+  const telegramMentions = useAppSelector((state) => state.posts.telegramMentions); // Use useAppSelector instead of useSelector
+  const darkWebXSSMentions = useAppSelector((state) => state.posts.darkWebXSSMentions); // Use useAppSelector instead of useSelector
+  const darkWebFacebookMentions = useAppSelector((state) => state.posts.darkWebFacebookMentions); // Use useAppSelector instead of useSelector
+  const darkWebStealerMentions = useAppSelector((state) => state.posts.darkWebStealerMentions); // Use useAppSelector instead of useSelector
+
+  posts.push(...instagramMentions)
+  posts.push(...twitterMentions)
+  posts.push(...facebookMentions)
+  posts.push(...telegramMentions)
+  posts.push(...darkWebXSSMentions)
+  posts.push(...darkWebXSSMentions)
+  posts.push(...darkWebFacebookMentions)
+  posts.push(...darkWebStealerMentions)
 
   const exportPDF = () => {
     const filteredPosts = posts.filter(

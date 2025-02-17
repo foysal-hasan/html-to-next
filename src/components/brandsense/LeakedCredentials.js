@@ -1,9 +1,9 @@
 import LeakedCredentialsCard from './LeakedCredentialsCard';
 import SectionTitle from './SectionTitle';
 
-const LeakedCredentials = async () => {
+const LeakedCredentials = async ({ domain }) => {
   // process.env.LEAKCHECK_API_KEY
-  const domain = 'google.com';
+  
   try {
     const res = await fetch(
       `https://leakcheck.io/api/v2/query/${domain}?limit=10`,

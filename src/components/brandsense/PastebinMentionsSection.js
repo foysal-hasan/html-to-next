@@ -5,7 +5,7 @@ import CodeMentionCard from './CodeMentionCard';
 import CustomButton from './CustomButton';
 import SectionTitle from './SectionTitle';
 
-const PastebinMentionsSection = ({ mentions }) => {
+const PastebinMentionsSection = ({ domain }) => {
   const [apiResults, setApiResults] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -13,7 +13,7 @@ const PastebinMentionsSection = ({ mentions }) => {
   useEffect(() => {
     const fetchApiResults = async () => {
       const url =
-        'https://google-search72.p.rapidapi.com/search?q=site:pastebin.com facebook&lr=en-US&num=5';
+        `https://google-search72.p.rapidapi.com/search?q=site:pastebin.com ${domain}&lr=en-US&num=5`;
 
       const headers = {
         'x-rapidapi-key': 'Izk7uHBUVcmshQqKrqmko9WywG6Fp12gmsajsnDzGBPAODILlb',

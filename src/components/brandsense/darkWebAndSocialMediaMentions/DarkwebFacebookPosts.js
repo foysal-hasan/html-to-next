@@ -6,11 +6,16 @@ import { useEffect, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsCard';
 import SectionTitle from '../SectionTitle';
 import { setDarkWebFacebookMentions } from '@/lib/features/posts/postsSlices'
-const DarkwebFacebookPosts = () => {
+
+
+const DarkwebFacebookPosts = ({ keyword }) => {
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false)
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    setLoading(true)
     const fetchPosts = async () => {
       try {
         // Dark Web - Facebook
@@ -18,10 +23,10 @@ const DarkwebFacebookPosts = () => {
           method: 'POST',
           body: JSON.stringify({
             input: {
-              keyword: 'facebook',
-              amount: 10,
-              from_date: '01/01/2025',
-              to_date: '01/15/2025',
+              keyword: keyword,
+              amount: 20,
+              // from_date: '01/01/2025',
+              // to_date: '01/15/2025',
             },
             url: 'http://172.86.116.124:5002/scrape',
           }),
@@ -35,17 +40,21 @@ const DarkwebFacebookPosts = () => {
         const classifiedPosts = await classifyPosts(normalizedPosts);
         console.log('classifiedPosts', classifiedPosts);
         dispatch(setDarkWebFacebookMentions(classifiedPosts))
+
+
         setPosts(classifiedPosts.slice(0, 3)); // Show only 2-3 posts
       } catch (error) {
         console.error('Dark Web API Error:', error);
+      }finally{
+        setLoading(false)
       }
     };
 
     fetchPosts();
-  }, []);
+  }, [keyword]);
 
 
-  if (posts.length === 0) {
+  if (posts.length === 0 || loading) {
     return null;
   }
 

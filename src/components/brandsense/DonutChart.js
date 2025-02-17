@@ -7,16 +7,16 @@ import { Doughnut } from 'react-chartjs-2';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const data = {
-  labels: ['LOW', 'MEDIUM', 'HIGH'],
-  datasets: [
-    {
-      data: [6.6, 1, 5],
-      backgroundColor: ['#32CD32', '#FF8C00', '#FF0000'],
-      hoverOffset: 4,
-    },
-  ],
-};
+// const data = {
+//   labels: ['LOW', 'MEDIUM', 'HIGH'],
+//   datasets: [
+//     {
+//       data: [6.6, 1, 5],
+//       backgroundColor: ['#32CD32', '#FF8C00', '#FF0000'],
+//       hoverOffset: 4,
+//     },
+//   ],
+// };
 
 export default function ReputationDonutChart() {
   const [client, setClient] = useState(false);

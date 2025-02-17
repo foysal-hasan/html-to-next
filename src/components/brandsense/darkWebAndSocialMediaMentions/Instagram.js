@@ -8,17 +8,20 @@ import SectionTitle from '../SectionTitle';
 import { setInstagramMentions } from '@/lib/features/posts/postsSlices';
 
 
-const InstagramMentions = () => {
+const InstagramMentions = ({ keyword }) => {
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false)
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     const fetchInstagramPosts = async () => {
       try {
+        setLoading(true)
         const res = await fetch('/api/fetchApifyPosts', {
           method: 'POST',
           body: JSON.stringify({
-            input: { search: 'google', searchType: 'hashtag', searchLimit: 1 },
+            input: { search: keyword, searchType: 'hashtag', searchLimit: 1 },
             url: 'apify/instagram-search-scraper',
           }),
         });
@@ -34,16 +37,19 @@ const InstagramMentions = () => {
         console.log('classifiedPosts', classifiedPosts);
         dispatch(setInstagramMentions(classifiedPosts))
 
+
         setPosts(classifiedPosts.slice(0, 3)); // Show only 2-3 posts
       } catch (error) {
         console.error('Instagram API Error:', error);
+      }finally{
+        setLoading(false)
       }
     };
 
     fetchInstagramPosts();
-  }, []);
+  }, [keyword]);
 
-  if (posts.length === 0) {
+  if (posts.length === 0 || loading) {
     return null;
   }
   return (

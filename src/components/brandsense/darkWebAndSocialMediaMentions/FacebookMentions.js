@@ -8,19 +8,22 @@ import SectionTitle from '../SectionTitle';
 import { setFacebookMentions } from '@/lib/features/posts/postsSlices';
 
 
-const FacebookMentions = () => {
+const FacebookMentions = ({ keyword }) => {
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false)
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
+        setLoading(true)
         // facebook
         const facebookRes = await fetch('/api/fetchApifyPosts', {
           method: 'POST',
           body: JSON.stringify({
             input: {
-              query: 'google', // replace with domain keyword
+              query: keyword, // replace with domain keyword
               search_type: 'posts',
               recent_posts: true,
               max_posts: 10,
@@ -43,17 +46,19 @@ const FacebookMentions = () => {
 
         console.log('classifiedPosts', classifiedPosts);
          dispatch(setFacebookMentions(classifiedPosts))
-
+         
         setPosts(classifiedPosts.slice(0, 3)); // Show only 2-3 posts
       } catch (error) {
         console.error('Instagram API Error:', error);
+      }finally{
+        setLoading(false)
       }
     };
 
     fetchPosts();
-  }, []);
+  }, [keyword]);
 
-  if (posts.length === 0) {
+  if (posts.length === 0 || loading) {
     return null;
   }
 

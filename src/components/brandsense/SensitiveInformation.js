@@ -5,7 +5,7 @@ import CustomButton from './CustomButton';
 import SectionTitle from './SectionTitle';
 import SensitiveInformationCard from './SensitiveInformationCard';
 
-const SensitiveInformation = ({ mentions }) => {
+const SensitiveInformation = ({ mentions, domain }) => {
   const [apiResults, setApiResults] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -13,7 +13,7 @@ const SensitiveInformation = ({ mentions }) => {
   useEffect(() => {
     const fetchApiResults = async () => {
       const url =
-        'https://google-search72.p.rapidapi.com/search?q=facebook%20%2B%20confidential%20filetype%3Apdf%20OR%20filetype%3Axlsx%20OR%20filetype%3Adocx&lr=en-US&num=5';
+        `https://google-search72.p.rapidapi.com/search?q=${domain}%20%2B%20confidential%20filetype%3Apdf%20OR%20filetype%3Axlsx%20OR%20filetype%3Adocx&lr=en-US&num=5`;
 
       const headers = {
         'x-rapidapi-key': 'Izk7uHBUVcmshQqKrqmko9WywG6Fp12gmsajsnDzGBPAODILlb',

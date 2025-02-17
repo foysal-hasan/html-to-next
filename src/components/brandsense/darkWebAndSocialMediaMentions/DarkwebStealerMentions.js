@@ -7,17 +7,21 @@ import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsC
 import SectionTitle from '../SectionTitle';
 import { setDarkWebStealerMentions } from '@/lib/features/posts/postsSlices';
 
-const DarkwebStealerMentions = () => {
+const DarkwebStealerMentions = ({ keyword }) => {
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false)
+
+
   const dispatch = useAppDispatch();
   useEffect(() => {
     const fetchDarkWebStealerPosts = async () => {
       try {
+        setLoading(true)
         const darkwebStealerRes = await fetch('/api/darkWebPosts', {
           method: 'POST',
           body: JSON.stringify({
             input: {
-              keyword: 'Stealer',
+              keyword: keyword,
             },
             url: 'http://172.86.116.124:5003/search',
           }),
@@ -32,16 +36,19 @@ const DarkwebStealerMentions = () => {
         console.log('classifiedPosts', classifiedPosts);
         dispatch(setDarkWebStealerMentions(classifiedPosts))
 
+
         setPosts(classifiedPosts.slice(0, 3)); // Show only 2-3 posts
       } catch (error) {
         console.error('Dark Web API Error:', error);
+      }finally{
+        setLoading(false)
       }
     };
 
     fetchDarkWebStealerPosts();
-  }, []);
+  }, [keyword]);
 
-  if (posts.length === 0) {
+if (posts.length === 0 || loading) {
     return null;
   }
 

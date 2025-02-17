@@ -7,22 +7,24 @@ import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsC
 import SectionTitle from '../SectionTitle';
 import { setDarkWebXSSMentions } from '@/lib/features/posts/postsSlices';
 
-const DarkwebXSSPosts = () => {
+const DarkwebXSSPosts = ({ keyword }) => {
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false)
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-
+        setLoading(true)
       // Dark Web - XSS
       const darkwebXssRes = await fetch('/api/darkWebPosts', {
         method: 'POST',
         body: JSON.stringify({
         input: {
-          keyword: 'google',
-          start_date: '2025-01-01',
-          end_date: '2025-01-10',
+          keyword: keyword,
+          // start_date: '2025-01-01',
+          // end_date: '2025-01-10',
         },
         url: 'http://172.86.116.124:5004/search_xss',
         }),
@@ -37,17 +39,20 @@ const DarkwebXSSPosts = () => {
       console.log('classifiedXssPosts', classifiedXssPosts);
       dispatch(setDarkWebXSSMentions(classifiedXssPosts))
 
+
       setPosts(prevPosts => [...prevPosts, ...classifiedXssPosts.slice(0, 3)]); // Show only 2-3 posts
       } catch (error) {
       console.error('Dark Web API Error:', error);
+      }finally{
+        setLoading(false)
       }
     };
 
     fetchPosts();
-  }, []);
+  }, [keyword]);
 
 
-  if (posts.length === 0) {
+  if (posts.length === 0 || loading) {
     return null;
   }
 

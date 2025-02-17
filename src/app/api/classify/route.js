@@ -9,7 +9,7 @@ const openai = new OpenAI({
 export async function POST(req) {
   try {
     const { posts } = await req.json();
-    console.log(posts);
+    // console.log(posts);
     
 
     // ================================
@@ -98,11 +98,11 @@ export async function POST(req) {
   });
   
   
-  console.log(response)
+  // console.log(response)
   
-  console.log("message: ", response.choices[0]?.message?.function_call?.arguments);
+  // console.log("message: ", response.choices[0]?.message?.function_call?.arguments);
   // console.log(response.choices[0].message);
-  console.log(...Object.values(JSON.parse(response.choices[0]?.message?.function_call?.arguments))[0]);
+  // console.log(...Object.values(JSON.parse(response.choices[0]?.message?.function_call?.arguments))[0]);
   
   allResponses.push(...Object.values(JSON.parse(response.choices[0]?.message?.function_call?.arguments))[0])
 

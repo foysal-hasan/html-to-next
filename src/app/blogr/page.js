@@ -1,4 +1,4 @@
-import RenderPosts from "@/components/blogr/RenderPosts";
+
 
 const isValidDomain = (domain) => {
   const domainRegex =
@@ -31,6 +31,7 @@ export default async function Blogr({ searchParams }) {
     );
   }
 
-  return <RenderPosts domain={domain} />
+  // return <RenderPosts domain={domain} />
+  return <h1>hello world</h1>
  
 }

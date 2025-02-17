@@ -8,20 +8,22 @@ import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsC
 import SectionTitle from '../SectionTitle';
 
 
-const TwitterMentions = () => {
+const TwitterMentions = ({ keyword }) => {
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false)
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
+        setLoading(true)
         // twitter
         const twitterRes = await fetch('/api/fetchApifyPosts', {
           method: 'POST',
           body: JSON.stringify({
             input: {
               searchTerms: [
-          'google', // replace with keyword domain
+                keyword, // replace with keyword domain
               ],
               sort: 'Latest',
               maxItems: 10,
@@ -39,17 +41,19 @@ const TwitterMentions = () => {
 
         console.log('classifiedPosts', classifiedPosts);
         dispatch(setTwitterMentions(classifiedPosts))
-
+    
         setPosts(classifiedPosts.slice(0, 3)); // Show only 2-3 posts
       } catch (error) {
         console.error('Instagram API Error:', error);
+      }finally{
+        setLoading(false)
       }
     };
 
     fetchPosts();
-  }, []);
+  }, [keyword]);
 
-  if (posts.length === 0) {
+  if (posts.length === 0 || loading) {
     return null;
   }
 

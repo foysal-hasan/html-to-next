@@ -1,3 +1,4 @@
+import DarkWebAndSocialMediaMentions from '@/components/brandsense/DarkWebAndSocialMediaMentions';
 import DarkwebFacebookPosts from '@/components/brandsense/darkWebAndSocialMediaMentions/DarkwebFacebookPosts';
 import DarkwebStealerMentions from '@/components/brandsense/darkWebAndSocialMediaMentions/DarkwebStealerMentions';
 import DarkwebXSSPosts from '@/components/brandsense/darkWebAndSocialMediaMentions/DarkwebXss';
@@ -5,7 +6,11 @@ import FacebookMentions from '@/components/brandsense/darkWebAndSocialMediaMenti
 import InstagramMentions from '@/components/brandsense/darkWebAndSocialMediaMentions/Instagram';
 import TelegramMentions from '@/components/brandsense/darkWebAndSocialMediaMentions/Telegram';
 import TwitterMentions from '@/components/brandsense/darkWebAndSocialMediaMentions/TwitterMentions';
+import DomainImpersonation from '@/components/brandsense/DomainImpersonation';
 import DonutChart from '@/components/brandsense/DonutChart';
+import LeakedCredentials from '@/components/brandsense/LeakedCredentials';
+import PastebinMentionsSection from '@/components/brandsense/PastebinMentionsSection';
+import SensitiveInformation from '@/components/brandsense/SensitiveInformation';
 
 const isValidDomain = (domain) => {
   const domainRegex =
@@ -16,6 +21,8 @@ const isValidDomain = (domain) => {
 export default async function Brandsense({ searchParams }) {
   const search = await searchParams;
   const domain = search?.domain ?? '';
+
+  console.log(domain)
 
   if (!domain) {
     return (
@@ -36,6 +43,8 @@ export default async function Brandsense({ searchParams }) {
       </div>
     );
   }
+
+  
   return (
     <div className="px-40 flex flex-1 justify-center py-5 pb-20 ">
       <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
@@ -46,18 +55,11 @@ export default async function Brandsense({ searchParams }) {
         </div>
         <DonutChart />
         {/* <Home /> */}
-        {/* <LeakedCredentials /> */}
-        {/* <DarkWebAndSocialMediaMentions domain={domain} /> */}
-        {/* <InstagramMentions /> */}
-        <TelegramMentions /> 
-        {/* <DarkwebStealerMentions />
-        <DarkwebFacebookPosts />
-        <FacebookMentions />
-        <TwitterMentions />
-        <DarkwebXSSPosts /> */}
-      {/* <DomainImpersonation />
-        <PastebinMentionsSection />
-        <SensitiveInformation />   */}
+        {/* <LeakedCredentials domain={domain} /> */}
+        {/* <DarkWebAndSocialMediaMentions domain={domain} />    */}
+      <DomainImpersonation domain={domain} />
+        {/* <PastebinMentionsSection domain={domain} /> */}
+        {/* <SensitiveInformation domain={domain} />   */}
       </div>
     </div>
   );

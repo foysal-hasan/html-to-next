@@ -5,11 +5,13 @@ import CustomButton from './CustomButton';
 import DomainImpersonationCard from './DomainImpersonationCard';
 import SectionTitle from './SectionTitle';
 
-const Top = () => {
+const Top = ({ domain }) => {
   const [domains, setDomains] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(true);
 
+  console.log(domain);
+  
   useEffect(() => {
     const fetchDomains = async () => {
       const url = 'https://brand-alert.whoisxmlapi.com/api/v2';
@@ -20,7 +22,7 @@ const Top = () => {
         withTypos: false,
         responseFormat: 'json',
         punycode: true,
-        includeSearchTerms: ['google', 'blog'],
+        includeSearchTerms: [domain?.split('.')[0]],
         excludeSearchTerms: [],
       };
 
@@ -37,12 +39,15 @@ const Top = () => {
         const result = await response.json();
         // console.log('result from domain Impersonation', result);
 
+        console.log(result)
         if (result.errorMessage) {
           setErrorMessage(result.errorMessage);
         } else {
-          setDomains(result.domainsList.slice(0, 5));
+          setDomains(result?.domainsList?.slice(0, 5));
         }
       } catch (error) {
+        console.log(error);
+        
         console.error(error);
         setErrorMessage('An error occurred while fetching the domains.');
       } finally {
@@ -421,7 +426,7 @@ const result = {
   ],
 };
 
-const Bottom = () => {
+const Bottom = ({ domain }) => {
   const [socialScannerResult, setSocialScannerResult] = useState(
     result.detected,
   );
@@ -531,18 +536,21 @@ const Bottom = () => {
   );
 };
 
-const DomainImpersonation = () => {
-  const TopComponent = Top();
-  const BottomComponent = Bottom();
+const DomainImpersonation = ( { domain }) => {
+  console.log(domain);
+  
+  // const TopComponent = Top(domain);
+  // const BottomComponent = Bottom(domain);
 
-  if (!TopComponent || !BottomComponent) {
-    return null;
-  }
+  // if (!TopComponent || !BottomComponent) {
+  //   return null;
+  // }
   return (
     <div className="border-[#3b4854] border-b-2 pb-8">
       <SectionTitle>Domain Impersonation</SectionTitle>
-      {TopComponent}
-      {BottomComponent}
+      {/* {TopComponent}
+      {BottomComponent} */}
+<Top domain={domain} />
       <div className="flex gap-5 items-center justify-center mt-5">
         <Link href="/blogr">
           <CustomButton text="Download" />
