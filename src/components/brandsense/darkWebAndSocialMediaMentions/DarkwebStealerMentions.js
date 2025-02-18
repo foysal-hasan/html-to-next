@@ -1,16 +1,20 @@
 'use client'
 import { classifyPosts } from '@/lib/api/classify';
-import { useAppDispatch } from '@/lib/hooks';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import normalizePosts from '@/utils/normalizePosts';
 import { useEffect, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsCard';
 import SectionTitle from '../SectionTitle';
 import { setDarkWebStealerMentions } from '@/lib/features/posts/postsSlices';
 
-const DarkwebStealerMentions = ({ keyword }) => {
+const DarkwebStealerMentions = ({ keyword, domain }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false)
+  const searchQuery = useAppSelector((state) => state.search.searchQuery);
 
+  const darkWebStealerMentions = useAppSelector(
+    (state) => state.posts.darkWebStealerMentions,
+  );
 
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -22,6 +26,8 @@ const DarkwebStealerMentions = ({ keyword }) => {
           body: JSON.stringify({
             input: {
               keyword: keyword,
+              from_date: '01/01/2025',
+              to_date: '01/15/2025',
             },
             url: 'http://172.86.116.124:5003/search',
           }),
@@ -44,8 +50,12 @@ const DarkwebStealerMentions = ({ keyword }) => {
         setLoading(false)
       }
     };
-
-    fetchDarkWebStealerPosts();
+    
+    if (searchQuery === domain) {
+      setPosts(darkWebStealerMentions.slice(0, 3));
+    } else {
+      fetchDarkWebStealerPosts();
+    }
   }, [keyword]);
 
 if (posts.length === 0 || loading) {

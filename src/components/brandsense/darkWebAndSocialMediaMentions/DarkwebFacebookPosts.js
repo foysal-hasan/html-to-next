@@ -1,6 +1,6 @@
 'use client'
 import { classifyPosts } from '@/lib/api/classify';
-import { useAppDispatch } from '@/lib/hooks';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import normalizePosts from '@/utils/normalizePosts';
 import { useEffect, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsCard';
@@ -8,9 +8,15 @@ import SectionTitle from '../SectionTitle';
 import { setDarkWebFacebookMentions } from '@/lib/features/posts/postsSlices'
 
 
-const DarkwebFacebookPosts = ({ keyword }) => {
+const DarkwebFacebookPosts = ({ keyword, domain }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false)
+
+  const searchQuery = useAppSelector((state) => state.search.searchQuery);
+    
+    const darkWebFacebookMentions = useAppSelector(
+        (state) => state.posts.darkWebFacebookMentions,
+      );
 
   const dispatch = useAppDispatch();
 
@@ -25,8 +31,8 @@ const DarkwebFacebookPosts = ({ keyword }) => {
             input: {
               keyword: keyword,
               amount: 20,
-              // from_date: '01/01/2025',
-              // to_date: '01/15/2025',
+              from_date: '01/01/2025',
+              to_date: '01/15/2025',
             },
             url: 'http://172.86.116.124:5002/scrape',
           }),
@@ -50,7 +56,11 @@ const DarkwebFacebookPosts = ({ keyword }) => {
       }
     };
 
-    fetchPosts();
+    if (searchQuery === domain) {
+      setPosts(darkWebFacebookMentions.slice(0, 3));
+    } else {
+      fetchPosts();
+    }
   }, [keyword]);
 
 

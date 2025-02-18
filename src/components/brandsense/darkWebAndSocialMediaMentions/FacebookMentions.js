@@ -1,6 +1,6 @@
 'use client'
 import { classifyPosts } from '@/lib/api/classify';
-import { useAppDispatch } from '@/lib/hooks';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import normalizePosts from '@/utils/normalizePosts';
 import { useEffect, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsCard';
@@ -8,9 +8,15 @@ import SectionTitle from '../SectionTitle';
 import { setFacebookMentions } from '@/lib/features/posts/postsSlices';
 
 
-const FacebookMentions = ({ keyword }) => {
+const FacebookMentions = ({ keyword, domain }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false)
+
+  const searchQuery = useAppSelector((state) => state.search.searchQuery);
+  
+  const facebookMentions = useAppSelector(
+      (state) => state.posts.facebookMentions,
+    );
 
   const dispatch = useAppDispatch();
 
@@ -55,8 +61,13 @@ const FacebookMentions = ({ keyword }) => {
       }
     };
 
-    fetchPosts();
-  }, [keyword]);
+    if (searchQuery === domain) {
+      setPosts(facebookMentions.slice(0, 3));
+    } else {
+      fetchPosts();
+    }
+    
+  }, [keyword, domain]);
 
   if (posts.length === 0 || loading) {
     return null;

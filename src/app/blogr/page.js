@@ -1,4 +1,13 @@
-
+import {
+  darkwebFacebook,
+  darkwebStealer,
+  darkwebXss,
+  facebook,
+  instagram,
+  telegram,
+  twitter,
+} from '@/components/blogr/enum';
+import RenderPosts from '@/components/blogr/RenderPosts';
 
 const isValidDomain = (domain) => {
   const domainRegex =
@@ -7,7 +16,6 @@ const isValidDomain = (domain) => {
 };
 
 export default async function Blogr({ searchParams }) {
-
   const search = await searchParams;
   const domain = search?.domain ?? '';
 
@@ -31,7 +39,15 @@ export default async function Blogr({ searchParams }) {
     );
   }
 
-  // return <RenderPosts domain={domain} />
-  return <h1>hello world</h1>
- 
+  return (
+    <>
+      <RenderPosts domain={domain} source={instagram} />
+      <RenderPosts domain={domain} source={facebook} />
+      <RenderPosts domain={domain} source={twitter} />
+      <RenderPosts domain={domain} source={telegram} />
+      <RenderPosts domain={domain} source={darkwebFacebook} />
+      <RenderPosts domain={domain} source={darkwebStealer} />
+      <RenderPosts domain={domain} source={darkwebXss} />
+    </>
+  );
 }

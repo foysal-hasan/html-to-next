@@ -20,7 +20,7 @@ const DarkWebAndSocialMediaMentionsCard = ({ link, date, content, risk }) => {
         <span className="text-white">Date: </span>{new Date(date).toDateString()}
 
         </p>
-        <p className="text-[#9dabb9] text-sm font-normal leading-normal">
+        <p className="text-[#9dabb9] text-sm font-normal leading-normal break-all">
           <span className="text-white">Content: </span> {content.substring(0, 200)}
         </p>
       </div>

@@ -1,6 +1,6 @@
 'use client'
 import { classifyPosts } from '@/lib/api/classify';
-import { useAppDispatch } from '@/lib/hooks';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import normalizePosts from '@/utils/normalizePosts';
 import { useEffect, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsCard';
@@ -8,10 +8,14 @@ import SectionTitle from '../SectionTitle';
 import { setInstagramMentions } from '@/lib/features/posts/postsSlices';
 
 
-const InstagramMentions = ({ keyword }) => {
+const InstagramMentions = ({ keyword, domain }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false)
+const searchQuery = useAppSelector((state) => state.search.searchQuery);
 
+const instagramMentions = useAppSelector(
+    (state) => state.posts.instagramMentions,
+  );
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -46,8 +50,13 @@ const InstagramMentions = ({ keyword }) => {
       }
     };
 
-    fetchInstagramPosts();
-  }, [keyword]);
+
+    if (searchQuery === domain) {
+      setPosts(instagramMentions.slice(0, 3));
+    } else {
+      fetchInstagramPosts();
+    }
+  }, [keyword, domain]);
 
   if (posts.length === 0 || loading) {
     return null;

@@ -11,7 +11,7 @@ const Top = ({ domain }) => {
   const [loading, setLoading] = useState(true);
 
   console.log(domain);
-  
+
   useEffect(() => {
     const fetchDomains = async () => {
       const url = 'https://brand-alert.whoisxmlapi.com/api/v2';
@@ -37,9 +37,8 @@ const Top = ({ domain }) => {
       try {
         const response = await fetch(url, options);
         const result = await response.json();
-        // console.log('result from domain Impersonation', result);
+        console.log('result from domain Impersonation', result);
 
-        console.log(result)
         if (result.errorMessage) {
           setErrorMessage(result.errorMessage);
         } else {
@@ -47,7 +46,7 @@ const Top = ({ domain }) => {
         }
       } catch (error) {
         console.log(error);
-        
+
         console.error(error);
         setErrorMessage('An error occurred while fetching the domains.');
       } finally {
@@ -56,7 +55,7 @@ const Top = ({ domain }) => {
     };
 
     fetchDomains();
-  }, []);
+  }, [domain]);
 
   if (loading) {
     return (
@@ -472,7 +471,7 @@ const Bottom = ({ domain }) => {
   //   };
 
   //   fetchDomains();
-  // }, []);
+  // }, [domain]);
 
   if (loading) {
     return (
@@ -536,9 +535,9 @@ const Bottom = ({ domain }) => {
   );
 };
 
-const DomainImpersonation = ( { domain }) => {
+const DomainImpersonation = ({ domain }) => {
   console.log(domain);
-  
+
   // const TopComponent = Top(domain);
   // const BottomComponent = Bottom(domain);
 
@@ -550,11 +549,12 @@ const DomainImpersonation = ( { domain }) => {
       <SectionTitle>Domain Impersonation</SectionTitle>
       {/* {TopComponent}
       {BottomComponent} */}
-<Top domain={domain} />
+      <Top domain={domain} />
       <div className="flex gap-5 items-center justify-center mt-5">
-        <Link href="/blogr">
+        <div className="flex gap-2">
+          <CustomButton text="View More" />
           <CustomButton text="Download" />
-        </Link>
+        </div>
       </div>
     </div>
   );

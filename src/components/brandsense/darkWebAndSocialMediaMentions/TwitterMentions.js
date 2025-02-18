@@ -1,16 +1,21 @@
 'use client'
 import { classifyPosts } from '@/lib/api/classify';
 import { setTwitterMentions } from '@/lib/features/posts/postsSlices';
-import { useAppDispatch } from '@/lib/hooks';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import normalizePosts from '@/utils/normalizePosts';
 import { useEffect, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsCard';
 import SectionTitle from '../SectionTitle';
 
 
-const TwitterMentions = ({ keyword }) => {
+const TwitterMentions = ({ keyword, domain }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false)
+    const searchQuery = useAppSelector((state) => state.search.searchQuery);
+     const twitterMentions = useAppSelector(
+        (state) => state.posts.twitterMentions,
+      );
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -50,8 +55,12 @@ const TwitterMentions = ({ keyword }) => {
       }
     };
 
-    fetchPosts();
-  }, [keyword]);
+    if (searchQuery === domain) {
+      setPosts(twitterMentions.slice(0, 3));
+    } else {
+      fetchPosts();
+    }
+  }, [keyword, domain]);
 
   if (posts.length === 0 || loading) {
     return null;

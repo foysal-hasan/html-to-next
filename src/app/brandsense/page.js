@@ -22,7 +22,7 @@ export default async function Brandsense({ searchParams }) {
   const search = await searchParams;
   const domain = search?.domain ?? '';
 
-  console.log(domain)
+  console.log(domain);
 
   if (!domain) {
     return (
@@ -44,7 +44,6 @@ export default async function Brandsense({ searchParams }) {
     );
   }
 
-  
   return (
     <div className="px-40 flex flex-1 justify-center py-5 pb-20 ">
       <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
@@ -55,11 +54,11 @@ export default async function Brandsense({ searchParams }) {
         </div>
         <DonutChart />
         {/* <Home /> */}
-        {/* <LeakedCredentials domain={domain} /> */}
-        {/* <DarkWebAndSocialMediaMentions domain={domain} />    */}
-      <DomainImpersonation domain={domain} />
-        {/* <PastebinMentionsSection domain={domain} /> */}
-        {/* <SensitiveInformation domain={domain} />   */}
+        <LeakedCredentials domain={domain} />
+        <DarkWebAndSocialMediaMentions domain={domain} />
+        <DomainImpersonation domain={domain} />
+        <PastebinMentionsSection domain={domain} />
+        <SensitiveInformation domain={domain} />
       </div>
     </div>
   );
