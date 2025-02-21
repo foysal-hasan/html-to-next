@@ -5,29 +5,44 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 import LeakedCredentialsCard from './LeakedCredentialsCard';
 import SectionTitle from './SectionTitle';
 import CustomButton from './CustomButton';
+import { useQuery } from '@tanstack/react-query';
+
+const fetchLeakCheck = (domain) => {
+  return async () => {
+    const res = await fetch(`/api/leakcheck/?domain=${domain}`);
+    const result = await res.json();
+    const filteredData = result.filter(log => log.email && log.password);
+    return filteredData || []
+  }
+}
+
 
 const LeakedCredentials = ({ domain }) => {
-  const [data, setData] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // const [data, setData] = useState([]);
+  // const [error, setError] = useState(null);
+  // const [loading, setLoading] = useState(true);
   const [showAll, setShowAll] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch(`/api/leakcheck/?domain=${domain}`);
-        const result = await res.json();
-        const filteredData = result.filter(log => log.email && log.password);
-        setData(filteredData || []);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const {data, isLoading: loading, error, isError } = useQuery({
+    queryKey: ['leackedCredentials', domain],
+    queryFn: fetchLeakCheck(domain)
+  })
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const res = await fetch(`/api/leakcheck/?domain=${domain}`);
+  //       const result = await res.json();
+  //       const filteredData = result.filter(log => log.email && log.password);
+  //       setData(filteredData || []);
+  //     } catch (error) {
+  //       setError(error.message);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchData();
-  }, [domain]);
+  //   fetchData();
+  // }, [domain]);
 
   const handleDownload = () => {
     const docDefinition = {
@@ -56,6 +71,7 @@ const LeakedCredentials = ({ domain }) => {
     };
     pdfMake.createPdf(docDefinition).download('leaked-credentials.pdf');
   };
+  
 
   return (
     <div className="border-[#3b4854] border-b-2 pb-8 mt-10">
@@ -84,7 +100,7 @@ const LeakedCredentials = ({ domain }) => {
           </svg>
         </div>
       ) : error ? (
-        <p className="text-red-500 text-center">{error}</p>
+        <p className="text-red-500 text-center">{error.message}</p>
       ) : (
         <>
           <div className="flex flex-col gap-10">

@@ -5,41 +5,60 @@ import { useEffect, useState } from 'react';
 import CustomButton from './CustomButton';
 import SectionTitle from './SectionTitle';
 import SensitiveInformationCard from './SensitiveInformationCard';
+import { useQuery } from "@tanstack/react-query";
 
-
+const fetchApiResults = (domain) => {
+  return async () => {
+    const url =
+    `https://google-search72.p.rapidapi.com/search?q=${domain}%20%2B%20confidential%20filetype%3Apdf%20OR%20filetype%3Axlsx%20OR%20filetype%3Adocx&lr=en-US&num=20`;
+  
+    const headers = {
+    'x-rapidapi-key': process.env.NEXT_PUBLIC_RAPIDAPI_KEY,
+    'x-rapidapi-host': 'google-search72.p.rapidapi.com',
+  };
+    const response = await fetch(url, { headers });
+    const result = await response.json();
+    return result?.items;
+};
+}
 const SensitiveInformation = ({ domain }) => {
-  const [apiResults, setApiResults] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // const [apiResults, setApiResults] = useState([]);
+  // const [error, setError] = useState(null);
+  // const [loading, setLoading] = useState(true);
   const [showAll, setShowAll] = useState(false);
 
-  useEffect(() => {
-    const fetchApiResults = async () => {
-      const url =
-        `https://google-search72.p.rapidapi.com/search?q=${domain}%20%2B%20confidential%20filetype%3Apdf%20OR%20filetype%3Axlsx%20OR%20filetype%3Adocx&lr=en-US&num=20`;
+  const {data: apiResults, isLoading: loading, error} = useQuery({
+    queryKey: ['sensitiveInformation', domain],
+    queryFn: fetchApiResults(domain)
+  })
 
-      const headers = {
-        'x-rapidapi-key': 'Izk7uHBUVcmshQqKrqmko9WywG6Fp12gmsajsnDzGBPAODILlb',
-        'x-rapidapi-host': 'google-search72.p.rapidapi.com',
-      };
-      try {
-        const response = await fetch(url, { headers });
-        if (!response.ok) {
-          throw new Error('You might have no credit');
-        }
-        const result = await response.json();
-        console.log(result);
+  // useEffect(() => {
+  //   const fetchApiResults = async () => {
+  //     const url =
+  //       `https://google-search72.p.rapidapi.com/search?q=${domain}%20%2B%20confidential%20filetype%3Apdf%20OR%20filetype%3Axlsx%20OR%20filetype%3Adocx&lr=en-US&num=20`;
 
-        setApiResults(result?.items);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+  //     const headers = {
+  //       'x-rapidapi-key': process.env.NEXT_PUBLIC_RAPIDAPI_KEY,
+  //       'x-rapidapi-host': 'google-search72.p.rapidapi.com',
+  //     };
+  //     try {
+  //       const response = await fetch(url, { headers });
+  //       if (!response.ok) {
+  //         throw new Error('You might have no credit');
+  //       }
+  //       const result = await response.json();
+  //       console.log(result);
 
-    fetchApiResults();
-  }, [domain]);
+  //       setApiResults(result?.items);
+  //     } catch (error) {
+  //       setError(error.message);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchApiResults();
+  // }, [domain]);
 
   const handleDownload = () => {
     const docDefinition = {
@@ -96,7 +115,7 @@ const SensitiveInformation = ({ domain }) => {
           </svg>
         </div>
       ) : error ? (
-        <p className="text-red-500 text-center">{error}</p>
+        <p className="text-red-500 text-center">{error.message}</p>
       ) : (
         <>
           <div className="flex flex-col gap-10">

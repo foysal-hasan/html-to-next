@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const CodeMentionCard = ({ item: { title, link, displayLink, snippet } }) => {
   // Determine button text based on the URL
   const buttonText = link?.includes('gist.github.com')
@@ -27,9 +29,11 @@ const CodeMentionCard = ({ item: { title, link, displayLink, snippet } }) => {
         </p>
       </div>
       <div className="shrink-0">
-        <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-8 px-4 bg-[#283139] text-white text-sm font-medium leading-normal w-fit">
+       <Link href={link} target="_blank">
+       <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-8 px-4 bg-[#283139] text-white text-sm font-medium leading-normal w-fit">
           <span className="truncate">{buttonText}</span>
         </button>
+       </Link>
       </div>
     </div>
   );
