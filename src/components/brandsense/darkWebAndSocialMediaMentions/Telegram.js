@@ -6,11 +6,13 @@ import normalizePosts from '@/utils/normalizePosts';
 import { useEffect, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsCard';
 import SectionTitle from '../SectionTitle';
+import SectionLoader from '@/components/SectionLoader';
 
 const TelegramMentions = ({ keyword, domain }) => {
   const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const searchQuery = useAppSelector((state) => state.search.searchQuery);
+  
 
   const dispatch = useAppDispatch();
   console.log('from telegram page: ', keyword);
@@ -36,14 +38,18 @@ const TelegramMentions = ({ keyword, domain }) => {
           }),
         });
         const rawPosts = await res.json();
-        console.log('telegram posts', rawPosts);
+        // console.log('telegram posts', rawPosts);
+        if (!rawPosts || rawPosts.length === 0) {
+          setLoading(false);
+          return;
+        }
 
         const normalizedPosts = normalizePosts(rawPosts, 'telegram');
-        console.log('normalized: ', normalizedPosts);
+        // console.log('normalized: ', normalizedPosts);
 
         const classifiedPosts = await classifyPosts(normalizedPosts);
 
-        console.log('classifiedPosts', classifiedPosts);
+        // console.log('classifiedPosts', classifiedPosts);
         dispatch(setTelegramMentions(classifiedPosts));
 
         setPosts(classifiedPosts.slice(0, 3)); // Show only 2-3 posts
@@ -63,11 +69,9 @@ const TelegramMentions = ({ keyword, domain }) => {
     }
   }, [keyword, domain]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (posts.length === 0 ) {
+  if(loading) return <SectionLoader sectionTitle={'Telegram Mentions'} />
+  
+  if (!posts || posts.length === 0 ) {
     return null;
   }
 

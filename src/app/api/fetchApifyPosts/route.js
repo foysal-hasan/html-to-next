@@ -13,9 +13,11 @@ export async function POST(req) {
     const run = await client.actor(body?.url).call(body?.input);
 
     const { items } = await client.dataset(run.defaultDatasetId).listItems();
-    if (items.length > 0) {
-      items.pop();
+    if (items?.length > 0) {
+      items?.pop();
     }
+    console.log('items', items);
+    
     return Response.json(items);
   } catch (error) {
     // console.log(error);

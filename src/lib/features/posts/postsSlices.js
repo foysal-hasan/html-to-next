@@ -12,19 +12,16 @@ const initialState = {
   telegramMentions: [],
   darkWebXSSMentions: [],
   darkWebFacebookMentions: [],
-  darkWebStealerMentions: []
+  darkWebStealerMentions: [],
 };
 
 const updateRiskAnalysis = (state, newMentions) => {
   newMentions.forEach((mention) => {
-    if (mention.risk === "low") state.riskAnalysis.low += 1;
-    if (mention.risk === "medium") state.riskAnalysis.medium += 1;
-    if (mention.risk === "high") state.riskAnalysis.high += 1;
+    if (mention.risk === 'low') state.riskAnalysis.low += 1;
+    if (mention.risk === 'medium') state.riskAnalysis.medium += 1;
+    if (mention.risk === 'high') state.riskAnalysis.high += 1;
   });
 };
-
-
-
 
 const postsSlice = createSlice({
   name: 'posts',
@@ -39,6 +36,21 @@ const postsSlice = createSlice({
         medium: 0,
         high: 0,
       };
+    },
+
+    reset(state) {
+      state.riskAnalysis = {
+        low: 0,
+        medium: 0,
+        high: 0,
+      };
+      state.instagramMentions = [];
+      state.twitterMentions = [];
+      state.facebookMentions = [];
+      state.telegramMentions = [];
+      state.darkWebXSSMentions = [];
+      state.darkWebFacebookMentions = [];
+      state.darkWebStealerMentions = [];
     },
     setInstagramMentions(state, action) {
       state.instagramMentions = action.payload;
@@ -67,20 +79,21 @@ const postsSlice = createSlice({
     setDarkWebStealerMentions(state, action) {
       state.darkWebStealerMentions = action.payload;
       updateRiskAnalysis(state, action.payload);
-    }
-  }
+    },
+  },
 });
 
-export const { 
+export const {
   setRiskAnalysis,
   resetRiskAnalysis,
-  setInstagramMentions, 
-  setTwitterMentions, 
-  setFacebookMentions, 
-  setTelegramMentions, 
-  setDarkWebXSSMentions, 
-  setDarkWebFacebookMentions, 
-  setDarkWebStealerMentions 
+  setInstagramMentions,
+  setTwitterMentions,
+  setFacebookMentions,
+  setTelegramMentions,
+  setDarkWebXSSMentions,
+  setDarkWebFacebookMentions,
+  setDarkWebStealerMentions,
+  reset
 } = postsSlice.actions;
 
 export default postsSlice.reducer;

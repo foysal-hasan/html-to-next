@@ -6,6 +6,7 @@ import normalizePosts from '@/utils/normalizePosts';
 import { useEffect, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsCard';
 import SectionTitle from '../SectionTitle';
+import SectionLoader from '@/components/SectionLoader';
 
 const DarkwebXSSPosts = ({ keyword, domain }) => {
   const [posts, setPosts] = useState([]);
@@ -35,16 +36,21 @@ const DarkwebXSSPosts = ({ keyword, domain }) => {
           }),
         });
         const darkwebXssPosts = await darkwebXssRes.json();
-        console.log('darkweb Xss posts: ', darkwebXssPosts);
+        // console.log('darkweb Xss posts: ', darkwebXssPosts);
+
+        if (!darkwebXssPosts || darkwebXssPosts.length === 0) {
+          setLoading(false);
+          return;
+        }
 
         const normalizedXssPosts = normalizePosts(
           darkwebXssPosts,
           'darkwebxss',
         );
-        console.log('normalized Xss: ', normalizedXssPosts);
+        // console.log('normalized Xss: ', normalizedXssPosts);
 
         const classifiedXssPosts = await classifyPosts(normalizedXssPosts);
-        console.log('classifiedXssPosts', classifiedXssPosts);
+        // console.log('classifiedXssPosts', classifiedXssPosts);
         dispatch(setDarkWebXSSMentions(classifiedXssPosts));
 
         setPosts((prevPosts) => [
@@ -65,13 +71,15 @@ const DarkwebXSSPosts = ({ keyword, domain }) => {
     }
   }, [keyword]);
 
-  if (posts.length === 0 || loading) {
+  if(loading) return <SectionLoader sectionTitle={'Darkweb XSS Posts Mentions'} />
+  
+  if (!posts || posts.length === 0) {
     return null;
   }
 
   return (
     <div>
-      <SectionTitle>Dark Web Stealer Mentions</SectionTitle>
+      <SectionTitle>Darkweb XSS Posts Mentions</SectionTitle>
       {posts.map((post, index) => (
         <DarkWebAndSocialMediaMentionsCard key={index} {...post} />
       ))}

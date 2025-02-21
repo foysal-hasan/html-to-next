@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsCard';
 import SectionTitle from '../SectionTitle';
 import { setDarkWebStealerMentions } from '@/lib/features/posts/postsSlices';
+import SectionLoader from '@/components/SectionLoader';
 
 const DarkwebStealerMentions = ({ keyword, domain }) => {
   const [posts, setPosts] = useState([]);
@@ -26,20 +27,25 @@ const DarkwebStealerMentions = ({ keyword, domain }) => {
           body: JSON.stringify({
             input: {
               keyword: keyword,
-              from_date: '01/01/2025',
-              to_date: '01/15/2025',
+              from_date: '01/01/2000',
+              to_date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }),
             },
             url: 'http://172.86.116.124:5003/search',
           }),
         });
         const darkwebStealerPosts = await darkwebStealerRes.json();
-        console.log('darkweb Stealer posts: ', darkwebStealerPosts);
+        // console.log('darkweb Stealer posts: ', darkwebStealerPosts);
+
+        if (!darkwebStealerPosts || darkwebStealerPosts.length === 0) {
+          setLoading(false);
+          return;
+        }
 
         const normalizedPosts = normalizePosts(darkwebStealerPosts, 'darkweb');
-        console.log('normalized: ', normalizedPosts);
+        // console.log('normalized: ', normalizedPosts);
 
         const classifiedPosts = await classifyPosts(normalizedPosts);
-        console.log('classifiedPosts', classifiedPosts);
+        // console.log('classifiedPosts', classifiedPosts);
         dispatch(setDarkWebStealerMentions(classifiedPosts))
 
 
@@ -57,11 +63,12 @@ const DarkwebStealerMentions = ({ keyword, domain }) => {
       fetchDarkWebStealerPosts();
     }
   }, [keyword]);
-
-if (posts.length === 0 || loading) {
+  
+  if(loading) return <SectionLoader sectionTitle={'Dark Web Stealer Mentions'} />
+  if (!posts || posts.length === 0) {
     return null;
   }
-
+  
   return (
     <div>
       <SectionTitle>Dark Web Stealer Mentions</SectionTitle>

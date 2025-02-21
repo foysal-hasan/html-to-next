@@ -1,30 +1,28 @@
 'use client';
-import {
-  resetRiskAnalysis,
-  setNormalizedPosts,
-  setRisksForPosts,
-} from '@/lib/features/posts/postsSlices';
 import { setSearchQuery } from '@/lib/features/search/searchSlices';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
-import { useEffect, useState } from 'react';
-import DarkWebAndSocialMediaMentionsCard from './DarkWebAndSocialMediaMentionsCard';
-import ExportRiskPDF from './download';
-import SectionTitle from './SectionTitle';
-import ViewMoreButton from './ViewMoreButton';
-import InstagramMentions from './darkWebAndSocialMediaMentions/Instagram';
-import FacebookMentions from './darkWebAndSocialMediaMentions/FacebookMentions';
-import TwitterMentions from './darkWebAndSocialMediaMentions/TwitterMentions';
-import TelegramMentions from './darkWebAndSocialMediaMentions/Telegram';
+import { useEffect } from 'react';
 import DarkwebFacebookPosts from './darkWebAndSocialMediaMentions/DarkwebFacebookPosts';
 import DarkwebStealerMentions from './darkWebAndSocialMediaMentions/DarkwebStealerMentions';
 import DarkwebXSSPosts from './darkWebAndSocialMediaMentions/DarkwebXss';
+import FacebookMentions from './darkWebAndSocialMediaMentions/FacebookMentions';
+import InstagramMentions from './darkWebAndSocialMediaMentions/Instagram';
+import TelegramMentions from './darkWebAndSocialMediaMentions/Telegram';
+import TwitterMentions from './darkWebAndSocialMediaMentions/TwitterMentions';
+import ExportRiskPDF from './download';
+import SectionTitle from './SectionTitle';
+import ViewMoreButton from './ViewMoreButton';
+import { reset, resetRiskAnalysis } from '@/lib/features/posts/postsSlices';
 
 const DarkWebAndSocialMediaMentions = ({ domain }) => {
   const dispatch = useAppDispatch();
+  const searchQuery = useAppSelector((state) => state.search.searchQuery);
 
   useEffect(() => {
-    dispatch(setSearchQuery(domain))
-    dispatch(resetRiskAnalysis());
+    if (searchQuery !== domain) {
+      dispatch(reset());
+      dispatch(setSearchQuery(domain));
+    }
   }, [domain]);
 
   const keyword = domain.split('.')[0];
@@ -33,12 +31,12 @@ const DarkWebAndSocialMediaMentions = ({ domain }) => {
       <SectionTitle>Dark Web and Social Media Mentions</SectionTitle>
 
       <div className="max-w-4xl flex flex-col gap-10">
-        <InstagramMentions keyword={keyword}  domain={domain} />
-        <FacebookMentions keyword={keyword}  domain={domain} />
-        <TwitterMentions keyword={keyword}  domain={domain} />
-        <TelegramMentions keyword={keyword} domain={domain}  />
-        <DarkwebFacebookPosts keyword={keyword}  domain={domain} />
-        <DarkwebStealerMentions keyword={keyword}  domain={domain} />
+        <InstagramMentions keyword={keyword} domain={domain} />
+         <FacebookMentions keyword={keyword} domain={domain} />
+        <TwitterMentions keyword={keyword} domain={domain} />
+        <TelegramMentions keyword={keyword} domain={domain} />
+        <DarkwebFacebookPosts keyword={keyword} domain={domain} />
+        <DarkwebStealerMentions keyword={keyword} domain={domain} />
         <DarkwebXSSPosts keyword={keyword} domain={domain} />
       </div>
       <div className="flex gap-5 items-center justify-center mt-5">

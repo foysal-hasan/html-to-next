@@ -1,11 +1,12 @@
 'use client'
+import SectionLoader from '@/components/SectionLoader';
 import { classifyPosts } from '@/lib/api/classify';
+import { setFacebookMentions } from '@/lib/features/posts/postsSlices';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import normalizePosts from '@/utils/normalizePosts';
 import { useEffect, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsCard';
 import SectionTitle from '../SectionTitle';
-import { setFacebookMentions } from '@/lib/features/posts/postsSlices';
 
 
 const FacebookMentions = ({ keyword, domain }) => {
@@ -43,14 +44,18 @@ const FacebookMentions = ({ keyword, domain }) => {
         });
 
         const facebookPosts = await facebookRes.json();
-        console.log('facebook posts: ', facebookPosts);
+        // console.log('facebook posts: ', facebookPosts);
+        if (!facebookPosts || facebookPosts.length === 0) {
+          setLoading(false);
+          return;
+        }
 
         const normalizedPosts = normalizePosts(facebookPosts, 'facebook');
-        console.log('normalized: ', normalizedPosts);
+        // console.log('normalized: ', normalizedPosts);
         
         const classifiedPosts = await classifyPosts(normalizedPosts);
 
-        console.log('classifiedPosts', classifiedPosts);
+        // console.log('classifiedPosts', classifiedPosts);
          dispatch(setFacebookMentions(classifiedPosts))
          
         setPosts(classifiedPosts.slice(0, 3)); // Show only 2-3 posts
@@ -69,10 +74,13 @@ const FacebookMentions = ({ keyword, domain }) => {
     
   }, [keyword, domain]);
 
-  if (posts.length === 0 || loading) {
+  
+  if(loading) return <SectionLoader sectionTitle={'Facebook Mentions'} />
+  
+  if (!posts || posts.length === 0) {
     return null;
   }
-
+  
   return (
     <div>
       <SectionTitle>Facebook Mentions</SectionTitle>

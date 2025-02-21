@@ -2,6 +2,7 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { Inter, Noto_Sans, Work_Sans } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
+import { ReactQueryClientProvider } from "./ReactQuery";
 import StoreProvider from "./StoreProvider";
 
 // Load fonts with desired weights
@@ -41,6 +42,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
+    <ReactQueryClientProvider>
     <html lang="en">
       <body
         className={`${inter.className} ${notoSans.className} ${workSans.className} ${geistSans.variable} ${geistMono.variable} antialiased`}
@@ -50,5 +52,6 @@ export default function RootLayout({ children }) {
         </StoreProvider>
       </body>
     </html>
+    </ReactQueryClientProvider>
   );
 }

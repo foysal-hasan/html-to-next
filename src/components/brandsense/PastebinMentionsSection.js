@@ -1,6 +1,8 @@
 'use client';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
 import CodeMentionCard from './CodeMentionCard';
 import CustomButton from './CustomButton';
 import SectionTitle from './SectionTitle';
@@ -9,11 +11,12 @@ const PastebinMentionsSection = ({ domain }) => {
   const [apiResults, setApiResults] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     const fetchApiResults = async () => {
       const url =
-        `https://google-search72.p.rapidapi.com/search?q=site:pastebin.com ${domain}&lr=en-US&num=5`;
+        `https://google-search72.p.rapidapi.com/search?q=site:pastebin.com ${domain}&lr=en-US&num=20`;
 
       const headers = {
         'x-rapidapi-key': 'Izk7uHBUVcmshQqKrqmko9WywG6Fp12gmsajsnDzGBPAODILlb',
@@ -36,7 +39,44 @@ const PastebinMentionsSection = ({ domain }) => {
     };
 
     fetchApiResults();
-  }, []);
+  }, [domain]);
+
+  const handleDownload = () => {
+    const docDefinition = {
+      content: [
+        { text: 'Pastebin and Code Mentions', style: 'title', margin: [0, 0, 0, 20] },
+        ...apiResults.map((item, index) => ({
+          stack: [
+            { text: `Title: ${item.title}`, style: 'header' },
+            { text: `Link: ${item.link}`, style: 'subheader' },
+            { text: `Display Link: ${item.displayLink}`, style: 'subheader' },
+            { text: `Snippet: ${item.snippet}`, style: 'subheader' },
+          ],
+          margin: [0, 10, 0, 0]
+        }))
+      ],
+      styles: {
+        title: {
+          fontSize: 22,
+          bold: true,
+          alignment: 'center'
+        },
+        header: {
+          fontSize: 18,
+          bold: true
+        },
+        subheader: {
+          fontSize: 14,
+          margin: [0, 5, 0, 5]
+        }
+      }
+    };
+    pdfMake.createPdf(docDefinition).download('pastebin-mentions.pdf');
+  };
+
+  const handleToggleShowAll = () => {
+    setShowAll(!showAll);
+  };
 
   return (
     <div className="border-[#3b4854] border-b-2 pb-8">
@@ -69,15 +109,13 @@ const PastebinMentionsSection = ({ domain }) => {
       ) : (
         <>
           <div className="flex flex-col gap-10">
-            {apiResults?.map((item, index) => (
+            {apiResults?.slice(0, showAll ? apiResults.length : 5).map((item, index) => (
               <CodeMentionCard key={index} item={item} />
             ))}
           </div>
           <div className="flex gap-5 items-center justify-center mt-5">
-            <Link href="/blogr">
-              <CustomButton text="View More" />
-            </Link>
-            <CustomButton text="Download" />
+            <CustomButton text={showAll ? "Show Less" : "View More"} onClick={handleToggleShowAll} />
+            <CustomButton text="Download" onClick={handleDownload} />
           </div>
         </>
       )}

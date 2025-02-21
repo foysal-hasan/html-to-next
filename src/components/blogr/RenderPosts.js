@@ -25,6 +25,7 @@ import {
   telegram,
   twitter,
 } from './enum';
+import SectionLoader from '../SectionLoader';
 
 const FacebookPostPreview = ({ post }) => {
   return (
@@ -133,7 +134,7 @@ const TelegramPostPreview = ({ post }) => {
 };
 
 export default function RenderPosts({ domain, source }) {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useState([]);
   const [selectedPost, setSelectedPost] = useState(null);
   const [visiblePosts, setVisiblePosts] = useState(5);
@@ -144,6 +145,7 @@ export default function RenderPosts({ domain, source }) {
   // console.log('search: ', searchQuery);
   // console.log('domain: ', domain);
   // console.log('search === domain', searchQuery === domain);
+console.log("dark web fecbook", storePosts?.darkWebFacebookMentions);
 
   const keyword = domain.split('.')[0];
 
@@ -158,28 +160,8 @@ export default function RenderPosts({ domain, source }) {
     setPosts([]);
     const fetchPosts = async () => {
       try {
-        // telegram start
-        if (source === telegram) {
-          const res = await fetch('/api/telegramPosts', {
-            method: 'POST',
-            body: JSON.stringify({
-              keyword,
-            }),
-          });
-          const rawPosts = await res.json();
-          console.log('telegram posts', rawPosts);
-
-          const normalizedPosts = normalizePosts(rawPosts, 'telegram');
-          console.log('normalized: ', normalizedPosts);
-
-          const classifiedPosts = await classifyPosts(normalizedPosts);
-
-          console.log('classifiedPosts', classifiedPosts);
-          dispatch(setTelegramMentions(classifiedPosts));
-          setPosts(classifiedPosts);
-          setSelectedPost(classifiedPosts[0]);
-        }
-        // telegram end
+        setLoading(true);
+        
 
         // instagram start
         if (source === instagram) {
@@ -194,12 +176,19 @@ export default function RenderPosts({ domain, source }) {
           const rawPosts = await res.json();
           console.log('raw posts: ', rawPosts);
 
+          if (!rawPosts || rawPosts.length === 0) {
+            setLoading(false);
+            return;
+          }
+
+          
           const normalizedPosts = normalizePosts(
             rawPosts[0]?.topPosts || [],
             'instagram',
           );
           console.log('normalized: ', normalizedPosts);
 
+          
           const classifiedPosts = await classifyPosts(normalizedPosts);
 
           console.log('classifiedPosts', classifiedPosts);
@@ -230,14 +219,19 @@ export default function RenderPosts({ domain, source }) {
           });
 
           const facebookPosts = await facebookRes.json();
-          console.log('facebook posts: ', facebookPosts);
+          // console.log('facebook posts: ', facebookPosts);
+
+          if (!facebookPosts || facebookPosts.length === 0) {
+            setLoading(false);
+            return;
+          }
 
           const normalizedPosts = normalizePosts(facebookPosts, 'facebook');
-          console.log('normalized: ', normalizedPosts);
+          // console.log('normalized: ', normalizedPosts);
 
           const classifiedPosts = await classifyPosts(normalizedPosts);
 
-          console.log('classifiedPosts', classifiedPosts);
+          // console.log('classifiedPosts', classifiedPosts);
           dispatch(setFacebookMentions(classifiedPosts));
 
           setPosts(classifiedPosts);
@@ -262,20 +256,51 @@ export default function RenderPosts({ domain, source }) {
             }),
           });
           const twitterPosts = await twitterRes.json();
-          console.log('twitter posts: ', twitterPosts);
+          // console.log('twitter posts: ', twitterPosts);
+          if (!twitterPosts || twitterPosts.length === 0) {
+            setLoading(false);
+            return;
+          }
 
           const normalizedPosts = normalizePosts(twitterPosts, 'twitter');
-          console.log('normalized: ', normalizedPosts);
+          // console.log('normalized: ', normalizedPosts);
 
           const classifiedPosts = await classifyPosts(normalizedPosts);
 
-          console.log('classifiedPosts', classifiedPosts);
+          // console.log('classifiedPosts', classifiedPosts);
           dispatch(setTwitterMentions(classifiedPosts));
 
           setPosts(classifiedPosts);
           setSelectedPost(classifiedPosts[0]);
         }
         // twitter end
+
+        // telegram start
+        if (source === telegram) {
+          const res = await fetch('/api/telegramPosts', {
+            method: 'POST',
+            body: JSON.stringify({
+              keyword,
+            }),
+          });
+          const rawPosts = await res.json();
+          // console.log('telegram posts', rawPosts);
+          if (!rawPosts || rawPosts.length === 0) {
+            setLoading(false);
+            return;
+          }
+
+          const normalizedPosts = normalizePosts(rawPosts, 'telegram');
+          // console.log('normalized: ', normalizedPosts);
+
+          const classifiedPosts = await classifyPosts(normalizedPosts);
+
+          // console.log('classifiedPosts', classifiedPosts);
+          dispatch(setTelegramMentions(classifiedPosts));
+          setPosts(classifiedPosts);
+          setSelectedPost(classifiedPosts[0]);
+        }
+        // telegram end
 
         // darkwebFacebook start
         if (source === darkwebFacebook) {
@@ -285,20 +310,29 @@ export default function RenderPosts({ domain, source }) {
               input: {
                 keyword: keyword,
                 amount: 20,
-                from_date: '01/01/2025',
-                to_date: '01/15/2025',
+                from_date: '01/01/2000',
+                to_date: new Date().toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                }),
               },
               url: 'http://172.86.116.124:5002/scrape',
             }),
           });
           const darkwebFacebookPosts = await darkwebFacebookRes.json();
-          console.log('darkweb Facebook posts: ', darkwebFacebookPosts);
+          // console.log('darkweb Facebook posts: ', darkwebFacebookPosts);
+
+          if (!darkwebFacebookPosts || darkwebFacebookPosts.length === 0) {
+            setLoading(false);
+            return;
+          }
 
           const normalizedPosts = normalizePosts(
             darkwebFacebookPosts,
             'darkwebfacebook',
           );
-          console.log('normalized: ', normalizedPosts);
+          // console.log('normalized: ', normalizedPosts);
 
           const classifiedPosts = await classifyPosts(normalizedPosts);
           console.log('classifiedPosts', classifiedPosts);
@@ -323,16 +357,21 @@ export default function RenderPosts({ domain, source }) {
             }),
           });
           const darkwebXssPosts = await darkwebXssRes.json();
-          console.log('darkweb Xss posts: ', darkwebXssPosts);
+          // console.log('darkweb Xss posts: ', darkwebXssPosts);
+
+          if (!darkwebXssPosts || darkwebXssPosts.length === 0) {
+            setLoading(false);
+            return;
+          }
 
           const normalizedXssPosts = normalizePosts(
             darkwebXssPosts,
             'darkwebxss',
           );
-          console.log('normalized Xss: ', normalizedXssPosts);
+          // console.log('normalized Xss: ', normalizedXssPosts);
 
           const classifiedXssPosts = await classifyPosts(normalizedXssPosts);
-          console.log('classifiedXssPosts', classifiedXssPosts);
+          // console.log('classifiedXssPosts', classifiedXssPosts);
           dispatch(setDarkWebXSSMentions(classifiedXssPosts));
 
           setPosts(classifiedXssPosts);
@@ -354,16 +393,21 @@ export default function RenderPosts({ domain, source }) {
             }),
           });
           const darkwebStealerPosts = await darkwebStealerRes.json();
-          console.log('darkweb Stealer posts: ', darkwebStealerPosts);
+          // console.log('darkweb Stealer posts: ', darkwebStealerPosts);
+
+          if (!darkwebStealerPosts || darkwebStealerPosts.length === 0) {
+            setLoading(false);
+            return;
+          }
 
           const normalizedPosts = normalizePosts(
             darkwebStealerPosts,
             'darkweb',
           );
-          console.log('normalized: ', normalizedPosts);
+          // console.log('normalized: ', normalizedPosts);
 
           const classifiedPosts = await classifyPosts(normalizedPosts);
-          console.log('classifiedPosts', classifiedPosts);
+          // console.log('classifiedPosts', classifiedPosts);
           dispatch(setDarkWebStealerMentions(classifiedPosts));
 
           setPosts(classifiedPosts);
@@ -381,45 +425,47 @@ export default function RenderPosts({ domain, source }) {
     if (searchQuery === domain) {
       switch (source) {
         case telegram:
-          setPosts(storePosts.telegramMentions);
           if (storePosts.telegramMentions?.length > 0) {
+            setPosts(storePosts.telegramMentions);
             setSelectedPost(storePosts.telegramMentions[0]);
           }
           break;
         case twitter:
-          setPosts(storePosts.twitterMentions);
           if (storePosts.twitterMentions?.length > 0) {
+            setPosts(storePosts.twitterMentions);
             setSelectedPost(storePosts.twitterMentions[0]);
           }
           break;
         case facebook:
-          setPosts(storePosts.facebookMentions);
           if (storePosts.facebookMentions?.length > 0) {
+            setPosts(storePosts.facebookMentions);
             setSelectedPost(storePosts.facebookMentions[0]);
           }
           break;
         case instagram:
-          setPosts(storePosts.instagramMentions);
           if (storePosts.instagramMentions?.length > 0) {
+            setPosts(storePosts.instagramMentions);
             setSelectedPost(storePosts.instagramMentions[0]);
           }
           break;
         case darkwebFacebook:
-          setPosts(storePosts.darkwebFacebookMentions);
-          if (storePosts.darkwebFacebookMentions?.length > 0) {
-            setSelectedPost(storePosts.darkwebFacebookMentions[0]);
+          if (storePosts.darkWebFacebookMentions?.length > 0) {
+            console.log(storePosts.darkWebFacebookMentions);
+            
+            setPosts(storePosts.darkWebFacebookMentions);
+            setSelectedPost(storePosts.darkWebFacebookMentions[0]);
           }
           break;
         case darkwebStealer:
-          setPosts(storePosts.darkwebStealerMentions);
-          if (storePosts.darkwebStealerMentions?.length > 0) {
-            setSelectedPost(storePosts.darkwebStealerMentions[0]);
+          if (storePosts.darkWebStealerMentions?.length > 0) {
+            setPosts(storePosts.darkWebStealerMentions);
+            setSelectedPost(storePosts.darkWebStealerMentions[0]);
           }
           break;
         case darkwebXss:
-          setPosts(storePosts.darkwebXSSMentions);
-          if (storePosts.darkwebXSSMentions?.length > 0) {
-            setSelectedPost(storePosts.darkwebXSSMentions[0]);
+          if (storePosts.darkWebXSSMentions?.length > 0) {
+            setPosts(storePosts.darkWebXSSMentions);
+            setSelectedPost(storePosts.darkWebXSSMentions[0]);
           }
           break;
         default:
@@ -479,27 +525,14 @@ export default function RenderPosts({ domain, source }) {
   }
 
   console.log('Section Title: ', sectionTitle);
-
+  console.log('loading = ', loading)
+  
   const filteredPosts = posts ? filterPosts(posts, filters) : [];
-  if (source == telegram && loading) {
-    return (
-      <div className="gap-1 px-6 flex flex-1 justify-center items-start py-5 min-h-screen">
-        <div className="flex flex-col gap-10 w-[80%]">
-          <div className="flex flex-col gap-4 mb-4 justify-end flex-1 items-center">
-            {/* <h1 className="text-white mr-auto text-3xl  ml-3">{sectionTitle}</h1> */}
-            <div className="flex items-center justify-center h-96">
-              <div className="flex flex-col items-center gap-2">
-                <div className="w-8 h-8 border-4 border-gray-300 border-t-white rounded-full animate-spin"></div>
-                <span className="text-white">Loading...</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (posts?.length <= 0) return null;
+  console.log(posts);
+  
+  if (loading) return <SectionLoader sectionTitle={sectionTitle} />
+  
+  if (!posts || posts?.length <= 0) return null;
 
   const handleScroll = (e) => {
     const bottom =
@@ -510,7 +543,7 @@ export default function RenderPosts({ domain, source }) {
   };
 
   return (
-    <div className="gap-1 px-6 flex flex-1 justify-center items-start py-5 min-h-screen">
+    <div className="gap-1 px-6 flex flex-1 justify-center items-start py-10">
       <div className="flex flex-col gap-10 w-[80%]">
         <div className="flex gap-4 mb-4 justify-end flex-1 items-center">
           <h1 className="text-white mr-auto text-3xl  ml-3">{sectionTitle}</h1>
