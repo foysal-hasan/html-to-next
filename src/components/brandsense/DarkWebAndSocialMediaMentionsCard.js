@@ -11,9 +11,9 @@ const getRiskClass = (risk) => {
   }
 };
 
-const DarkWebAndSocialMediaMentionsCard = ({ link, date, content, risk }) => {
+const DarkWebAndSocialMediaMentionsCard = ({ link, date, content, risk, selectedPost, id, page }) => {
   return (
-    <div className="flex gap-4 bg-[#111518] px-4 py-3 justify-between">
+    <div className={`flex gap-4  px-4 py-3 justify-between rounded-md mr-3 ${page == 'blogr'? selectedPost == id? "bg-gray-700": 'bg-gray-800': ''}`}>
       <div className="flex flex-1 flex-col justify-center gap-2">
         <p className="text-white text-base font-medium leading-normal break-all">{link}</p>
         <p className="text-[#9dabb9] text-sm font-normal leading-normal">

@@ -1,61 +1,99 @@
 'use client';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import CustomButton from './CustomButton';
 import DomainImpersonationCard from './DomainImpersonationCard';
 import SectionTitle from './SectionTitle';
+import pdfMake from 'pdfmake/build/pdfmake';
+
+const fetchDomains = (domain) => {
+  return async () => {
+    const url = 'https://brand-alert.whoisxmlapi.com/api/v2';
+    const body = {
+      apiKey: 'at_TEVWuqpjWNtLnF52zzZ354HHIp3PH',
+      sinceDate: '2025-02-02',
+      mode: 'purchase',
+      withTypos: false,
+      responseFormat: 'json',
+      punycode: true,
+      includeSearchTerms: [domain?.split('.')[0]],
+      excludeSearchTerms: [],
+    };
+  
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    };
+  
+  
+      const response = await fetch(url, options);
+      const result = await response.json();
+     return result?.domainsList
+  
+  };
+}
+
+
 
 const Top = ({ domain }) => {
-  const [domains, setDomains] = useState([]);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [loading, setLoading] = useState(true);
+  // const [domains, setDomains] = useState([]);
+  // const [errorMessage, setErrorMessage] = useState('');
+  const {data: domains, isLoading: loading, error, isError } = useQuery({
+    queryKey: ['domainImpersonation-top', domain],
+    queryFn: fetchDomains(domain)
+  })
 
   console.log(domain);
 
-  useEffect(() => {
-    const fetchDomains = async () => {
-      const url = 'https://brand-alert.whoisxmlapi.com/api/v2';
-      const body = {
-        apiKey: 'at_TEVWuqpjWNtLnF52zzZ354HHIp3PH',
-        sinceDate: '2025-02-02',
-        mode: 'purchase',
-        withTypos: false,
-        responseFormat: 'json',
-        punycode: true,
-        includeSearchTerms: [domain?.split('.')[0]],
-        excludeSearchTerms: [],
-      };
+  // useEffect(() => {
+  //   const fetchDomains = async () => {
+  //     const url = 'https://brand-alert.whoisxmlapi.com/api/v2';
+  //     const body = {
+  //       apiKey: 'at_TEVWuqpjWNtLnF52zzZ354HHIp3PH',
+  //       sinceDate: '2025-02-02',
+  //       mode: 'purchase',
+  //       withTypos: false,
+  //       responseFormat: 'json',
+  //       punycode: true,
+  //       includeSearchTerms: [domain?.split('.')[0]],
+  //       excludeSearchTerms: [],
+  //     };
 
-      const options = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-      };
+  //     const options = {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(body),
+  //     };
 
-      try {
-        const response = await fetch(url, options);
-        const result = await response.json();
-        console.log('result from domain Impersonation', result);
+  //     try {
+  //       const response = await fetch(url, options);
+  //       const result = await response.json();
+  //       console.log('result from domain Impersonation', result);
 
-        if (result.errorMessage) {
-          setErrorMessage(result.errorMessage);
-        } else {
-          setDomains(result?.domainsList?.slice(0, 5));
-        }
-      } catch (error) {
-        console.log(error);
+  //       if (result.errorMessage) {
+  //         setErrorMessage(result.errorMessage);
+  //       } else {
+  //         setDomains(result?.domainsList?.slice(0, 5));
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
 
-        console.error(error);
-        setErrorMessage('An error occurred while fetching the domains.');
-      } finally {
-        setLoading(false);
-      }
-    };
+  //       console.error(error);
+  //       setErrorMessage('An error occurred while fetching the domains.');
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchDomains();
-  }, [domain]);
+  //   fetchDomains();
+  // }, [domain]);
+
+  if (!domains || domains?.length == 0) return null;
 
   if (loading) {
     return (
@@ -84,7 +122,7 @@ const Top = ({ domain }) => {
     );
   }
 
-  if (errorMessage) {
+  if (error) {
     return <p className="text-red-500 text-center">You might have no credit</p>;
   }
   return (
@@ -538,22 +576,92 @@ const Bottom = ({ domain }) => {
 const DomainImpersonation = ({ domain }) => {
   console.log(domain);
 
-  // const TopComponent = Top(domain);
-  // const BottomComponent = Bottom(domain);
+  const { data: domains, isLoading: loading, error, isError } = useQuery({
+    queryKey: ['domainImpersonation-top', domain],
+    queryFn: fetchDomains(domain),
+  });
 
-  // if (!TopComponent || !BottomComponent) {
-  //   return null;
-  // }
+  const [showAll, setShowAll] = useState(false);
+
+  if (!domains || domains?.length == 0) return null;
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center">
+        <svg
+          className="animate-spin h-20 w-20 text-white"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+          ></circle>
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8v8H4z"
+          ></path>
+        </svg>
+      </div>
+    );
+  }
+
+  if (error) {
+    return <p className="text-red-500 text-center">You might have no credit</p>;
+  }
+
+  const displayedDomains = showAll ? domains : domains.slice(0, 5);
+  const handleDownload = () => {
+    const docDefinition = {
+      content: [
+        { text: 'Domain Impersonation', style: 'header', margin: [0, 0, 0, 10] },
+        ...domains.map((item, index) => ({
+          stack: [
+            { text: `Domain Name: ${item?.domainName}`, style: 'subheader' },
+            { text: `Date: ${item?.date}`, style: 'subheader' },
+            { text: `Action: ${item?.action}`, style: 'subheader' },
+            { text: '----------------------------------------', margin: [0, 10, 0, 0] },
+          ],
+          margin: [0, 10, 0, 0],
+        })),
+      ],
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+        },
+        subheader: {
+          fontSize: 14,
+          margin: [0, 5, 0, 5],
+        },
+      },
+    };
+    pdfMake.createPdf(docDefinition).download('domain-impersonation.pdf');
+  };
   return (
     <div className="border-[#3b4854] border-b-2 pb-8">
       <SectionTitle>Domain Impersonation</SectionTitle>
-      {/* {TopComponent}
-      {BottomComponent} */}
-      <Top domain={domain} />
+      {displayedDomains?.map((item, index) => (
+        <DomainImpersonationCard
+          key={index}
+          name={item?.domainName}
+          date={item?.date}
+          action={item?.action}
+        />
+      ))}
       <div className="flex gap-5 items-center justify-center mt-5">
         <div className="flex gap-2">
-          <CustomButton text="View More" />
-          <CustomButton text="Download" />
+          <CustomButton
+            text={showAll ? "Show Less" : "View More"}
+            onClick={() => setShowAll(!showAll)}
+          />
+          <CustomButton text="Download" onClick={handleDownload} />
         </div>
       </div>
     </div>

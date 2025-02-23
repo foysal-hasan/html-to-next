@@ -60,6 +60,8 @@ const SensitiveInformation = ({ domain }) => {
   //   fetchApiResults();
   // }, [domain]);
 
+  if (!apiResults || apiResults?.length == 0) return null;
+  
   const handleDownload = () => {
     const docDefinition = {
       content: [

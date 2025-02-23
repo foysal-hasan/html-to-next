@@ -7,6 +7,7 @@ import {
   setDarkWebXSSMentions,
   setFacebookMentions,
   setInstagramMentions,
+  setPostsMentions,
   setTelegramMentions,
   setTwitterMentions,
 } from '@/lib/features/posts/postsSlices';
@@ -16,16 +17,17 @@ import filterPosts from '@/utils/filterPosts';
 import normalizePosts from '@/utils/normalizePosts';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import SectionLoader from '../SectionLoader';
 import {
   darkwebFacebook,
   darkwebStealer,
   darkwebXss,
   facebook,
   instagram,
+  postsMentions,
   telegram,
   twitter,
 } from './enum';
-import SectionLoader from '../SectionLoader';
 
 const FacebookPostPreview = ({ post }) => {
   return (
@@ -133,6 +135,48 @@ const TelegramPostPreview = ({ post }) => {
   );
 };
 
+
+const PostsMentionPreview = ({ post }) => {
+  return (
+    <div
+      className="p-4 rounded text-white break-all"
+      style={{ height: 'auto' }}
+    >
+      <h2 className="text-xl font-bold mb-2">Post Preview</h2>
+      {post?.images && (
+        <div className="my-4 grid grid-cols-1 gap-2">
+          {post.images.map((image, index) => (
+            <img
+              key={index}
+              src={image?.thumb}
+              alt={`Post Image ${index + 1}`}
+              className="my-2"
+            />
+          ))}
+        </div>
+      )}
+      <p>
+        <strong>Date:</strong> {post?.date}
+      </p>
+      <p>
+        <strong>Content:</strong> {post?.content}
+      </p>
+      <p>
+        <strong>Risk:</strong> {post?.risk}
+      </p>
+
+      <Link
+        href={post?.link || ''}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-blue-500"
+      >
+        View Post
+      </Link>
+    </div>
+  );
+};
+
 export default function RenderPosts({ domain, source }) {
   const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useState([]);
@@ -145,7 +189,7 @@ export default function RenderPosts({ domain, source }) {
   // console.log('search: ', searchQuery);
   // console.log('domain: ', domain);
   // console.log('search === domain', searchQuery === domain);
-console.log("dark web fecbook", storePosts?.darkWebFacebookMentions);
+  console.log('dark web fecbook', storePosts?.darkWebFacebookMentions);
 
   const keyword = domain.split('.')[0];
 
@@ -161,7 +205,6 @@ console.log("dark web fecbook", storePosts?.darkWebFacebookMentions);
     const fetchPosts = async () => {
       try {
         setLoading(true);
-        
 
         // instagram start
         if (source === instagram) {
@@ -181,14 +224,12 @@ console.log("dark web fecbook", storePosts?.darkWebFacebookMentions);
             return;
           }
 
-          
           const normalizedPosts = normalizePosts(
             rawPosts[0]?.topPosts || [],
             'instagram',
           );
           console.log('normalized: ', normalizedPosts);
 
-          
           const classifiedPosts = await classifyPosts(normalizedPosts);
 
           console.log('classifiedPosts', classifiedPosts);
@@ -301,6 +342,43 @@ console.log("dark web fecbook", storePosts?.darkWebFacebookMentions);
           setSelectedPost(classifiedPosts[0]);
         }
         // telegram end
+
+        // Posts start
+        if (source === postsMentions) {
+          const postsRes = await fetch('/api/fetchApifyPosts', {
+            method: 'POST',
+            body: JSON.stringify({
+              input: {
+                queries: [keyword],
+                limit: 20,
+                sort: 'latest',
+                proxyConfiguration: {
+                  useApifyProxy: true,
+                  apifyProxyGroups: [],
+                },
+              },
+              url: 'U9JtSIIjR6gyldBIN',
+            }),
+          });
+          const postsResponse = await postsRes.json();
+          // console.log('twitter posts: ', twitterPosts);
+          if (!postsResponse || postsResponse.length === 0) {
+            setLoading(false);
+            return;
+          }
+
+          const normalizedPosts = normalizePosts(postsResponse, 'posts');
+          // console.log('normalized: ', normalizedPosts);
+
+          const classifiedPosts = await classifyPosts(normalizedPosts);
+
+          // console.log('classifiedPosts', classifiedPosts);
+          dispatch(setPostsMentions(classifiedPosts));
+
+          setPosts(classifiedPosts);
+          setSelectedPost(classifiedPosts[0]);
+        }
+        // posts end
 
         // darkwebFacebook start
         if (source === darkwebFacebook) {
@@ -436,6 +514,12 @@ console.log("dark web fecbook", storePosts?.darkWebFacebookMentions);
             setSelectedPost(storePosts.twitterMentions[0]);
           }
           break;
+        case postsMentions:
+          if (storePosts.postsMentions?.length > 0) {
+            setPosts(storePosts.postsMentions);
+            setSelectedPost(storePosts.postsMentions[0]);
+          }
+          break;
         case facebook:
           if (storePosts.facebookMentions?.length > 0) {
             setPosts(storePosts.facebookMentions);
@@ -451,7 +535,7 @@ console.log("dark web fecbook", storePosts?.darkWebFacebookMentions);
         case darkwebFacebook:
           if (storePosts.darkWebFacebookMentions?.length > 0) {
             console.log(storePosts.darkWebFacebookMentions);
-            
+
             setPosts(storePosts.darkWebFacebookMentions);
             setSelectedPost(storePosts.darkWebFacebookMentions[0]);
           }
@@ -520,18 +604,21 @@ console.log("dark web fecbook", storePosts?.darkWebFacebookMentions);
     case darkwebXss:
       sectionTitle = 'Darkweb XSS';
       break;
+    case postsMentions:
+      sectionTitle = 'Posts Mentions';
+      break;
     default:
       sectionTitle = 'Posts';
   }
 
   console.log('Section Title: ', sectionTitle);
-  console.log('loading = ', loading)
-  
+  console.log('loading = ', loading);
+
   const filteredPosts = posts ? filterPosts(posts, filters) : [];
   console.log(posts);
-  
-  if (loading) return <SectionLoader sectionTitle={sectionTitle} />
-  
+
+  if (loading) return <SectionLoader sectionTitle={sectionTitle} />;
+
   if (!posts || posts?.length <= 0) return null;
 
   const handleScroll = (e) => {
@@ -543,94 +630,114 @@ console.log("dark web fecbook", storePosts?.darkWebFacebookMentions);
   };
 
   return (
-    <div className="gap-1 px-6 flex flex-1 justify-center items-start py-10">
-      <div className="flex flex-col gap-10 w-[80%]">
-        <div className="flex gap-4 mb-4 justify-end flex-1 items-center">
-          <h1 className="text-white mr-auto text-3xl  ml-3">{sectionTitle}</h1>
-          <input
-            type="date"
-            placeholder="Start Date"
-            className="border p-2 rounded"
-            onChange={(e) =>
-              setFilters({ ...filters, startDate: e.target.value })
-            }
-          />
-          <input
-            type="date"
-            placeholder="End Date"
-            className="border p-2 rounded"
-            onChange={(e) =>
-              setFilters({ ...filters, endDate: e.target.value })
-            }
-          />
-          <select
-            className="border p-2 rounded"
-            onChange={(e) =>
-              setFilters({ ...filters, riskLevel: e.target.value })
-            }
-          >
-            <option value="">All Risks</option>
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-          </select>
-        </div>
-        <div className="flex gap-4">
-          <div
-            className="w-1/3 overflow-y-auto overflow-x-hidden custom-scrollbar "
-            style={{ maxHeight: '75vh' }}
-            onScroll={handleScroll}
-          >
-            {filteredPosts?.slice(0, visiblePosts).map((post, index) => (
-              <div
-                key={index}
-                onClick={() => setSelectedPost(post)}
-                className="bg-red-400 cursor-pointer"
+    <main className="w-full min-h-screen bg-gray-900">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-10">
+        <div className="flex flex-col space-y-6">
+          {/* Header and Filters */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-gray-800/50 p-4 rounded-lg">
+            <h1 className="text-white text-2xl sm:text-3xl font-bold">
+              {sectionTitle}
+            </h1>
+            <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+              <input
+                type="date"
+                placeholder="Start Date"
+                className="bg-gray-700 text-white border-gray-600 p-2 rounded-md flex-1 sm:flex-none min-w-[140px] focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
+              />
+              <input
+                type="date"
+                placeholder="End Date"
+                className="bg-gray-700 text-white border-gray-600 p-2 rounded-md flex-1 sm:flex-none min-w-[140px] focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
+              />
+              <select
+                className="bg-gray-700 text-white border-gray-600 p-2 rounded-md flex-1 sm:flex-none min-w-[140px] focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onChange={(e) => setFilters({ ...filters, riskLevel: e.target.value })}
               >
-                <DarkWebAndSocialMediaMentionsCard
-                  url={post.link}
-                  date={post.date}
-                  content={post.content}
-                  risk={post.risk}
-                />
-              </div>
-            ))}
+                <option value="">All Risks</option>
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+            </div>
           </div>
-          <div className="w-2/3">
-            {source == facebook && <FacebookPostPreview post={selectedPost} />}
-            {source == twitter && <TwitterPostPreview post={selectedPost} />}
-            {source == telegram && <TelegramPostPreview post={selectedPost} />}
-            {source !== facebook &&
-              source !== twitter &&
-              source !== telegram &&
-              selectedPost && (
-                <div
-                  className="p-4 rounded text-white break-all"
-                  style={{ height: 'auto' }}
-                >
-                  <h2 className="text-xl font-bold mb-2">Post Preview</h2>
-                  <p>
-                    <strong>Date:</strong> {selectedPost.date}
-                  </p>
-                  <p>
-                    <strong>Content:</strong> {selectedPost.content}
-                  </p>
-                  <p>
-                    <strong>Risk:</strong> {selectedPost.risk}
-                  </p>
-                  <Link
-                    href={selectedPost.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500"
+
+          {/* Content Grid */}
+          <div className="grid lg:grid-cols-3 gap-6">
+            {/* Posts List */}
+            <div
+              className="lg:col-span-1 h-[calc(100vh-12rem)] overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
+              onScroll={handleScroll}
+            >
+              <div className="space-y-4">
+                {filteredPosts?.slice(0, visiblePosts).map((post, index) => (
+                  <div
+                    key={index}
+                    onClick={() => setSelectedPost(post)}
+                    className="cursor-pointer"
                   >
-                    View Post
-                  </Link>
-                </div>
-              )}
+                    <DarkWebAndSocialMediaMentionsCard
+                      url={post.link}
+                      date={post.date}
+                      content={post.content}
+                      risk={post.risk}
+                      id={post.id}
+                      selectedPost={selectedPost?.id}
+                      page={'blogr'}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Preview Panel */}
+            <div className="lg:col-span-2 bg-gray-800 rounded-lg overflow-hidden min-h-[calc(100vh-12rem)]">
+              {source === facebook && <FacebookPostPreview post={selectedPost} />}
+              {source === twitter && <TwitterPostPreview post={selectedPost} />}
+              {source === telegram && <TelegramPostPreview post={selectedPost} />}
+              {source === postsMentions && <PostsMentionPreview post={selectedPost} />}
+              {source !== facebook &&
+                source !== twitter &&
+                source !== telegram &&
+                source !== postsMentions &&
+                selectedPost && (
+                  <div className="p-6 text-white">
+                    <h2 className="text-2xl font-bold mb-6">Post Preview</h2>
+                    <div className="space-y-6">
+                      <div className="bg-gray-700/50 p-4 rounded-lg">
+                        <strong className="block text-gray-300 mb-2">Date</strong>
+                        <p>{selectedPost.date}</p>
+                      </div>
+                      <div className="bg-gray-700/50 p-4 rounded-lg">
+                        <strong className="block text-gray-300 mb-2">Content</strong>
+                        <p className="break-words">{selectedPost.content}</p>
+                      </div>
+                      <div className="bg-gray-700/50 p-4 rounded-lg">
+                        <strong className="block text-gray-300 mb-2">Risk Level</strong>
+                        <p className={`inline-block px-3 py-1 rounded-full ${
+                          selectedPost.risk === 'high' ? 'bg-red-500/20 text-red-300' :
+                          selectedPost.risk === 'medium' ? 'bg-yellow-500/20 text-yellow-300' :
+                          'bg-green-500/20 text-green-300'
+                        }`}>
+                          {selectedPost.risk}
+                        </p>
+                      </div>
+                      <Link
+                        href={selectedPost.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                      >
+                        View Original Post
+                      </Link>
+                    </div>
+                  </div>
+                )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

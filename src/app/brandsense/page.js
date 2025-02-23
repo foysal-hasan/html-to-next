@@ -56,9 +56,9 @@ export default async function Brandsense({ searchParams }) {
         {/* <Home /> */}
         <LeakedCredentials domain={domain} />
         <DarkWebAndSocialMediaMentions domain={domain} />
-        {/* <DomainImpersonation domain={domain} /> */}
-        <PastebinMentionsSection domain={domain} />
-        <SensitiveInformation domain={domain} />
+       <DomainImpersonation domain={domain} /> 
+       <PastebinMentionsSection domain={domain} />
+        <SensitiveInformation domain={domain} /> 
       </div>
     </div>
   );

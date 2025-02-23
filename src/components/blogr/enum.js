@@ -10,4 +10,5 @@ export const telegram = 'telegramPosts'
 export const darkwebFacebook = 'darkwebFacebookPosts'
 export const darkwebXss = 'darkwebXssPosts'
 export const darkwebStealer = 'darkwebStealerPosts'
+export const postsMentions = 'postsMentions'
 

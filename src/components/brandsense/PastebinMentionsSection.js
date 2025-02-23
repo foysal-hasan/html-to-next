@@ -103,6 +103,7 @@ const PastebinMentionsSection = ({ domain }) => {
     setShowAll(!showAll);
   };
 
+  if (!apiResults || apiResults?.length == 0) return null;
 
 
   return (

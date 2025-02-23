@@ -44,6 +44,9 @@ const LeakedCredentials = ({ domain }) => {
   //   fetchData();
   // }, [domain]);
 
+
+  if (!data || data?.length == 0) return null;
+
   const handleDownload = () => {
     const docDefinition = {
       content: [
