@@ -33,7 +33,7 @@ const DarkWebAndSocialMediaMentions = ({ domain, onlyData }) => {
       {!onlyData && <SectionTitle>Dark Web and Social Media Mentions</SectionTitle> }
 
       <div className="max-w-4xl flex flex-col gap-10">
-        {/* <TelegramMentions keyword={keyword} domain={domain} onlyData={onlyData} />
+        <TelegramMentions keyword={keyword} domain={domain} onlyData={onlyData} />
         <InstagramMentions keyword={keyword} domain={domain} onlyData={onlyData} />
          <FacebookMentions keyword={keyword} domain={domain} onlyData={onlyData} />
         <TwitterMentions keyword={keyword} domain={domain} onlyData={onlyData} />
@@ -41,9 +41,9 @@ const DarkWebAndSocialMediaMentions = ({ domain, onlyData }) => {
         
         <DarkwebFacebookPosts keyword={keyword} domain={domain} onlyData={onlyData} />
         <DarkwebStealerMentions keyword={keyword} domain={domain} onlyData={onlyData} />
-        <DarkwebXSSPosts keyword={keyword} domain={domain} onlyData={onlyData} /> */}
-        {/* <SearchExploit keyword={keyword} domain={domain} onlyData={onlyData} /> */}
-        
+        <DarkwebXSSPosts keyword={keyword} domain={domain} onlyData={onlyData} />
+        <SearchExploit keyword={keyword} domain={domain} onlyData={onlyData} />
+
       </div>
       <div className={`flex gap-5 items-center ${onlyData? 'justify-end mr-[5vw]': 'justify-center'} mt-5`}>
         {!onlyData && <ViewMoreButton />}
