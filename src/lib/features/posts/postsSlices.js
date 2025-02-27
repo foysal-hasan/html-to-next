@@ -14,14 +14,21 @@ const initialState = {
   darkWebFacebookMentions: [],
   darkWebStealerMentions: [],
   postsMentions: [],
+  allPosts: [],
 };
 
 const updateRiskAnalysis = (state, newMentions) => {
+  if (!Array.isArray(newMentions)) return; 
+
   newMentions.forEach((mention) => {
     if (mention.risk === 'low') state.riskAnalysis.low += 1;
     if (mention.risk === 'medium') state.riskAnalysis.medium += 1;
     if (mention.risk === 'high') state.riskAnalysis.high += 1;
   });
+};
+
+const updateAllPosts = (state, newMentions) => {
+  state.allPosts = [...state.allPosts, ...newMentions];
 };
 
 const postsSlice = createSlice({
@@ -38,7 +45,6 @@ const postsSlice = createSlice({
         high: 0,
       };
     },
-
     reset(state) {
       state.riskAnalysis = {
         low: 0,
@@ -53,39 +59,50 @@ const postsSlice = createSlice({
       state.darkWebFacebookMentions = [];
       state.darkWebStealerMentions = [];
       state.postsMentions = [];
+      state.allPosts = [];
     },
     setInstagramMentions(state, action) {
       state.instagramMentions = action.payload;
       updateRiskAnalysis(state, action.payload);
+      updateAllPosts(state, action.payload);
     },
     setTwitterMentions(state, action) {
       state.twitterMentions = action.payload;
       updateRiskAnalysis(state, action.payload);
+      updateAllPosts(state, action.payload);
     },
     setFacebookMentions(state, action) {
       state.facebookMentions = action.payload;
       updateRiskAnalysis(state, action.payload);
+      updateAllPosts(state, action.payload);
     },
     setTelegramMentions(state, action) {
       state.telegramMentions = action.payload;
-      updateRiskAnalysis(state, action.payload);
+      updateRiskAnalysis(state, action.payload || []);
+      updateAllPosts(state, action.payload || []);   
+      console.log("state: ", action.payload);
+      
     },
     setDarkWebXSSMentions(state, action) {
       state.darkWebXSSMentions = action.payload;
       updateRiskAnalysis(state, action.payload);
+      updateAllPosts(state, action.payload);
     },
     setDarkWebFacebookMentions(state, action) {
       state.darkWebFacebookMentions = action.payload;
       updateRiskAnalysis(state, action.payload);
+      updateAllPosts(state, action.payload);
     },
     setDarkWebStealerMentions(state, action) {
       state.darkWebStealerMentions = action.payload;
       updateRiskAnalysis(state, action.payload);
+      updateAllPosts(state, action.payload);
     },
-    setPostsMentions(state, action){
+    setPostsMentions(state, action) {
       state.postsMentions = action.payload;
       updateRiskAnalysis(state, action.payload);
-    }
+      updateAllPosts(state, action.payload);
+    },
   },
 });
 
@@ -100,7 +117,7 @@ export const {
   setDarkWebFacebookMentions,
   setDarkWebStealerMentions,
   reset,
-  setPostsMentions
+  setPostsMentions,
 } = postsSlice.actions;
 
 export default postsSlice.reducer;

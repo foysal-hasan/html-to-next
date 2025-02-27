@@ -667,7 +667,7 @@ export default function RenderPosts({ domain, source }) {
           <div className="grid lg:grid-cols-3 gap-6">
             {/* Posts List */}
             <div
-              className="lg:col-span-1 h-[calc(100vh-12rem)] overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
+              className="lg:col-span-1 max-h-[calc(100vh-12rem)] overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
               onScroll={handleScroll}
             >
               <div className="space-y-4">

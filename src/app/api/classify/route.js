@@ -67,6 +67,7 @@ export async function POST(req) {
 
   const response = await openai.chat.completions.create({
     model: 'gpt-4-turbo',
+    // model: 'o1',
     messages: [
       { role: 'system', content: 'You are a security analyst.' },
       { role: 'user', content: prompt }
