@@ -1,7 +1,7 @@
 'use client'
 import SectionLoader from '@/components/SectionLoader';
 import { classifyPosts } from '@/lib/api/classify';
-import { setSearchExploitMentions } from '@/lib/features/posts/postsSlices';
+import { setSearchExploitMentions, setSearchXss } from '@/lib/features/posts/postsSlices';
 
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import normalizePosts from '@/utils/normalizePosts';
@@ -10,14 +10,14 @@ import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsC
 import SectionTitle from '../SectionTitle';
 
 
-const SearchExploit = ({ keyword, domain, onlyData }) => {
+const SearchXss = ({ keyword, domain, onlyData }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false)
 
   const searchQuery = useAppSelector((state) => state.search.searchQuery);
   
   const postsMentions = useAppSelector(
-      (state) => state.posts.searchExploitMentions,
+      (state) => state.posts.searchXss,
     );
 
   const dispatch = useAppDispatch();
@@ -30,18 +30,18 @@ const SearchExploit = ({ keyword, domain, onlyData }) => {
         const postsRes = await fetch('/api/stream', {
           method: 'POST',
           body: JSON.stringify({
-            input: {
-              "keyword":"Facebook Accounts",
-              "start_date":"2025-02-01",
-              "end_date":"2025-02-21"
-              },
-            url: 'http://107.189.26.43:6900/search_exploit',
+            input:{
+              "keyword":"Accounts",
+              "start_date":"2025-01-01",
+              "end_date":"2025-01-10"
+          },
+            url: 'http://172.86.116.124:5003/search_xss',
           }),
         });
 
         const postsResponse = await postsRes.json();
         console.log('facebook posts: ', postsResponse);
-        if (!postsResponse || postsResponse[0]?.length === 0) {
+        if (!postsResponse || postsResponse?.length === 0) {
           setLoading(false);
           return;
         }
@@ -52,7 +52,7 @@ const SearchExploit = ({ keyword, domain, onlyData }) => {
         const classifiedPosts = await classifyPosts(normalizedPosts);
 
         // console.log('classifiedPosts', classifiedPosts);
-         dispatch(setSearchExploitMentions(classifiedPosts))
+         dispatch(setSearchXss(classifiedPosts))
          
         setPosts(classifiedPosts.slice(0, 3)); // Show only 2-3 posts
       } catch (error) {
@@ -73,7 +73,7 @@ const SearchExploit = ({ keyword, domain, onlyData }) => {
   if (onlyData) {
     return null;
   }
-  if(loading) return <SectionLoader sectionTitle={'Search Exploit'} />
+  if(loading) return <SectionLoader sectionTitle={'Search XSS'} />
   
   if (!posts || posts.length === 0 || onlyData) {
     return null;
@@ -81,7 +81,7 @@ const SearchExploit = ({ keyword, domain, onlyData }) => {
   
   return (
     <div>
-      <SectionTitle>Search Exploit</SectionTitle>
+      <SectionTitle>Search XSS</SectionTitle>
       {posts.map((post, index) => (
         <DarkWebAndSocialMediaMentionsCard key={index} {...post} />
       ))}
@@ -89,4 +89,4 @@ const SearchExploit = ({ keyword, domain, onlyData }) => {
   );
 };
 
-export default SearchExploit;
+export default SearchXss;

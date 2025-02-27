@@ -15,7 +15,8 @@ const initialState = {
   darkWebStealerMentions: [],
   postsMentions: [],
   allPosts: [],
-  SearchExploitMentions: []
+  searchExploitMentions: [],
+  searchXss: []
 };
 
 const updateRiskAnalysis = (state, newMentions) => {
@@ -62,6 +63,7 @@ const postsSlice = createSlice({
       state.postsMentions = [];
       state.allPosts = [];
       state.searchExploitMentions = [];
+      state.searchXss = [];
     },
     setInstagramMentions(state, action) {
       state.instagramMentions = action.payload;
@@ -109,7 +111,13 @@ const postsSlice = createSlice({
       state.searchExploitMentions = action.payload;
       updateRiskAnalysis(state, action.payload);
       updateAllPosts(state, action.payload);
-    }
+    },
+    setSearchXss(state, action) {
+      state.searchXss = action.payload;
+      updateRiskAnalysis(state, action.payload);
+      updateAllPosts(state, action.payload);
+    },
+    
   },
 });
 
@@ -125,7 +133,8 @@ export const {
   setDarkWebStealerMentions,
   reset,
   setPostsMentions,
-  setSearchExploitMentions
+  setSearchExploitMentions,
+  setSearchXss
 } = postsSlice.actions;
 
 export default postsSlice.reducer;

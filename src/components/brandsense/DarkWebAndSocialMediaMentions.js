@@ -15,6 +15,7 @@ import ViewMoreButton from './ViewMoreButton';
 import { reset, resetRiskAnalysis } from '@/lib/features/posts/postsSlices';
 import Posts from './darkWebAndSocialMediaMentions/Posts';
 import SearchExploit from './darkWebAndSocialMediaMentions/SearchExploit';
+import SearchXss from './darkWebAndSocialMediaMentions/SearchXss';
 
 const DarkWebAndSocialMediaMentions = ({ domain, onlyData }) => {
   const dispatch = useAppDispatch();
@@ -42,7 +43,8 @@ const DarkWebAndSocialMediaMentions = ({ domain, onlyData }) => {
         <DarkwebFacebookPosts keyword={keyword} domain={domain} onlyData={onlyData} />
         <DarkwebStealerMentions keyword={keyword} domain={domain} onlyData={onlyData} />
         <DarkwebXSSPosts keyword={keyword} domain={domain} onlyData={onlyData} />
-        <SearchExploit keyword={keyword} domain={domain} onlyData={onlyData} />
+        <SearchExploit keyword={keyword} domain={domain} onlyData={onlyData} /> 
+        {/* <SearchXss keyword={keyword} domain={domain} onlyData={onlyData} /> */}
 
       </div>
       <div className={`flex gap-5 items-center ${onlyData? 'justify-end mr-[5vw]': 'justify-center'} mt-5`}>
