@@ -10,7 +10,7 @@ import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsC
 import SectionTitle from '../SectionTitle';
 
 
-const Posts = ({ keyword, domain }) => {
+const Posts = ({ keyword, domain, onlyData }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false)
 
@@ -76,10 +76,12 @@ const Posts = ({ keyword, domain }) => {
     
   }, [keyword, domain]);
 
-  
+  if (onlyData) {
+    return null;
+  }
   if(loading) return <SectionLoader sectionTitle={'Posts Mentions'} />
   
-  if (!posts || posts.length === 0) {
+  if (!posts || posts.length === 0 || onlyData) {
     return null;
   }
   

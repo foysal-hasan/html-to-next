@@ -8,7 +8,7 @@ import SectionTitle from '../SectionTitle';
 import { setDarkWebStealerMentions } from '@/lib/features/posts/postsSlices';
 import SectionLoader from '@/components/SectionLoader';
 
-const DarkwebStealerMentions = ({ keyword, domain }) => {
+const DarkwebStealerMentions = ({ keyword, domain, onlyData }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false)
   const searchQuery = useAppSelector((state) => state.search.searchQuery);
@@ -63,9 +63,13 @@ const DarkwebStealerMentions = ({ keyword, domain }) => {
       fetchDarkWebStealerPosts();
     }
   }, [keyword]);
+
+  if (onlyData) {
+    return null;
+  }
   
   if(loading) return <SectionLoader sectionTitle={'Dark Web Stealer Mentions'} />
-  if (!posts || posts.length === 0) {
+  if (!posts || posts.length === 0 || onlyData) {
     return null;
   }
   

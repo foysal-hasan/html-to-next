@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsCard';
 import SectionTitle from '../SectionTitle';
 
-const DarkwebFacebookPosts = ({ keyword, domain }) => {
+const DarkwebFacebookPosts = ({ keyword, domain, onlyData }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -76,8 +76,11 @@ const DarkwebFacebookPosts = ({ keyword, domain }) => {
   }, [keyword]);
 
   
+  if (onlyData) {
+    return null;
+  }
   if (loading) return <SectionLoader sectionTitle={'Dark Web Facebook Mentions'} />;
-  if (!posts || posts.length === 0) {
+  if (!posts || posts.length === 0 || onlyData) {
     return null;
   }
   

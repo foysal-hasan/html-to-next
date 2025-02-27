@@ -105,24 +105,25 @@
 // app/api/stream/route.js
 import { NextResponse } from 'next/server';
 
-export async function GET() {
+export async function POST(req) {
+  const body = await req.json();
   // Define the third-party API URL and request body
-  const thirdPartyApiUrl = 'http://172.86.116.124:5003/search_xss';
-  const requestBody = {
-    keyword: 'Accounts',
-    start_date: '2025-01-01',
-    end_date: '2025-01-10',
-  };
+  // const thirdPartyApiUrl = 'http://172.86.116.124:5003/search_xss';
+  // const requestBody = {
+  //   keyword: 'Accounts',
+  //   start_date: '2025-01-01',
+  //   end_date: '2025-01-10',
+  // };
 
   try {
     // Fetch the stream from the third-party API
-    const response = await fetch(thirdPartyApiUrl, {
+    const response = await fetch(body?.url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         // "Authorization": "Bearer YOUR_API_KEY", // Uncomment if needed
       },
-      body: JSON.stringify(requestBody),
+      body: JSON.stringify(body?.input),
     });
 
     // Check if the response is OK

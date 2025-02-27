@@ -8,7 +8,7 @@ import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsC
 import SectionTitle from '../SectionTitle';
 import SectionLoader from '@/components/SectionLoader';
 
-const TelegramMentions = ({ keyword, domain }) => {
+const TelegramMentions = ({ keyword, domain, onlyData }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const searchQuery = useAppSelector((state) => state.search.searchQuery);
@@ -69,9 +69,12 @@ const TelegramMentions = ({ keyword, domain }) => {
     }
   }, [keyword, domain]);
 
+  if (onlyData) {
+    return null;
+  }
   if(loading) return <SectionLoader sectionTitle={'Telegram Mentions'} />
   
-  if (!posts || posts.length === 0 ) {
+  if (!posts || posts.length === 0 || onlyData ) {
     return null;
   }
 

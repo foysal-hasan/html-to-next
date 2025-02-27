@@ -8,7 +8,7 @@ import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsC
 import SectionTitle from '../SectionTitle';
 import SectionLoader from '@/components/SectionLoader';
 
-const DarkwebXSSPosts = ({ keyword, domain }) => {
+const DarkwebXSSPosts = ({ keyword, domain, onlyData }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const searchQuery = useAppSelector((state) => state.search.searchQuery);
@@ -71,9 +71,12 @@ const DarkwebXSSPosts = ({ keyword, domain }) => {
     }
   }, [keyword]);
 
+  if (onlyData) {
+    return null;
+  }
   if(loading) return <SectionLoader sectionTitle={'Darkweb XSS Posts Mentions'} />
   
-  if (!posts || posts.length === 0) {
+  if (!posts || posts.length === 0 || onlyData ) {
     return null;
   }
 

@@ -11,7 +11,16 @@ export default function StreamData() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch('/api/stream');
+        const response = await fetch('/api/stream', {
+          method: 'POST',
+          body: JSON.stringify({
+            input: { 
+              "keyword":"Facebook"
+          },
+            url: 'http://172.86.116.124:5002/search',
+          }),
+        });
+
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }

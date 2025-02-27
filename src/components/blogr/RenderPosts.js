@@ -1,7 +1,7 @@
 'use client';
-import DarkWebAndSocialMediaMentionsCard from '@/components/brandsense/DarkWebAndSocialMediaMentionsCard';
 import { classifyPosts } from '@/lib/api/classify';
 import {
+  reset,
   setDarkWebFacebookMentions,
   setDarkWebStealerMentions,
   setDarkWebXSSMentions,
@@ -17,7 +17,6 @@ import filterPosts from '@/utils/filterPosts';
 import normalizePosts from '@/utils/normalizePosts';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import SectionLoader from '../SectionLoader';
 import {
   darkwebFacebook,
   darkwebStealer,
@@ -202,6 +201,8 @@ export default function RenderPosts({ domain, source }) {
   useEffect(() => {
     console.log('working', keyword);
     setPosts([]);
+
+    dispatch(reset())
     const fetchPosts = async () => {
       try {
         setLoading(true);
@@ -617,7 +618,7 @@ export default function RenderPosts({ domain, source }) {
   const filteredPosts = posts ? filterPosts(posts, filters) : [];
   console.log(posts);
 
-  if (loading) return <SectionLoader sectionTitle={sectionTitle} />;
+  // if (loading) return <SectionLoader sectionTitle={sectionTitle} />;
 
   if (!posts || posts?.length <= 0) return null;
 
@@ -629,115 +630,6 @@ export default function RenderPosts({ domain, source }) {
     }
   };
 
-  return (
-    <main className="w-full min-h-screen bg-gray-900">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-10">
-        <div className="flex flex-col space-y-6">
-          {/* Header and Filters */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-gray-800/50 p-4 rounded-lg">
-            <h1 className="text-white text-2xl sm:text-3xl font-bold">
-              {sectionTitle}
-            </h1>
-            <div className="flex flex-wrap gap-2 w-full sm:w-auto">
-              <input
-                type="date"
-                placeholder="Start Date"
-                className="bg-gray-700 text-white border-gray-600 p-2 rounded-md flex-1 sm:flex-none min-w-[140px] focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
-              />
-              <input
-                type="date"
-                placeholder="End Date"
-                className="bg-gray-700 text-white border-gray-600 p-2 rounded-md flex-1 sm:flex-none min-w-[140px] focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
-              />
-              <select
-                className="bg-gray-700 text-white border-gray-600 p-2 rounded-md flex-1 sm:flex-none min-w-[140px] focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                onChange={(e) => setFilters({ ...filters, riskLevel: e.target.value })}
-              >
-                <option value="">All Risks</option>
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-              </select>
-            </div>
-          </div>
+  return null;
 
-          {/* Content Grid */}
-          <div className="grid lg:grid-cols-3 gap-6">
-            {/* Posts List */}
-            <div
-              className="lg:col-span-1 max-h-[calc(100vh-12rem)] overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
-              onScroll={handleScroll}
-            >
-              <div className="space-y-4">
-                {filteredPosts?.slice(0, visiblePosts).map((post, index) => (
-                  <div
-                    key={index}
-                    onClick={() => setSelectedPost(post)}
-                    className="cursor-pointer"
-                  >
-                    <DarkWebAndSocialMediaMentionsCard
-                      url={post.link}
-                      date={post.date}
-                      content={post.content}
-                      risk={post.risk}
-                      id={post.id}
-                      selectedPost={selectedPost?.id}
-                      page={'blogr'}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Preview Panel */}
-            <div className="lg:col-span-2 bg-gray-800 rounded-lg overflow-hidden min-h-[calc(100vh-12rem)]">
-              {source === facebook && <FacebookPostPreview post={selectedPost} />}
-              {source === twitter && <TwitterPostPreview post={selectedPost} />}
-              {source === telegram && <TelegramPostPreview post={selectedPost} />}
-              {source === postsMentions && <PostsMentionPreview post={selectedPost} />}
-              {source !== facebook &&
-                source !== twitter &&
-                source !== telegram &&
-                source !== postsMentions &&
-                selectedPost && (
-                  <div className="p-6 text-white">
-                    <h2 className="text-2xl font-bold mb-6">Post Preview</h2>
-                    <div className="space-y-6">
-                      <div className="bg-gray-700/50 p-4 rounded-lg">
-                        <strong className="block text-gray-300 mb-2">Date</strong>
-                        <p>{selectedPost.date}</p>
-                      </div>
-                      <div className="bg-gray-700/50 p-4 rounded-lg">
-                        <strong className="block text-gray-300 mb-2">Content</strong>
-                        <p className="break-words">{selectedPost.content}</p>
-                      </div>
-                      <div className="bg-gray-700/50 p-4 rounded-lg">
-                        <strong className="block text-gray-300 mb-2">Risk Level</strong>
-                        <p className={`inline-block px-3 py-1 rounded-full ${
-                          selectedPost.risk === 'high' ? 'bg-red-500/20 text-red-300' :
-                          selectedPost.risk === 'medium' ? 'bg-yellow-500/20 text-yellow-300' :
-                          'bg-green-500/20 text-green-300'
-                        }`}>
-                          {selectedPost.risk}
-                        </p>
-                      </div>
-                      <Link
-                        href={selectedPost.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-block mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                      >
-                        View Original Post
-                      </Link>
-                    </div>
-                  </div>
-                )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
-  );
 }

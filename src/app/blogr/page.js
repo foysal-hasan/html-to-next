@@ -6,10 +6,11 @@ import {
   instagram,
   postsMentions,
   telegram,
-  twitter
+  twitter,
 } from '@/components/blogr/enum';
 import RenderAllPosts from '@/components/blogr/RenderAllPosts';
 import RenderPosts from '@/components/blogr/RenderPosts';
+import DarkWebAndSocialMediaMentions from '@/components/brandsense/DarkWebAndSocialMediaMentions';
 
 const isValidDomain = (domain) => {
   const domainRegex =
@@ -43,16 +44,17 @@ export default async function Blogr({ searchParams }) {
 
   return (
     <>
-    <RenderAllPosts domain={domain} />
-    <RenderPosts domain={domain} source={telegram} />
-      {/* <RenderPosts domain={domain} source={instagram} />
+    <DarkWebAndSocialMediaMentions domain={domain} onlyData={true} />
+      {/* <RenderPosts domain={domain} source={telegram} />
+      <RenderPosts domain={domain} source={instagram} />
       <RenderPosts domain={domain} source={facebook} />
       <RenderPosts domain={domain} source={twitter} />
-      
+
       <RenderPosts domain={domain} source={postsMentions} />
       <RenderPosts domain={domain} source={darkwebFacebook} />
       <RenderPosts domain={domain} source={darkwebStealer} />
       <RenderPosts domain={domain} source={darkwebXss} /> */}
+      <RenderAllPosts domain={domain} />
     </>
   );
 }

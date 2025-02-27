@@ -9,7 +9,7 @@ import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsC
 import SectionTitle from '../SectionTitle';
 
 
-const FacebookMentions = ({ keyword, domain }) => {
+const FacebookMentions = ({ keyword, domain, onlyData }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false)
 
@@ -74,10 +74,12 @@ const FacebookMentions = ({ keyword, domain }) => {
     
   }, [keyword, domain]);
 
-  
+  if (onlyData) {
+    return null;
+  }
   if(loading) return <SectionLoader sectionTitle={'Facebook Mentions'} />
   
-  if (!posts || posts.length === 0) {
+  if (!posts || posts.length === 0 || onlyData) {
     return null;
   }
   

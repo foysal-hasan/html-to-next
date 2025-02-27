@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsCard';
 import SectionTitle from '../SectionTitle';
 
-const InstagramMentions = ({ keyword, domain }) => {
+const InstagramMentions = ({ keyword, domain, onlyData }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const searchQuery = useAppSelector((state) => state.search.searchQuery);
@@ -62,9 +62,13 @@ const InstagramMentions = ({ keyword, domain }) => {
       fetchInstagramPosts();
     }
   }, [keyword, domain, searchQuery, instagramMentions, dispatch]);
+
+  if (onlyData) {
+    return null;
+  }
   if (loading) return <SectionLoader sectionTitle={'Instagram Mentions'} />;
   
-  if (!posts || posts.length === 0) {
+  if (!posts || posts.length === 0 || onlyData) {
     return null;
   }
   

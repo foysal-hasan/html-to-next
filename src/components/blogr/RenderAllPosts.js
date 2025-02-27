@@ -1,13 +1,15 @@
 'use client'
-import { classifyPosts } from "@/lib/api/classify";
-import { setTelegramMentions } from "@/lib/features/posts/postsSlices";
-import { useAppSelector } from '@/lib/hooks';
+import { fetchTwitterPosts } from '@/hooks/fetchposts/twitterPosts';
+import { reset } from '@/lib/features/posts/postsSlices';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import filterPosts from "@/utils/filterPosts";
-import normalizePosts from "@/utils/normalizePosts";
-import { useState } from "react";
-import DarkWebAndSocialMediaMentionsCard from "../brandsense/DarkWebAndSocialMediaMentionsCard";
-import { facebook, postsMentions, telegram, twitter } from "./enum";
+import { useQuery } from '@tanstack/react-query';
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { fetchTelegramPosts } from '../../hooks/fetchposts/telegram';
+import DarkWebAndSocialMediaMentionsCard from "../brandsense/DarkWebAndSocialMediaMentionsCard";
+import SectionLoader from "../SectionLoader";
+import PostPreview from './PostPreview';
 
 const TwitterPostPreview = ({ post }) => {
   return (
@@ -51,63 +53,63 @@ const TwitterPostPreview = ({ post }) => {
 };
 
 
-const fetchInstagramPosts =  (keyword)=> {
-  return async () => {
-      const res = await fetch('/api/fetchApifyPosts', {
-        method: 'POST',
-        body: JSON.stringify({
-          input: { search: keyword, searchType: 'hashtag', searchLimit: 1 },
-          url: 'apify/instagram-search-scraper',
-        }),
-      });
+// const fetchInstagramPosts =  (keyword)=> {
+//   return async () => {
+//       const res = await fetch('/api/fetchApifyPosts', {
+//         method: 'POST',
+//         body: JSON.stringify({
+//           input: { search: keyword, searchType: 'hashtag', searchLimit: 1 },
+//           url: 'apify/instagram-search-scraper',
+//         }),
+//       });
 
-      const rawPosts = await res.json();
-      console.log('raw posts: ', rawPosts);
+//       const rawPosts = await res.json();
+//       console.log('raw posts: ', rawPosts);
 
-      if (!rawPosts || rawPosts.length === 0) {
-        setLoading(false);
-        return;
-      }
+//       if (!rawPosts || rawPosts.length === 0) {
+//         setLoading(false);
+//         return;
+//       }
 
-      const normalizedPosts = normalizePosts(
-        rawPosts[0]?.topPosts || [],
-        'instagram',
-      );
-      // console.log('normalized: ', normalizedPosts);
+//       const normalizedPosts = normalizePosts(
+//         rawPosts[0]?.topPosts || [],
+//         'instagram',
+//       );
+//       // console.log('normalized: ', normalizedPosts);
 
-      const classifiedPosts = await classifyPosts(normalizedPosts);
+//       const classifiedPosts = await classifyPosts(normalizedPosts);
 
-      // console.log('classifiedPosts', classifiedPosts);
+//       // console.log('classifiedPosts', classifiedPosts);
 
-      return classifiedPosts;
-    }
-  }
+//       return classifiedPosts;
+//     }
+//   }
 
-  const fetchTelegramPosts = (keyword, dispatch) => {
-    return async () => {
-        const res = await fetch('/api/telegramPosts', {
-          method: 'POST',
-          body: JSON.stringify({
-            keyword,
-          }),
-        });
-        const rawPosts = await res.json();
-        // console.log('telegram posts', rawPosts);
-        if (!rawPosts || rawPosts.length === 0) {
-          setLoading(false);
-          return;
-        }
+//   const fetchTelegramPosts = (keyword, dispatch) => {
+//     return async () => {
+//         const res = await fetch('/api/telegramPosts', {
+//           method: 'POST',
+//           body: JSON.stringify({
+//             keyword,
+//           }),
+//         });
+//         const rawPosts = await res.json();
+//         // console.log('telegram posts', rawPosts);
+//         if (!rawPosts || rawPosts.length === 0) {
+//           setLoading(false);
+//           return;
+//         }
 
-        const normalizedPosts = normalizePosts(rawPosts, 'telegram');
-        // console.log('normalized: ', normalizedPosts);
+//         const normalizedPosts = normalizePosts(rawPosts, 'telegram');
+//         // console.log('normalized: ', normalizedPosts);
 
-        const classifiedPosts = await classifyPosts(normalizedPosts);
+//         const classifiedPosts = await classifyPosts(normalizedPosts);
 
-        console.log('classifiedPosts', classifiedPosts);
-        dispatch(setTelegramMentions(classifiedPosts));
-      }
-      // telegram end
-}
+//         console.log('classifiedPosts', classifiedPosts);
+//         dispatch(setTelegramMentions(classifiedPosts));
+//       }
+//       // telegram end
+// }
 
 
 export default function RenderPostsPage({ domain }) {
@@ -120,26 +122,19 @@ export default function RenderPostsPage({ domain }) {
       riskLevel: '',
     });
 
-  // const dispatch = useAppDispatch()
-  // const keyword =  domain.split('.')[0]
+    console.log('selected post: ', selectedPost)
+    const dispatch = useAppDispatch()
 
-  // const { data: instagramPosts, isError: instaError } = useQuery({
-  //   queryKey: [instagram, keyword],
-  //   queryFn: fetchInstagramPosts(keyword),
-  // });
 
-  // if(!instaError){
-  //   // dispatch(setInstagramMentions(instagramPosts))
-  // }
+  // useEffect(()=>{
+  //   dispatch(reset())
+  // }, [domain])
 
-  // const { data: telegramPosts, isError: telegramError } = useQuery({
-  //   queryKey: [twitter, keyword],
-  //   queryFn: fetchTelegramPosts(keyword),
-  // });
+  useEffect(()=> {
+    setSelectedPost(allPosts[0])
+  }, [domain, allPosts])
 
-  // if(!telegramError){
-  //   console.log(telegramPosts);
-  // }
+  if (allPosts?.length <= 0) return <SectionLoader sectionTitle={'Posts'} />;
 
 
   console.log('all posts: ',  allPosts);
@@ -150,6 +145,7 @@ export default function RenderPostsPage({ domain }) {
 
 
   if (!allPosts || allPosts?.length <= 0) return null;
+
 
   const handleScroll = (e) => {
     const bottom =
@@ -197,7 +193,7 @@ export default function RenderPostsPage({ domain }) {
           <div className="grid lg:grid-cols-3 gap-6">
             {/* Posts List */}
             <div
-              className="lg:col-span-1 max-h-[calc(100vh-12rem)] overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
+              className="lg:col-span-1 max-h-[calc(100vh-12rem)] overflow-y-scroll overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
               onScroll={handleScroll}
             >
               <div className="space-y-4">
@@ -222,39 +218,30 @@ export default function RenderPostsPage({ domain }) {
             </div>
 
             {/* Preview Panel */}
-            <div className="lg:col-span-2 bg-gray-800 rounded-lg overflow-hidden min-h-[calc(100vh-12rem)]">
-
-            <TwitterPostPreview post={selectedPost} />
-              {selectedPost?.source === telegram && <TelegramPostPreview post={selectedPost} />}
-              {selectedPost?.source === postsMentions && <PostsMentionPreview post={selectedPost} />}
-              {selectedPost?.source !== facebook &&
-                selectedPost?.source !== twitter &&
-                selectedPost?.source !== telegram &&
-                selectedPost?.source !== postsMentions &&
-                selectedPost && (
+            {/* <div className="lg:col-span-2 bg-gray-800 rounded-lg overflow-hidden min-h-[calc(100vh-12rem)]">
                   <div className="p-6 text-white">
                     <h2 className="text-2xl font-bold mb-6">Post Preview</h2>
                     <div className="space-y-6">
                       <div className="bg-gray-700/50 p-4 rounded-lg">
                         <strong className="block text-gray-300 mb-2">Date</strong>
-                        <p>{selectedPost.date}</p>
+                        <p>{selectedPost?.date}</p>
                       </div>
                       <div className="bg-gray-700/50 p-4 rounded-lg">
                         <strong className="block text-gray-300 mb-2">Content</strong>
-                        <p className="break-words">{selectedPost.content}</p>
+                        <p className="break-words">{selectedPost?.content}</p>
                       </div>
                       <div className="bg-gray-700/50 p-4 rounded-lg">
                         <strong className="block text-gray-300 mb-2">Risk Level</strong>
                         <p className={`inline-block px-3 py-1 rounded-full ${
-                          selectedPost.risk === 'high' ? 'bg-red-500/20 text-red-300' :
-                          selectedPost.risk === 'medium' ? 'bg-yellow-500/20 text-yellow-300' :
+                          selectedPost?.risk === 'high' ? 'bg-red-500/20 text-red-300' :
+                          selectedPost?.risk === 'medium' ? 'bg-yellow-500/20 text-yellow-300' :
                           'bg-green-500/20 text-green-300'
                         }`}>
-                          {selectedPost.risk}
+                          {selectedPost?.risk}
                         </p>
                       </div>
                       <Link
-                        href={selectedPost.link}
+                        href={`https://${selectedPost?.link}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-block mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -263,8 +250,9 @@ export default function RenderPostsPage({ domain }) {
                       </Link>
                     </div>
                   </div>
-                )}
-            </div>
+
+            </div> */}
+            <PostPreview post={selectedPost}/>
           </div>
         </div>
       </div>
