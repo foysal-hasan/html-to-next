@@ -16,7 +16,8 @@ const initialState = {
   postsMentions: [],
   allPosts: [],
   searchExploitMentions: [],
-  searchXss: []
+  searchXss: [],
+  boardreader: []
 };
 
 const updateRiskAnalysis = (state, newMentions) => {
@@ -64,6 +65,7 @@ const postsSlice = createSlice({
       state.allPosts = [];
       state.searchExploitMentions = [];
       state.searchXss = [];
+      state.boardreader = [];
     },
     setInstagramMentions(state, action) {
       state.instagramMentions = action.payload;
@@ -117,6 +119,11 @@ const postsSlice = createSlice({
       updateRiskAnalysis(state, action.payload);
       updateAllPosts(state, action.payload);
     },
+    setBoardreader(state, action) {
+      state.boardreader = action.payload;
+      updateRiskAnalysis(state, action.payload);
+      updateAllPosts(state, action.payload);
+    },
     
   },
 });
@@ -134,7 +141,8 @@ export const {
   reset,
   setPostsMentions,
   setSearchExploitMentions,
-  setSearchXss
+  setSearchXss,
+  setBoardreader
 } = postsSlice.actions;
 
 export default postsSlice.reducer;
