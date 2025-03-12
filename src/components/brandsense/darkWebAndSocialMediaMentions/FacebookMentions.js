@@ -32,7 +32,7 @@ const FacebookMentions = ({ keyword, domain, onlyData }) => {
               query: keyword, // replace with domain keyword
               search_type: 'posts',
               recent_posts: true,
-              max_posts: process.env.ApifyPostLimit,
+              max_posts: 100,
               max_retries: 5,
               proxy: {
                 useApifyProxy: true,

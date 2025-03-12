@@ -31,7 +31,7 @@ const TwitterMentions = ({ keyword, domain, onlyData }) => {
                 keyword, // replace with keyword domain
               ],
               sort: 'Latest',
-              maxItems: process.env.ApifyPostLimit,
+              maxItems: 100,
             },
             url: 'apidojo/twitter-scraper-lite',
           }),

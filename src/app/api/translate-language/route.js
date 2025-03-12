@@ -103,10 +103,11 @@ export async function POST(request) {
       original_language: detectedLanguage,
     });
   } catch (error) {
-    console.error('Translation error:', error);
-    return NextResponse.json(
-      { error: 'Failed to translate content' },
-      { status: 500 },
-    );
+    // console.error('Translation error:', error);
+    // return NextResponse.json(
+    //   { error: 'Failed to translate content' },
+    //   { status: 500 },
+    // );
+    return NextResponse.json([]);
   }
 }

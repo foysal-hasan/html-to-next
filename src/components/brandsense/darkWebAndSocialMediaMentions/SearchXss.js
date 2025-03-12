@@ -50,8 +50,10 @@ const SearchXss = ({ keyword, domain, onlyData }) => {
         // console.log('normalized: ', normalizedPosts);
 
         // content is array make it string
-        normalizedPosts.forEach((post) => {
-          post.content = post.content.join(' ');
+        normalizedPosts?.forEach((post) => {
+          if (Array.isArray(post?.content)) {
+            post.content = post?.content?.join(' ');
+          }
         });
         console.log('normalizedPosts', normalizedPosts);
 
@@ -81,6 +83,11 @@ const SearchXss = ({ keyword, domain, onlyData }) => {
   if (loading) return <SectionLoader sectionTitle={'Search XSS'} />;
 
   if (!posts || posts.length === 0 || onlyData) {
+    return null;
+  }
+
+  // if posts is not array, return null
+  if (!Array.isArray(posts) || posts.length === 1) {
     return null;
   }
 

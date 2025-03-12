@@ -1,11 +1,11 @@
 // export async function GET() {
 //   try {
 //     const thirdPartyApiUrl = "http://172.86.116.124:7800/search_xss"; // Replace with actual API
-//     const requestBody = { 
-//       "keyword": "Accounts", 
-//       "start_date": "2025-01-01", 
+//     const requestBody = {
+//       "keyword": "Accounts",
+//       "start_date": "2025-01-01",
 //       "end_date": "2025-01-10"
-//     }; 
+//     };
 
 //     const response = await fetch(thirdPartyApiUrl, {
 //       method: "POST",
@@ -23,20 +23,20 @@
 //     const reader = response.body.getReader();
 //     const decoder = new TextDecoder();
 //     let chunks = [];
-    
+
 //     while (true) {
 //       const { done, value } = await reader.read();
-      
+
 //       if (done) {
 //         break;
 //       }
-      
+
 //       chunks.push(decoder.decode(value, { stream: true }));
 //     }
 
 //     const completeData = chunks.join('');
 //     const parsedData = JSON.parse(completeData.trim());
-    
+
 //     return new Response(JSON.stringify(parsedData), {
 //       headers: {
 //         'Content-Type': 'application/json',
@@ -51,7 +51,6 @@
 //     });
 //   }
 // }
-
 
 // async function* streamingFetch( fetchcall ) {
 
@@ -68,13 +67,12 @@
 //   }
 // }
 
-
 //     const thirdPartyApiUrl = "http://172.86.116.124:7800/search_xss"; // Replace with actual API
-//     const requestBody = { 
-//       "keyword": "Accounts", 
-//       "start_date": "2025-01-01", 
+//     const requestBody = {
+//       "keyword": "Accounts",
+//       "start_date": "2025-01-01",
 //       "end_date": "2025-01-10"
-//     }; 
+//     };
 
 //     const response = await fetch(thirdPartyApiUrl, {
 //       method: "POST",
@@ -128,7 +126,9 @@ export async function POST(req) {
 
     // Check if the response is OK
     if (!response.ok) {
-      throw new Error(`Failed to fetch data from third-party API: ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch data from third-party API: ${response.statusText}`,
+      );
     }
 
     // Array to store JSON objects
@@ -165,13 +165,21 @@ export async function POST(req) {
     // Log the collected JSON array for debugging
     console.log('Collected JSON Array:', jsonArray);
 
+    // // convert jsonArray to array
+    // const jsonArrayArray = JSON.parse(jsonArray);
+
+    // if (jsonArrayArray.length < 2) {
+    //   return NextResponse.json([]);
+    // }
+
     // Send the complete JSON array as a response to the client
     return NextResponse.json(jsonArray);
   } catch (error) {
-    console.error('Error:', error);
-    return NextResponse.json(
-      { error: error.message || 'Failed to fetch or process data' },
-      { status: 500 }
-    );
+    // console.error('Error:', error);
+    // return NextResponse.json(
+    //   { error: error.message || 'Failed to fetch or process data' },
+    //   { status: 500 }
+    // );
+    return NextResponse.json([]);
   }
 }

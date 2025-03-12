@@ -78,7 +78,7 @@ const Breachforum = ({ keyword, domain, onlyData }) => {
   return (
     <div>
       <SectionTitle>Breachforum</SectionTitle>
-      {posts.map((post, index) => (
+      {posts?.map((post, index) => (
         <DarkWebAndSocialMediaMentionsCard key={index} {...post} />
       ))}
     </div>

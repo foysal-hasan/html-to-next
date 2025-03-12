@@ -166,10 +166,11 @@ export async function POST(req) {
     // return Response.json(JSON.parse(response.choices[0].message.content));
     // return Response.json({ success: 'true'})
   } catch (error) {
-    console.error('OpenAI Error:', error);
-    return Response.json(
-      { error: 'Error processing request' },
-      { status: 500 },
-    );
+    // console.error('OpenAI Error:', error);
+    // return Response.json(
+    //   { error: 'Error processing request' },
+    //   { status: 500 },
+    // );
+    return Response.json([]);
   }
 }
