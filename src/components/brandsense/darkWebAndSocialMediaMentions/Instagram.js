@@ -35,6 +35,7 @@ const InstagramMentions = ({ keyword, domain, onlyData }) => {
         });
 
         const rawPosts = await res.json();
+        console.log('rawPosts', rawPosts);
         if (!rawPosts || rawPosts.length === 0) {
           setLoading(false);
           return;
@@ -42,6 +43,7 @@ const InstagramMentions = ({ keyword, domain, onlyData }) => {
 
         const normalizedPosts = normalizePosts(rawPosts || [], 'Instagram');
 
+        console.log('normalizedPosts', normalizedPosts);
         const classifiedPosts = await classifyPosts(normalizedPosts);
         dispatch(setInstagramMentions(classifiedPosts));
 
@@ -72,7 +74,7 @@ const InstagramMentions = ({ keyword, domain, onlyData }) => {
   return (
     <div>
       <SectionTitle>Instagram Mentions</SectionTitle>
-      {posts.map((post, index) => (
+      {posts?.map((post, index) => (
         <DarkWebAndSocialMediaMentionsCard key={index} {...post} />
       ))}
     </div>

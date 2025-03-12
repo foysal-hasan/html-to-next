@@ -87,7 +87,7 @@ const Boardreader = ({ keyword, domain, onlyData }) => {
   return (
     <div>
       <SectionTitle>Boardreader</SectionTitle>
-      {posts.map((post, index) => (
+      {posts?.map((post, index) => (
         <DarkWebAndSocialMediaMentionsCard key={index} {...post} />
       ))}
     </div>

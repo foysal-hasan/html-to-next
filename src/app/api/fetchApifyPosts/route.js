@@ -16,8 +16,8 @@ export async function POST(req) {
     if (items?.length > 0) {
       items?.pop();
     }
-    console.log('items', items);
-    
+    // console.log('items', items);
+
     return Response.json(items);
   } catch (error) {
     // console.log(error);

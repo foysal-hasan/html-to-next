@@ -31,9 +31,9 @@ const SearchXss = ({ keyword, domain, onlyData }) => {
           method: 'POST',
           body: JSON.stringify({
             input: {
-              keyword: 'Accounts',
-              start_date: '2025-01-01',
-              end_date: '2025-01-10',
+              keyword: keyword,
+              start_date: new Date().toISOString().split('T')[0],
+              end_date: new Date().toISOString().split('T')[0],
             },
             url: 'http://107.189.26.43:5003/search_xss',
           }),
