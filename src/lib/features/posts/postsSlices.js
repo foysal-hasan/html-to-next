@@ -6,6 +6,12 @@ const initialState = {
     medium: 0,
     high: 0,
   },
+  languageAnalysis: {
+    russian: 0,
+    arabic: 0,
+    english: 0,
+    others: 0,
+  },
   instagramMentions: [],
   twitterMentions: [],
   facebookMentions: [],
@@ -17,16 +23,29 @@ const initialState = {
   allPosts: [],
   searchExploitMentions: [],
   searchXss: [],
-  boardreader: []
+  boardreader: [],
+  breachforum: [],
+  vkPosts: [],
 };
 
 const updateRiskAnalysis = (state, newMentions) => {
-  if (!Array.isArray(newMentions)) return; 
+  if (!Array.isArray(newMentions)) return;
 
   newMentions.forEach((mention) => {
     if (mention.risk === 'low') state.riskAnalysis.low += 1;
     if (mention.risk === 'medium') state.riskAnalysis.medium += 1;
     if (mention.risk === 'high') state.riskAnalysis.high += 1;
+  });
+};
+
+const updateLanguageAnalysis = (state, newMentions) => {
+  if (!Array.isArray(newMentions)) return;
+
+  newMentions.forEach((mention) => {
+    if (mention.language === 'russian') state.languageAnalysis.russian += 1;
+    if (mention.language === 'arabic') state.languageAnalysis.arabic += 1;
+    if (mention.language === 'english') state.languageAnalysis.english += 1;
+    if (mention.language === 'others') state.languageAnalysis.others += 1;
   });
 };
 
@@ -66,65 +85,88 @@ const postsSlice = createSlice({
       state.searchExploitMentions = [];
       state.searchXss = [];
       state.boardreader = [];
+      state.breachforum = [];
+      state.vkPosts = [];
     },
     setInstagramMentions(state, action) {
       state.instagramMentions = action.payload;
       updateRiskAnalysis(state, action.payload);
+      updateLanguageAnalysis(state, action.payload);
       updateAllPosts(state, action.payload);
     },
     setTwitterMentions(state, action) {
       state.twitterMentions = action.payload;
       updateRiskAnalysis(state, action.payload);
+      updateLanguageAnalysis(state, action.payload);
       updateAllPosts(state, action.payload);
     },
     setFacebookMentions(state, action) {
       state.facebookMentions = action.payload;
       updateRiskAnalysis(state, action.payload);
+      updateLanguageAnalysis(state, action.payload);
       updateAllPosts(state, action.payload);
     },
     setTelegramMentions(state, action) {
       state.telegramMentions = action.payload;
       updateRiskAnalysis(state, action.payload || []);
-      updateAllPosts(state, action.payload || []);   
-      console.log("state: ", action.payload);
-      
+      updateLanguageAnalysis(state, action.payload || []);
+      updateAllPosts(state, action.payload || []);
+      console.log('state: ', action.payload);
     },
     setDarkWebXSSMentions(state, action) {
       state.darkWebXSSMentions = action.payload;
       updateRiskAnalysis(state, action.payload);
+      updateLanguageAnalysis(state, action.payload);
       updateAllPosts(state, action.payload);
     },
     setDarkWebFacebookMentions(state, action) {
       state.darkWebFacebookMentions = action.payload;
       updateRiskAnalysis(state, action.payload);
+      updateLanguageAnalysis(state, action.payload);
       updateAllPosts(state, action.payload);
     },
     setDarkWebStealerMentions(state, action) {
       state.darkWebStealerMentions = action.payload;
       updateRiskAnalysis(state, action.payload);
+      updateLanguageAnalysis(state, action.payload);
       updateAllPosts(state, action.payload);
     },
     setPostsMentions(state, action) {
       state.postsMentions = action.payload;
       updateRiskAnalysis(state, action.payload);
+      updateLanguageAnalysis(state, action.payload);
       updateAllPosts(state, action.payload);
     },
     setSearchExploitMentions(state, action) {
       state.searchExploitMentions = action.payload;
       updateRiskAnalysis(state, action.payload);
+      updateLanguageAnalysis(state, action.payload);
       updateAllPosts(state, action.payload);
     },
     setSearchXss(state, action) {
       state.searchXss = action.payload;
       updateRiskAnalysis(state, action.payload);
+      updateLanguageAnalysis(state, action.payload);
       updateAllPosts(state, action.payload);
     },
     setBoardreader(state, action) {
       state.boardreader = action.payload;
       updateRiskAnalysis(state, action.payload);
+      updateLanguageAnalysis(state, action.payload);
       updateAllPosts(state, action.payload);
     },
-    
+    setBreachforum(state, action) {
+      state.breachforum = action.payload;
+      updateRiskAnalysis(state, action.payload);
+      updateLanguageAnalysis(state, action.payload);
+      updateAllPosts(state, action.payload);
+    },
+    setVkPosts(state, action) {
+      state.vkPosts = action.payload;
+      updateRiskAnalysis(state, action.payload);
+      updateLanguageAnalysis(state, action.payload);
+      updateAllPosts(state, action.payload);
+    },
   },
 });
 
@@ -142,7 +184,9 @@ export const {
   setPostsMentions,
   setSearchExploitMentions,
   setSearchXss,
-  setBoardreader
+  setBoardreader,
+  setBreachforum,
+  setVkPosts,
 } = postsSlice.actions;
 
 export default postsSlice.reducer;

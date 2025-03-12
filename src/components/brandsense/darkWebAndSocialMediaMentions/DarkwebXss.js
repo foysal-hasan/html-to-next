@@ -29,8 +29,8 @@ const DarkwebXSSPosts = ({ keyword, domain, onlyData }) => {
           body: JSON.stringify({
             input: {
               keyword: keyword,
-              start_date: '2025-01-01',
-              end_date: '2025-01-10',
+              start_date: new Date().toISOString().split('T')[0],
+              end_date: new Date().toISOString().split('T')[0],
             },
             url: 'http://172.86.116.124:5004/search_xss',
           }),
@@ -64,7 +64,7 @@ const DarkwebXSSPosts = ({ keyword, domain, onlyData }) => {
       }
     };
 
-     if (searchQuery === domain) {
+    if (searchQuery === domain) {
       setPosts(darkWebXSSMentions.slice(0, 3));
     } else {
       fetchPosts();
@@ -74,9 +74,10 @@ const DarkwebXSSPosts = ({ keyword, domain, onlyData }) => {
   if (onlyData) {
     return null;
   }
-  if(loading) return <SectionLoader sectionTitle={'Darkweb XSS Posts Mentions'} />
-  
-  if (!posts || posts.length === 0 || onlyData ) {
+  if (loading)
+    return <SectionLoader sectionTitle={'Darkweb XSS Posts Mentions'} />;
+
+  if (!posts || posts.length === 0 || onlyData) {
     return null;
   }
 

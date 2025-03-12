@@ -1,20 +1,19 @@
 'use client';
+import SectionLoader from '@/components/SectionLoader';
 import { classifyPosts } from '@/lib/api/classify';
-import { setTwitterMentions } from '@/lib/features/posts/postsSlices';
+import { setVkPosts } from '@/lib/features/posts/postsSlices';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import normalizePosts from '@/utils/normalizePosts';
 import { useEffect, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsCard';
 import SectionTitle from '../SectionTitle';
-import SectionLoader from '@/components/SectionLoader';
 
-const TwitterMentions = ({ keyword, domain, onlyData }) => {
+const VKPostsScraper = ({ keyword, domain, onlyData }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const searchQuery = useAppSelector((state) => state.search.searchQuery);
-  const twitterMentions = useAppSelector(
-    (state) => state.posts.twitterMentions,
-  );
+
+  const vkPosts = useAppSelector((state) => state.posts.vkPosts);
 
   const dispatch = useAppDispatch();
 
@@ -22,54 +21,56 @@ const TwitterMentions = ({ keyword, domain, onlyData }) => {
     const fetchPosts = async () => {
       try {
         setLoading(true);
-        // twitter
-        const twitterRes = await fetch('/api/fetchApifyPosts', {
+        const vkRes = await fetch('/api/fetchApifyPosts', {
           method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
           body: JSON.stringify({
             input: {
-              searchTerms: [
-                keyword, // replace with keyword domain
-              ],
-              sort: 'Latest',
-              maxItems: process.env.ApifyPostLimit,
+              keywords: [keyword],
             },
-            url: 'apidojo/twitter-scraper-lite',
+            url: 'easyapi/vk-posts-scraper',
           }),
         });
-        const twitterPosts = await twitterRes.json();
-        // console.log('twitter posts: ', twitterPosts);
-        if (!twitterPosts || twitterPosts.length === 0) {
+
+        if (!vkRes.ok) {
           setLoading(false);
           return;
         }
 
-        const normalizedPosts = normalizePosts(twitterPosts, 'twitter');
-        // console.log('normalized: ', normalizedPosts);
+        const vkData = await vkRes.json();
 
+        if (!vkData || vkData.length === 0) {
+          setLoading(false);
+          return;
+        }
+
+        const normalizedPosts = normalizePosts(vkData, 'vk');
         const classifiedPosts = await classifyPosts(normalizedPosts);
 
         // console.log('classifiedPosts', classifiedPosts);
-        dispatch(setTwitterMentions(classifiedPosts));
 
-        setPosts(classifiedPosts.slice(0, 3)); // Show only 2-3 posts
+        dispatch(setVkPosts(classifiedPosts));
+        setPosts(classifiedPosts.slice(0, 3));
       } catch (error) {
-        console.error('Instagram API Error:', error);
+        console.error('VK Posts API Error:', error);
       } finally {
         setLoading(false);
       }
     };
 
     if (searchQuery === domain) {
-      setPosts(twitterMentions.slice(0, 3));
+      setPosts(vkPosts.slice(0, 3));
     } else {
       fetchPosts();
     }
-  }, [keyword, domain]);
+  }, [keyword, domain, searchQuery, dispatch, vkPosts]);
 
   if (onlyData) {
     return null;
   }
-  if (loading) return <SectionLoader sectionTitle={'Twitter Mentions'} />;
+  if (loading) return <SectionLoader sectionTitle={'VK Posts'} />;
 
   if (!posts || posts.length === 0 || onlyData) {
     return null;
@@ -77,7 +78,7 @@ const TwitterMentions = ({ keyword, domain, onlyData }) => {
 
   return (
     <div>
-      <SectionTitle>Twitter Mentions</SectionTitle>
+      <SectionTitle>VK Posts</SectionTitle>
       {posts.map((post, index) => (
         <DarkWebAndSocialMediaMentionsCard key={index} {...post} />
       ))}
@@ -85,4 +86,4 @@ const TwitterMentions = ({ keyword, domain, onlyData }) => {
   );
 };
 
-export default TwitterMentions;
+export default VKPostsScraper;

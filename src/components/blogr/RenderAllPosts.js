@@ -1,14 +1,14 @@
-'use client'
+'use client';
 import { fetchTwitterPosts } from '@/hooks/fetchposts/twitterPosts';
 import { reset } from '@/lib/features/posts/postsSlices';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
-import filterPosts from "@/utils/filterPosts";
+import filterPosts from '@/utils/filterPosts';
 import { useQuery } from '@tanstack/react-query';
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { fetchTelegramPosts } from '../../hooks/fetchposts/telegram';
-import DarkWebAndSocialMediaMentionsCard from "../brandsense/DarkWebAndSocialMediaMentionsCard";
-import SectionLoader from "../SectionLoader";
+import DarkWebAndSocialMediaMentionsCard from '../brandsense/DarkWebAndSocialMediaMentionsCard';
+import SectionLoader from '../SectionLoader';
 import PostPreview from './PostPreview';
 
 const TwitterPostPreview = ({ post }) => {
@@ -51,7 +51,6 @@ const TwitterPostPreview = ({ post }) => {
     </div>
   );
 };
-
 
 // const fetchInstagramPosts =  (keyword)=> {
 //   return async () => {
@@ -111,41 +110,35 @@ const TwitterPostPreview = ({ post }) => {
 //       // telegram end
 // }
 
-
 export default function RenderPostsPage({ domain }) {
-  const allPosts = useAppSelector(state => state.posts.allPosts)
+  const allPosts = useAppSelector((state) => state.posts.allPosts);
   const [selectedPost, setSelectedPost] = useState(null);
   const [visiblePosts, setVisiblePosts] = useState(5);
   const [filters, setFilters] = useState({
-      startDate: '',
-      endDate: '',
-      riskLevel: '',
-    });
+    startDate: '',
+    endDate: '',
+    riskLevel: '',
+  });
 
-    console.log('selected post: ', selectedPost)
-    const dispatch = useAppDispatch()
-
+  console.log('selected post: ', selectedPost);
+  // const dispatch = useAppDispatch()
 
   // useEffect(()=>{
   //   dispatch(reset())
   // }, [domain])
 
-  useEffect(()=> {
-    setSelectedPost(allPosts[0])
-  }, [domain, allPosts])
+  useEffect(() => {
+    setSelectedPost(allPosts[0]);
+  }, [domain, allPosts]);
 
   if (allPosts?.length <= 0) return <SectionLoader sectionTitle={'Posts'} />;
 
+  console.log('all posts: ', allPosts);
 
-  console.log('all posts: ',  allPosts);
-  
   const filteredPosts = allPosts ? filterPosts(allPosts, filters) : [];
   console.log(allPosts);
 
-
-
-  if (!allPosts || allPosts?.length <= 0) return null;
-
+  // if (!allPosts || allPosts?.length <= 0) return null;
 
   const handleScroll = (e) => {
     const bottom =
@@ -162,24 +155,30 @@ export default function RenderPostsPage({ domain }) {
           {/* Header and Filters */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-gray-800/50 p-4 rounded-lg">
             <h1 className="text-white text-2xl sm:text-3xl font-bold">
-              Posts: 
+              Posts:
             </h1>
             <div className="flex flex-wrap gap-2 w-full sm:w-auto">
               <input
                 type="date"
                 placeholder="Start Date"
-                className="bg-gray-700 text-white border-gray-600 p-2 rounded-md flex-1 sm:flex-none min-w-[140px] focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
+                className="bg-gray-700 text-white border-gray-600 p-2 rounded-md flex-1 sm:flex-none min-w-[140px] focus:ring-2 focus:ring-blue-500 focus:border-transparent [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert"
+                onChange={(e) =>
+                  setFilters({ ...filters, startDate: e.target.value })
+                }
               />
               <input
                 type="date"
                 placeholder="End Date"
-                className="bg-gray-700 text-white border-gray-600 p-2 rounded-md flex-1 sm:flex-none min-w-[140px] focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
+                className="bg-gray-700 text-white border-gray-600 p-2 rounded-md flex-1 sm:flex-none min-w-[140px] focus:ring-2 focus:ring-blue-500 focus:border-transparent [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert"
+                onChange={(e) =>
+                  setFilters({ ...filters, endDate: e.target.value })
+                }
               />
               <select
                 className="bg-gray-700 text-white border-gray-600 p-2 rounded-md flex-1 sm:flex-none min-w-[140px] focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                onChange={(e) => setFilters({ ...filters, riskLevel: e.target.value })}
+                onChange={(e) =>
+                  setFilters({ ...filters, riskLevel: e.target.value })
+                }
               >
                 <option value="">All Risks</option>
                 <option value="low">Low</option>
@@ -193,8 +192,12 @@ export default function RenderPostsPage({ domain }) {
           <div className="grid lg:grid-cols-3 gap-6">
             {/* Posts List */}
             <div
-              className="lg:col-span-1 max-h-[calc(100vh-12rem)] overflow-y-scroll overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
+              className="lg:col-span-1 max-h-[calc(100vh-12rem)] overflow-y-auto overflow-x-hidden pr-2"
               onScroll={handleScroll}
+              style={{
+                // scrollbarWidth: 'thin',
+                scrollbarColor: '#2dd4bf #1f2937',
+              }}
             >
               <div className="space-y-4">
                 {filteredPosts?.slice(0, visiblePosts).map((post, index) => (
@@ -252,11 +255,10 @@ export default function RenderPostsPage({ domain }) {
                   </div>
 
             </div> */}
-            <PostPreview post={selectedPost}/>
+            <PostPreview post={selectedPost} />
           </div>
         </div>
       </div>
     </main>
   );
 }
-

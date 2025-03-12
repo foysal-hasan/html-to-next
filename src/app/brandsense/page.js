@@ -1,13 +1,5 @@
 import DarkWebAndSocialMediaMentions from '@/components/brandsense/DarkWebAndSocialMediaMentions';
-import DarkwebFacebookPosts from '@/components/brandsense/darkWebAndSocialMediaMentions/DarkwebFacebookPosts';
-import DarkwebStealerMentions from '@/components/brandsense/darkWebAndSocialMediaMentions/DarkwebStealerMentions';
-import DarkwebXSSPosts from '@/components/brandsense/darkWebAndSocialMediaMentions/DarkwebXss';
-import FacebookMentions from '@/components/brandsense/darkWebAndSocialMediaMentions/FacebookMentions';
-import InstagramMentions from '@/components/brandsense/darkWebAndSocialMediaMentions/Instagram';
-import TelegramMentions from '@/components/brandsense/darkWebAndSocialMediaMentions/Telegram';
-import TwitterMentions from '@/components/brandsense/darkWebAndSocialMediaMentions/TwitterMentions';
 import DomainImpersonation from '@/components/brandsense/DomainImpersonation';
-import DonutChart from '@/components/brandsense/DonutChart';
 import LeakedCredentials from '@/components/brandsense/LeakedCredentials';
 import PastebinMentionsSection from '@/components/brandsense/PastebinMentionsSection';
 import SensitiveInformation from '@/components/brandsense/SensitiveInformation';
@@ -52,13 +44,13 @@ export default async function Brandsense({ searchParams }) {
             Brand Intelligence Report
           </p>
         </div>
-        <DonutChart />
+        {/* <DonutChart /> */}
         {/* <Home /> */}
         <LeakedCredentials domain={domain} />
         <DarkWebAndSocialMediaMentions domain={domain} />
-        <DomainImpersonation domain={domain} /> 
+        <DomainImpersonation domain={domain} />
         <PastebinMentionsSection domain={domain} />
-        <SensitiveInformation domain={domain} /> 
+        <SensitiveInformation domain={domain} />
       </div>
     </div>
   );

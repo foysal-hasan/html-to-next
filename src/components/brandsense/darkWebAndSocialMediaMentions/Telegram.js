@@ -12,7 +12,6 @@ const TelegramMentions = ({ keyword, domain, onlyData }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const searchQuery = useAppSelector((state) => state.search.searchQuery);
-  
 
   const dispatch = useAppDispatch();
   console.log('from telegram page: ', keyword);
@@ -45,11 +44,11 @@ const TelegramMentions = ({ keyword, domain, onlyData }) => {
         }
 
         const normalizedPosts = normalizePosts(rawPosts, 'telegram');
-        // console.log('normalized: ', normalizedPosts);
+        console.log('normalized: ', normalizedPosts);
 
         const classifiedPosts = await classifyPosts(normalizedPosts);
 
-        // console.log('classifiedPosts', classifiedPosts);
+        console.log('classifiedPosts', classifiedPosts);
         dispatch(setTelegramMentions(classifiedPosts));
 
         setPosts(classifiedPosts.slice(0, 3)); // Show only 2-3 posts
@@ -62,19 +61,19 @@ const TelegramMentions = ({ keyword, domain, onlyData }) => {
 
     if (searchQuery === domain) {
       setPosts(telegramMentions.slice(0, 3));
-      setLoading(false)
+      setLoading(false);
     } else {
       fetchTelegramPosts();
-      setLoading(false)
+      setLoading(false);
     }
   }, [keyword, domain]);
 
   if (onlyData) {
     return null;
   }
-  if(loading) return <SectionLoader sectionTitle={'Telegram Mentions'} />
-  
-  if (!posts || posts.length === 0 || onlyData ) {
+  if (loading) return <SectionLoader sectionTitle={'Telegram Mentions'} />;
+
+  if (!posts || posts.length === 0 || onlyData) {
     return null;
   }
 

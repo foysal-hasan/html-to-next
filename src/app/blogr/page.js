@@ -1,16 +1,7 @@
-import {
-  darkwebFacebook,
-  darkwebStealer,
-  darkwebXss,
-  facebook,
-  instagram,
-  postsMentions,
-  telegram,
-  twitter,
-} from '@/components/blogr/enum';
 import RenderAllPosts from '@/components/blogr/RenderAllPosts';
-import RenderPosts from '@/components/blogr/RenderPosts';
+import ChartBar from '@/components/brandsense/ChartBar';
 import DarkWebAndSocialMediaMentions from '@/components/brandsense/DarkWebAndSocialMediaMentions';
+import DonutChart from '@/components/brandsense/DonutChart';
 
 const isValidDomain = (domain) => {
   const domainRegex =
@@ -44,7 +35,15 @@ export default async function Blogr({ searchParams }) {
 
   return (
     <>
-    <DarkWebAndSocialMediaMentions domain={domain} onlyData={true} />
+      <div
+        className="mt-10 flex items-center justify-center gap-10 
+      lg:flex-row flex-col-reverse flex-1
+      "
+      >
+        <DonutChart />
+        <ChartBar />
+      </div>
+      <DarkWebAndSocialMediaMentions domain={domain} onlyData={true} />
       {/* <RenderPosts domain={domain} source={telegram} />
       <RenderPosts domain={domain} source={instagram} />
       <RenderPosts domain={domain} source={facebook} />

@@ -1,7 +1,10 @@
-'use client'
+'use client';
 import SectionLoader from '@/components/SectionLoader';
 import { classifyPosts } from '@/lib/api/classify';
-import { setSearchExploitMentions, setSearchXss } from '@/lib/features/posts/postsSlices';
+import {
+  setSearchExploitMentions,
+  setSearchXss,
+} from '@/lib/features/posts/postsSlices';
 
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import normalizePosts from '@/utils/normalizePosts';
@@ -9,33 +12,30 @@ import { useEffect, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsCard';
 import SectionTitle from '../SectionTitle';
 
-
 const SearchXss = ({ keyword, domain, onlyData }) => {
   const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const searchQuery = useAppSelector((state) => state.search.searchQuery);
-  
-  const postsMentions = useAppSelector(
-      (state) => state.posts.searchXss,
-    );
+
+  const postsMentions = useAppSelector((state) => state.posts.searchXss);
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        setLoading(true)
+        setLoading(true);
         // facebook
         const postsRes = await fetch('/api/stream', {
           method: 'POST',
           body: JSON.stringify({
-            input:{
-              "keyword":"Accounts",
-              "start_date":"2025-01-01",
-              "end_date":"2025-01-10"
-          },
-            url: 'http://172.86.116.124:5003/search_xss',
+            input: {
+              keyword: 'Accounts',
+              start_date: '2025-01-01',
+              end_date: '2025-01-10',
+            },
+            url: 'http://107.189.26.43:5003/search_xss',
           }),
         });
 
@@ -46,19 +46,25 @@ const SearchXss = ({ keyword, domain, onlyData }) => {
           return;
         }
 
-        const normalizedPosts = normalizePosts(postsResponse[0], 'posts');
+        const normalizedPosts = normalizePosts(postsResponse, 'searchXss');
         // console.log('normalized: ', normalizedPosts);
-        
+
+        // content is array make it string
+        normalizedPosts.forEach((post) => {
+          post.content = post.content.join(' ');
+        });
+        console.log('normalizedPosts', normalizedPosts);
+
         const classifiedPosts = await classifyPosts(normalizedPosts);
 
         // console.log('classifiedPosts', classifiedPosts);
-         dispatch(setSearchXss(classifiedPosts))
-         
+        dispatch(setSearchXss(classifiedPosts));
+
         setPosts(classifiedPosts.slice(0, 3)); // Show only 2-3 posts
       } catch (error) {
         console.error('Search API Error:', error);
-      }finally{
-        setLoading(false)
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -67,22 +73,21 @@ const SearchXss = ({ keyword, domain, onlyData }) => {
     } else {
       fetchPosts();
     }
-    
-  }, [keyword, domain]);
+  }, [keyword, domain, searchQuery]);
 
   if (onlyData) {
     return null;
   }
-  if(loading) return <SectionLoader sectionTitle={'Search XSS'} />
-  
+  if (loading) return <SectionLoader sectionTitle={'Search XSS'} />;
+
   if (!posts || posts.length === 0 || onlyData) {
     return null;
   }
-  
+
   return (
     <div>
       <SectionTitle>Search XSS</SectionTitle>
-      {posts.map((post, index) => (
+      {posts?.map((post, index) => (
         <DarkWebAndSocialMediaMentionsCard key={index} {...post} />
       ))}
     </div>

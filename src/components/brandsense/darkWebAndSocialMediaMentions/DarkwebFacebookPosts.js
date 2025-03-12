@@ -31,8 +31,12 @@ const DarkwebFacebookPosts = ({ keyword, domain, onlyData }) => {
           body: JSON.stringify({
             input: {
               keyword: keyword,
-              amount: 20,
-              from_date: '01/01/2000',
+              amount: 100,
+              from_date: new Date().toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+              }),
               to_date: new Date().toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: '2-digit',
@@ -48,7 +52,6 @@ const DarkwebFacebookPosts = ({ keyword, domain, onlyData }) => {
           setLoading(false);
           return;
         }
-
 
         const normalizedPosts = normalizePosts(
           darkwebFacebookPosts,
@@ -75,15 +78,15 @@ const DarkwebFacebookPosts = ({ keyword, domain, onlyData }) => {
     }
   }, [keyword]);
 
-  
   if (onlyData) {
     return null;
   }
-  if (loading) return <SectionLoader sectionTitle={'Dark Web Facebook Mentions'} />;
+  if (loading)
+    return <SectionLoader sectionTitle={'Dark Web Facebook Mentions'} />;
   if (!posts || posts.length === 0 || onlyData) {
     return null;
   }
-  
+
   return (
     <div>
       <SectionTitle>Dark Web Facebook Mentions</SectionTitle>

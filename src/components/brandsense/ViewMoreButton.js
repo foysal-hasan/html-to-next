@@ -9,7 +9,7 @@ export default function ViewMoreButton() {
 
   return (
     <Link
-      className="text-white text-sm font-medium leading-normal"
+      className="text-white text-sm font-medium leading-normal mt-6"
       href={searchQuery == '' ? '/blogr' : `/blogr?domain=${searchQuery}`}
     >
       <CustomButton text="View More" />

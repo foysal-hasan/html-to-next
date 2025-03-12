@@ -18,16 +18,16 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 //   ],
 // };
 
-export default function ReputationDonutChart() {
+export default function DonutChart() {
   const [client, setClient] = useState(false);
-  const riskAnalysis = useAppSelector(state => state.posts.riskAnalysis)
+  const riskAnalysis = useAppSelector((state) => state.posts.riskAnalysis);
 
   const data = {
     labels: ['LOW', 'MEDIUM', 'HIGH'],
     datasets: [
       {
         data: [riskAnalysis.low, riskAnalysis.medium, riskAnalysis.high],
-        backgroundColor: ['#32CD32', '#FF8C00', '#FF0000'],
+        backgroundColor: ['#40c754', '#ffa93e', '#c13434'],
         hoverOffset: 4,
       },
     ],
@@ -39,7 +39,12 @@ export default function ReputationDonutChart() {
 
   if (!client) return null;
 
-  if (riskAnalysis.low <= 0 && riskAnalysis.medium <= 0 && riskAnalysis.high <= 0) return null;
+  if (
+    riskAnalysis.low <= 0 &&
+    riskAnalysis.medium <= 0 &&
+    riskAnalysis.high <= 0
+  )
+    return null;
 
   const options = {
     layout: {
@@ -51,6 +56,7 @@ export default function ReputationDonutChart() {
       legend: {
         position: 'bottom', // Moves the labels to the bottom
         labels: {
+          color: 'white', // Sets legend text color to white
           margin: '30px', // Adds spacing between legend items
           padding: 20, // Adds spacing between legend items
           boxWidth: 40, // Ensures better spacing and alignment
@@ -59,9 +65,11 @@ export default function ReputationDonutChart() {
     },
   };
   return (
-    <div className="flex flex-col items-center">
-      {/* <h2 className="text-xl font-semibold mb-4">Reputation by Category</h2> */}
-      <div className="w-96 h-96">
+    <div className="flex flex-col items-center bg-gray-800 rounded-lg p-5 xl:p-10">
+      <h2 className="text-2xl font-bold mb-6 text-white">
+        Risk Analysis Distribution
+      </h2>
+      <div className="w-64 h-64 xl:w-96 xl:h-96">
         <Doughnut data={data} options={options} className="flex" />
       </div>
     </div>

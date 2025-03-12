@@ -16,8 +16,6 @@ export async function POST(req) {
     for (let i = 0; i < posts.length; i += batchSize) {
       const batch = posts.slice(i, i + batchSize);
 
-      // i need also post by language count ,language can be russian, arabic, english if not it is unknown
-
       const prompt = `
       You are a security and fraud analyst. Analyze the sentiment and risk level of each post and classify them as:
       - "low"
@@ -27,7 +25,9 @@ export async function POST(req) {
       Respond with a JSON array of objects:
       - "id": post ID
       - "risk": "low", "medium", or "high"
-      - "language": "russian", "arabic", "english", or "others"
+      - "russianContent": "Translate the content into russian language."
+      - "arabicContent": "Translate the content into arabic language."
+      - "englishContent": "Translate the content into english language."
 
       Posts:
       ${batch.map((p) => `ID: ${p.id}, Content: ${p.content}`).join('\n')}
@@ -94,13 +94,29 @@ export async function POST(req) {
                         enum: ['low', 'medium', 'high'],
                         description: 'The risk level of the mention.',
                       },
-                      language: {
+                      russianContent: {
                         type: 'string',
-                        enum: ['russian', 'arabic', 'english', 'others'],
-                        description: 'The language of the mention.',
+                        description:
+                          'Translate the content into russian language.',
+                      },
+                      arabicContent: {
+                        type: 'string',
+                        description:
+                          'Translate the content into arabic language.',
+                      },
+                      englishContent: {
+                        type: 'string',
+                        description:
+                          'Translate the content into english language.',
                       },
                     },
-                    required: ['id', 'risk', 'language'],
+                    required: [
+                      'id',
+                      'risk',
+                      'russianContent',
+                      'arabicContent',
+                      'englishContent',
+                    ],
                   },
                 },
               },

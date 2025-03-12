@@ -29,10 +29,10 @@ const Boardreader = ({ keyword, domain, onlyData }) => {
           method: 'POST',
           body: JSON.stringify({
             input: {
-              keyword: 'Porn',
-              amount: 10,
-              from_date: '01/01/2025',
-              to_date: '01/15/2025',
+              keyword: keyword,
+              amount: 100,
+              from_date: new Date().toISOString().split('T')[0],
+              to_date: new Date().toISOString().split('T')[0],
             },
             url: 'http://107.189.26.43:5002/scrape',
           }),

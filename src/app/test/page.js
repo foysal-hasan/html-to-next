@@ -1,49 +1,90 @@
-// app/components/StreamData.js
-'use client';
+// 'use client';
+// import { useEffect, useState } from 'react';
 
-import { useEffect, useState } from 'react';
+// const FacebookMentions = () => {
+//   const [posts, setPosts] = useState([]);
+//   const [loading, setLoading] = useState(false);
 
-export default function StreamData() {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+//   useEffect(() => {
+//     const fetchPosts = async () => {
+//       try {
+//         setLoading(true);
+//         // facebook
+//         const facebookRes = await fetch('/api/fetchApifyPosts', {
+//           method: 'POST',
+//           body: JSON.stringify({
+//             input: {
+//               hashtags: ['google'],
+//               resultsType: 'posts',
+//               resultsLimit: 20,
+//             },
+//             url: 'apify/instagram-hashtag-scraper',
+//           }),
+//         });
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await fetch('/api/stream', {
-          method: 'POST',
-          body: JSON.stringify({
-            input: { 
-              "keyword":"Facebook"
-          },
-            url: 'http://172.86.116.124:5002/search',
-          }),
-        });
+//         const facebookPosts = await facebookRes.json();
+//         // console.log('facebook posts: ', facebookPosts);
+//         if (!facebookPosts || facebookPosts.length === 0) {
+//           setLoading(false);
+//           return;
+//         }
 
-        if (!response.ok) {
-          throw new Error('Failed to fetch data');
-        }
-        const result = await response.json();
-        console.log(result)
-        setData(result);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
+//         console.log('posts => ', facebookPosts);
+//         setPosts(facebookPosts);
+//       } catch (error) {
+//         console.error('Instagram API Error:', error);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchPosts();
+//   }, []);
+
+//   if (loading) return <h1>loading...</h1>;
+
+//   return (
+//     <div>
+//       <h1>hello world</h1>
+//       {/* display as objects raw data*/}
+//       {JSON.stringify(posts.slice(0, 3))}
+//     </div>
+//   );
+// };
+
+// export default FacebookMentions;
+
+async function test() {
+  try {
+    const res = await fetch('http://107.189.26.43:5004/search', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        keyword: 'Facebook',
+      }),
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      console.error('API Error:', errorData);
+      return <div>Error: {errorData.error}</div>;
     }
 
-    fetchData();
-  }, []);
+    const data = await res.json();
+    console.log('data', data);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-
-  return (
-    <div>
-      <h1>Stream Data</h1>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
-    </div>
-  );
+    return (
+      <div>
+        <h1>Search Results</h1>
+        <pre>{JSON.stringify(data, null, 2)}</pre>
+      </div>
+    );
+  } catch (error) {
+    console.error('Request failed:', error);
+    return <div>Error: Failed to fetch data</div>;
+  }
 }
+
+export default test;
