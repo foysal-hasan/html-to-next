@@ -1,5 +1,6 @@
 import DarkWebAndSocialMediaMentions from '@/components/brandsense/DarkWebAndSocialMediaMentions';
 import DomainImpersonation from '@/components/brandsense/DomainImpersonation';
+import DonutChart from '@/components/brandsense/DonutChart';
 import LeakedCredentials from '@/components/brandsense/LeakedCredentials';
 import PastebinMentionsSection from '@/components/brandsense/PastebinMentionsSection';
 import SensitiveInformation from '@/components/brandsense/SensitiveInformation';
@@ -14,7 +15,7 @@ export default async function Brandsense({ searchParams }) {
   const search = await searchParams;
   const domain = search?.domain ?? '';
 
-  console.log(domain);
+  // console.log(domain);
 
   if (!domain) {
     return (
@@ -44,7 +45,9 @@ export default async function Brandsense({ searchParams }) {
             Brand Intelligence Report
           </p>
         </div>
-        {/* <DonutChart /> */}
+        <div className="max-w-[500px] mx-auto my-10">
+          <DonutChart />
+        </div>
         {/* <Home /> */}
         <LeakedCredentials domain={domain} />
         <DarkWebAndSocialMediaMentions domain={domain} />

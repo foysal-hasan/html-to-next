@@ -45,44 +45,44 @@ const DarkWebAndSocialMediaMentions = ({ domain, onlyData }) => {
           onlyData={onlyData}
         />
         <InstagramMentions
-          keyword={keyword}
-          domain={domain}
-          onlyData={onlyData}
-        />
+            keyword={keyword}
+            domain={domain}
+            onlyData={onlyData}
+          />
 
-        <FacebookMentions
-          keyword={keyword}
-          domain={domain}
-          onlyData={onlyData}
-        />
-        <TwitterMentions
-          keyword={keyword}
-          domain={domain}
-          onlyData={onlyData}
-        />
+          <FacebookMentions
+            keyword={keyword}
+            domain={domain}
+            onlyData={onlyData}
+          />
+          <TwitterMentions
+            keyword={keyword}
+            domain={domain}
+            onlyData={onlyData}
+          />
 
-        <Posts keyword={keyword} domain={domain} onlyData={onlyData} />
+          <Posts keyword={keyword} domain={domain} onlyData={onlyData} />
 
-        <DarkwebFacebookPosts
-          keyword={keyword}
-          domain={domain}
-          onlyData={onlyData}
-        />
-        <DarkwebStealerMentions
-          keyword={keyword}
-          domain={domain}
-          onlyData={onlyData}
-        />
-        <DarkwebXSSPosts
-          keyword={keyword}
-          domain={domain}
-          onlyData={onlyData}
-        />
-        <Breachforum keyword={keyword} domain={domain} onlyData={onlyData} />
-        <VKPostsScraper keyword={keyword} domain={domain} onlyData={onlyData} />
-        <SearchExploit keyword={keyword} domain={domain} onlyData={onlyData} />
-        <SearchXss keyword={keyword} domain={domain} onlyData={onlyData} />
-        <Boardreader keyword={keyword} domain={domain} onlyData={onlyData} />
+          <DarkwebFacebookPosts
+            keyword={keyword}
+            domain={domain}
+            onlyData={onlyData}
+          />
+          <DarkwebStealerMentions
+            keyword={keyword}
+            domain={domain}
+            onlyData={onlyData}
+          />
+          <DarkwebXSSPosts
+            keyword={keyword}
+            domain={domain}
+            onlyData={onlyData}
+          />
+          <Breachforum keyword={keyword} domain={domain} onlyData={onlyData} />
+          <VKPostsScraper keyword={keyword} domain={domain} onlyData={onlyData} />
+          <SearchExploit keyword={keyword} domain={domain} onlyData={onlyData} />
+          <SearchXss keyword={keyword} domain={domain} onlyData={onlyData} />
+          <Boardreader keyword={keyword} domain={domain} onlyData={onlyData} />
       </div>
       <div
         className={`flex gap-5 items-center  ${

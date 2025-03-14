@@ -14,7 +14,7 @@ const TelegramMentions = ({ keyword, domain, onlyData }) => {
   const searchQuery = useAppSelector((state) => state.search.searchQuery);
 
   const dispatch = useAppDispatch();
-  console.log('from telegram page: ', keyword);
+  // console.log('from telegram page: ', keyword);
 
   const telegramMentions = useAppSelector(
     (state) => state.posts.telegramMentions,

@@ -163,7 +163,7 @@ export async function POST(req) {
     }
 
     // Log the collected JSON array for debugging
-    console.log('Collected JSON Array:', jsonArray);
+    // console.log('Collected JSON Array:', jsonArray);
 
     // // convert jsonArray to array
     // const jsonArrayArray = JSON.parse(jsonArray);
