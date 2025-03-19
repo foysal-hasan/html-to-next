@@ -1,8 +1,9 @@
 import { useAppSelector } from '@/lib/hooks';
 import { generateCsv, mkConfig } from 'export-to-csv';
 import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
 
-// pdfMake.vfs = pdfFonts.pdfMake.vfs; // Set the virtual file system for the fonts
+pdfMake.vfs = pdfFonts.vfs; // Set the virtual file system for the fonts
 // pdfMake.vfs = pdfFonts.pdfMake.vfs; // Set the virtual file system for the fonts
 const ExportRiskCSV = () => {
   const exportCSV = () => {
@@ -127,7 +128,7 @@ const csvConfig = mkConfig({
 const ExportRiskPDF = () => {
   const posts = useAppSelector((state) => state.posts.allPosts);
 
-  const exportPDF = () => {
+  const exportPDF = async () => {
     const filteredPosts = posts.filter(
       (post) => post.risk === 'medium' || post.risk === 'high',
     );
@@ -167,6 +168,9 @@ const ExportRiskPDF = () => {
           bold: true,
           alignment: 'center',
           margin: [0, 20, 0, 20],
+        },
+        defaultStyle: {
+          font: 'Roboto',
         },
         urlText: {
           fontSize: 12,

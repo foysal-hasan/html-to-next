@@ -46,6 +46,8 @@ const VKPostsScraper = ({ keyword, domain, onlyData }) => {
           return;
         }
 
+        console.log('vkData', vkData);
+
         const normalizedPosts = normalizePosts(vkData, 'vk');
         const classifiedPosts = await classifyPosts(normalizedPosts);
 

@@ -37,6 +37,7 @@ const Breachforum = ({ keyword, domain, onlyData }) => {
         }
 
         const breachforumData = await breachforumRes.json();
+        console.log('breachforumData', breachforumData);
 
         if (!breachforumData || breachforumData.length === 0) {
           setLoading(false);

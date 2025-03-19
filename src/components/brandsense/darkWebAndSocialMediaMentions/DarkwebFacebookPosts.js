@@ -32,11 +32,7 @@ const DarkwebFacebookPosts = ({ keyword, domain, onlyData }) => {
             input: {
               keyword: keyword,
               amount: 100,
-              from_date: new Date().toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-              }),
+              from_date: '01/01/2025',
               to_date: new Date().toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: '2-digit',
@@ -47,7 +43,7 @@ const DarkwebFacebookPosts = ({ keyword, domain, onlyData }) => {
           }),
         });
         const darkwebFacebookPosts = await darkwebFacebookRes.json();
-        // console.log('darkweb Facebook posts: ', darkwebFacebookPosts);
+        console.log('darkweb Facebook posts: ', darkwebFacebookPosts);
         if (!darkwebFacebookPosts || darkwebFacebookPosts.length === 0) {
           setLoading(false);
           return;

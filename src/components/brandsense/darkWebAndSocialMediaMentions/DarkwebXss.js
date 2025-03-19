@@ -29,7 +29,7 @@ const DarkwebXSSPosts = ({ keyword, domain, onlyData }) => {
           body: JSON.stringify({
             input: {
               keyword: keyword,
-              start_date: new Date().toISOString().split('T')[0],
+              start_date: '2025-01-01',
               end_date: new Date().toISOString().split('T')[0],
             },
             url: 'http://172.86.116.124:5004/search_xss',

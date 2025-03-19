@@ -27,11 +27,7 @@ const DarkwebStealerMentions = ({ keyword, domain, onlyData }) => {
           body: JSON.stringify({
             input: {
               keyword: keyword,
-              from_date: new Date().toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-              }),
+              from_date: '01/01/2025',
               to_date: new Date().toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: '2-digit',

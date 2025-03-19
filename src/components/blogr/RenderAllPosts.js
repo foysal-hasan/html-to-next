@@ -10,6 +10,7 @@ import { fetchTelegramPosts } from '../../hooks/fetchposts/telegram';
 import DarkWebAndSocialMediaMentionsCard from '../brandsense/DarkWebAndSocialMediaMentionsCard';
 import SectionLoader from '../SectionLoader';
 import PostPreview from './PostPreview';
+import ExportRiskPDF from '../brandsense/download';
 
 const TwitterPostPreview = ({ post }) => {
   return (
@@ -52,64 +53,6 @@ const TwitterPostPreview = ({ post }) => {
   );
 };
 
-// const fetchInstagramPosts =  (keyword)=> {
-//   return async () => {
-//       const res = await fetch('/api/fetchApifyPosts', {
-//         method: 'POST',
-//         body: JSON.stringify({
-//           input: { search: keyword, searchType: 'hashtag', searchLimit: 1 },
-//           url: 'apify/instagram-search-scraper',
-//         }),
-//       });
-
-//       const rawPosts = await res.json();
-//       console.log('raw posts: ', rawPosts);
-
-//       if (!rawPosts || rawPosts.length === 0) {
-//         setLoading(false);
-//         return;
-//       }
-
-//       const normalizedPosts = normalizePosts(
-//         rawPosts[0]?.topPosts || [],
-//         'instagram',
-//       );
-//       // console.log('normalized: ', normalizedPosts);
-
-//       const classifiedPosts = await classifyPosts(normalizedPosts);
-
-//       // console.log('classifiedPosts', classifiedPosts);
-
-//       return classifiedPosts;
-//     }
-//   }
-
-//   const fetchTelegramPosts = (keyword, dispatch) => {
-//     return async () => {
-//         const res = await fetch('/api/telegramPosts', {
-//           method: 'POST',
-//           body: JSON.stringify({
-//             keyword,
-//           }),
-//         });
-//         const rawPosts = await res.json();
-//         // console.log('telegram posts', rawPosts);
-//         if (!rawPosts || rawPosts.length === 0) {
-//           setLoading(false);
-//           return;
-//         }
-
-//         const normalizedPosts = normalizePosts(rawPosts, 'telegram');
-//         // console.log('normalized: ', normalizedPosts);
-
-//         const classifiedPosts = await classifyPosts(normalizedPosts);
-
-//         console.log('classifiedPosts', classifiedPosts);
-//         dispatch(setTelegramMentions(classifiedPosts));
-//       }
-//       // telegram end
-// }
-
 export default function RenderPostsPage({ domain }) {
   const allPosts = useAppSelector((state) => state.posts.allPosts);
   const [selectedPost, setSelectedPost] = useState(null);
@@ -118,14 +61,10 @@ export default function RenderPostsPage({ domain }) {
     startDate: '',
     endDate: '',
     riskLevel: '',
+    source: '',
   });
 
   console.log('selected post: ', selectedPost);
-  // const dispatch = useAppDispatch()
-
-  // useEffect(()=>{
-  //   dispatch(reset())
-  // }, [domain])
 
   useEffect(() => {
     setSelectedPost(allPosts[0]);
@@ -136,9 +75,7 @@ export default function RenderPostsPage({ domain }) {
   console.log('all posts: ', allPosts);
 
   const filteredPosts = allPosts ? filterPosts(allPosts, filters) : [];
-  console.log(allPosts);
-
-  // if (!allPosts || allPosts?.length <= 0) return null;
+  // console.log(allPosts);
 
   const handleScroll = (e) => {
     const bottom =
@@ -151,6 +88,9 @@ export default function RenderPostsPage({ domain }) {
   return (
     <main className="w-full min-h-screen bg-gray-900">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-10">
+        <div className="flex justify-end mb-6">
+          <ExportRiskPDF />
+        </div>
         <div className="flex flex-col space-y-6">
           {/* Header and Filters */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-gray-800/50 p-4 rounded-lg">
@@ -185,6 +125,32 @@ export default function RenderPostsPage({ domain }) {
                 <option value="medium">Medium</option>
                 <option value="high">High</option>
               </select>
+              <select
+                className="bg-gray-700 text-white border-gray-600 p-2 rounded-md flex-1 sm:flex-none min-w-[140px] focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onChange={(e) =>
+                  setFilters({ ...filters, source: e.target.value })
+                }
+              >
+                <option value="">All Sources</option>
+                {/* <option value="telegram">Telegram</option>
+                <option value="twitter">Twitter</option>
+                <option value="instagram">Instagram</option>
+                <option value="facebook">Facebook</option>
+                <option value="darkwebxss">Dark Web XSS</option>
+                <option value="breachforum">Breach Forum</option>
+                <option value="darkwebfacebook">Dark Web Facebook</option> */}
+                <option value="Instagram">Instagram</option>
+                <option value="facebook">Facebook</option>
+                <option value="telegram">Telegram</option>
+                <option value="twitter">Twitter</option>
+                <option value="vk">VK</option>
+                {/* <option value="darkweb">Dark Web Stealer</option>
+                <option value="darkwebxss">Dark Web XSS</option> */}
+                <option value="posts">Posts</option>
+                <option value="searchExploit">Search Exploit</option>
+                <option value="searchXss">Search XSS</option>
+                <option value="breachforum">Breachforum</option>
+              </select>
             </div>
           </div>
 
@@ -195,7 +161,6 @@ export default function RenderPostsPage({ domain }) {
               className="lg:col-span-1 max-h-[calc(100vh-12rem)] overflow-y-auto overflow-x-hidden pr-2"
               onScroll={handleScroll}
               style={{
-                // scrollbarWidth: 'thin',
                 scrollbarColor: '#2dd4bf #1f2937',
               }}
             >
@@ -220,41 +185,6 @@ export default function RenderPostsPage({ domain }) {
               </div>
             </div>
 
-            {/* Preview Panel */}
-            {/* <div className="lg:col-span-2 bg-gray-800 rounded-lg overflow-hidden min-h-[calc(100vh-12rem)]">
-                  <div className="p-6 text-white">
-                    <h2 className="text-2xl font-bold mb-6">Post Preview</h2>
-                    <div className="space-y-6">
-                      <div className="bg-gray-700/50 p-4 rounded-lg">
-                        <strong className="block text-gray-300 mb-2">Date</strong>
-                        <p>{selectedPost?.date}</p>
-                      </div>
-                      <div className="bg-gray-700/50 p-4 rounded-lg">
-                        <strong className="block text-gray-300 mb-2">Content</strong>
-                        <p className="break-words">{selectedPost?.content}</p>
-                      </div>
-                      <div className="bg-gray-700/50 p-4 rounded-lg">
-                        <strong className="block text-gray-300 mb-2">Risk Level</strong>
-                        <p className={`inline-block px-3 py-1 rounded-full ${
-                          selectedPost?.risk === 'high' ? 'bg-red-500/20 text-red-300' :
-                          selectedPost?.risk === 'medium' ? 'bg-yellow-500/20 text-yellow-300' :
-                          'bg-green-500/20 text-green-300'
-                        }`}>
-                          {selectedPost?.risk}
-                        </p>
-                      </div>
-                      <Link
-                        href={`https://${selectedPost?.link}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-block mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                      >
-                        View Original Post
-                      </Link>
-                    </div>
-                  </div>
-
-            </div> */}
             <PostPreview post={selectedPost} />
           </div>
         </div>

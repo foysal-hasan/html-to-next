@@ -25,19 +25,37 @@ const Boardreader = ({ keyword, domain, onlyData }) => {
       try {
         setLoading(true);
         // Dark Web - XSS
-        const darkwebXssRes = await fetch('/api/darkWebPosts', {
+        // const darkwebXssRes = await fetch('/api/darkWebPosts', {
+        //   method: 'POST',
+        //   body: JSON.stringify({
+        //     input: {
+        //       keyword: keyword,
+        //       amount: 10,
+        //       from_date: '01/01/2025',
+        //       to_date: new Date()
+        //         .toLocaleDateString('en-US', {
+        //           month: '2-digit',
+        //           day: '2-digit',
+        //           year: 'numeric',
+        //         })
+        //         .replace(/\//g, '/'), // Format: MM/DD/YYYY
+        //     },
+        //     url: 'http://107.189.26.43:5002/scrape',
+        //   }),
+        // });
+
+        const darkwebXssRes = await fetch('/api/boardreader', {
           method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
           body: JSON.stringify({
-            input: {
-              keyword: keyword,
-              amount: 100,
-              from_date: new Date().toISOString().split('T')[0],
-              to_date: new Date().toISOString().split('T')[0],
-            },
-            url: 'http://107.189.26.43:5002/scrape',
+            keyword: keyword,
           }),
         });
-        const darkwebXssPosts = await darkwebXssRes.json();
+
+        let darkwebXssPosts = await darkwebXssRes.json();
+        darkwebXssPosts = darkwebXssPosts?.posts;
         // console.log('darkweb Xss posts: ', darkwebXssPosts);
 
         if (!darkwebXssPosts || darkwebXssPosts.length === 0) {

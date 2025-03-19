@@ -58,6 +58,7 @@ const getIconBySource = (source) => {
         />
       );
     case 'threads':
+    case 'searchExploit':
       return (
         <Image src={icons.threads} alt="threads Icon" width={50} height={50} />
       );
@@ -188,55 +189,92 @@ const PostPreview = ({ post }) => {
           </div>
         )}
 
-        <div className="bg-gray-700/50 p-4 rounded-lg">
-          <strong className="block text-gray-300 mb-2">Title</strong>
-          {post?.title ? (
-            <p dangerouslySetInnerHTML={{ __html: post?.title }} />
-          ) : (
-            <p
-              dangerouslySetInnerHTML={{
-                __html: post?.content.substring(0, 80),
-              }}
-            />
-          )}
-        </div>
+        {post?.source !== 'searchExploit' && (
+          <div className="bg-gray-700/50 p-4 rounded-lg">
+            <strong className="block text-gray-300 mb-2">Title</strong>
+            {post?.title ? (
+              <p dangerouslySetInnerHTML={{ __html: post?.title }} />
+            ) : (
+              <p
+                dangerouslySetInnerHTML={{
+                  __html: post?.content.substring(0, 80) + '...',
+                }}
+              />
+            )}
+          </div>
+        )}
 
         {/* Images or Media */}
-        {post?.image || post?.media || post?.images || post?.media?.file_url ? (
+        {post?.source !== 'Instagram' &&
+        (post?.image ||
+          post?.media ||
+          post?.images ||
+          post?.media?.file_url) ? (
           <div className="bg-gray-700/50  rounded-lg">
-            <div className="grid grid-cols-2 gap-2">
+            <div
+              className={`grid ${
+                post?.images?.length > 1 ||
+                (post?.media &&
+                  Array.isArray(post?.media) &&
+                  post?.media.length > 1)
+                  ? 'grid-cols-1 sm:grid-cols-2'
+                  : 'grid-cols-1'
+              } gap-4 place-items-center`}
+            >
               {post?.image && (
-                <img
-                  src={post?.image?.uri}
-                  alt="Post Image"
-                  className="rounded p-4"
-                />
+                <div className="flex justify-center w-full max-w-2xl mx-auto p-8">
+                  <img
+                    src={post?.image?.uri}
+                    alt="Post Image"
+                    className="rounded w-full h-full object-cover"
+                  />
+                </div>
               )}
               {post?.media?.file_url && (
-                <img
-                  src={post?.media?.file_url}
-                  alt="Post Image"
-                  className="rounded"
-                />
+                <div className="flex justify-center w-full max-w-2xl mx-auto flex-wrap gap-8 p-8">
+                  <img
+                    src={post?.media?.file_url}
+                    alt="Post Image"
+                    className="rounded w-full h-full object-cover"
+                  />
+                  <img
+                    alt="Post Image"
+                    class="rounded w-full h-full object-cover"
+                    src="https://static40.tgcnt.ru/posts/_0/e2/e2d009ccef9a29178e16123b504283c3.jpg"
+                  ></img>
+                  <img
+                    alt="Post Image"
+                    class="rounded w-full h-full object-cover"
+                    src="https://static40.tgcnt.ru/posts/_0/e2/e2d009ccef9a29178e16123b504283c3.jpg"
+                  ></img>
+                </div>
               )}
               {post?.media &&
                 Array.isArray(post?.media) &&
                 post?.media.map((img, index) => (
-                  <img
+                  <div
                     key={index}
-                    src={img}
-                    alt={`Media ${index + 1}`}
-                    className="rounded p-4"
-                  />
+                    className="flex justify-center w-full max-w-2xl mx-auto flex-wrap gap-8 p-8"
+                  >
+                    <img
+                      src={img}
+                      alt={`Media ${index + 1}`}
+                      className="rounded w-full h-full object-cover"
+                    />
+                  </div>
                 ))}
               {post?.images &&
                 post?.images.map((img, index) => (
-                  <img
+                  <div
                     key={index}
-                    src={img?.thumb}
-                    alt={`Image ${index + 1}`}
-                    className="rounded p-4"
-                  />
+                    className="flex justify-center w-full max-w-2xl mx-auto flex-wrap gap-4"
+                  >
+                    <img
+                      src={img?.thumb}
+                      alt={`Image ${index + 1}`}
+                      className="rounded w-full h-full object-cover"
+                    />
+                  </div>
                 ))}
             </div>
           </div>

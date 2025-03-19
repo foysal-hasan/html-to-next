@@ -49,11 +49,11 @@ export default async function Brandsense({ searchParams }) {
           <DonutChart />
         </div>
         {/* <Home /> */}
-        <LeakedCredentials domain={domain} />
+        {/* <LeakedCredentials domain={domain} /> */}
         <DarkWebAndSocialMediaMentions domain={domain} />
-        <DomainImpersonation domain={domain} />
+        {/* <DomainImpersonation domain={domain} />
         <PastebinMentionsSection domain={domain} />
-        <SensitiveInformation domain={domain} />
+        <SensitiveInformation domain={domain} /> */}
       </div>
     </div>
   );

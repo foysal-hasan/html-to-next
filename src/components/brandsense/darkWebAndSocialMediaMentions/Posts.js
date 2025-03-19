@@ -41,7 +41,7 @@ const Posts = ({ keyword, domain, onlyData }) => {
         });
 
         const postsResponse = await postsRes.json();
-        console.log('facebook posts: ', postsResponse);
+        // console.log('facebook posts: ', postsResponse);
         if (!postsResponse || postsResponse.length === 0) {
           setLoading(false);
           return;

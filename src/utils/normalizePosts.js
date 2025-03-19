@@ -1,3 +1,14 @@
+function normalizedDate(source, date) {
+  if (source === 'telegram' || source === 'facebook') {
+    console.log('date', date);
+    // const timestamp = date; // Unix timestamp in seconds
+    const newDate = new Date(date * 1000); // Convert to millisecond
+    return newDate.toISOString();
+  }
+
+  return date;
+}
+
 // Normalize posts
 const normalizePosts = (posts, source) => {
   // console.log('posts from normalized', posts);
@@ -10,6 +21,7 @@ const normalizePosts = (posts, source) => {
   //     "thread_link": "https://forum.exploit.in/topic/253905/?tab=comments#comment-1538861",
   //     "thread_content": "4 Accounts in total\nVerification badge, Access to email and some socials (github, facebook, youtube)\n400.0K - 800.0k Followers\nGeo (US)\n  Price can be negotiated / %"
   // }
+
   console.log(posts);
   return posts?.map((post) => {
     const id =
@@ -32,13 +44,21 @@ const normalizePosts = (posts, source) => {
         post?.thread_content ||
         post?.hidden_content?.join() ||
         '',
-      date:
+      date: normalizedDate(
+        source,
         post?.postItem?.postDate ||
-        post?.caption?.created_at ||
-        post.createdAt ||
-        post.date ||
-        post.timestamp ||
-        new Date().toISOString(),
+          post?.caption?.created_at ||
+          post.createdAt ||
+          post.date ||
+          post.timestamp ||
+          new Date().toISOString(),
+      ),
+      // post?.postItem?.postDate ||
+      // post?.caption?.created_at ||
+      // post.createdAt ||
+      // post.date ||
+      // post.timestamp ||
+      // new Date().toISOString(),
       link: post?.link?.uri || post.thread_link || post.link || post.url || '#',
     };
   });

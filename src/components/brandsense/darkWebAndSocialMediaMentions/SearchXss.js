@@ -32,7 +32,7 @@ const SearchXss = ({ keyword, domain, onlyData }) => {
           body: JSON.stringify({
             input: {
               keyword: keyword,
-              start_date: new Date().toISOString().split('T')[0],
+              start_date: '2025-01-01',
               end_date: new Date().toISOString().split('T')[0],
             },
             url: 'http://107.189.26.43:5003/search_xss',
@@ -40,7 +40,7 @@ const SearchXss = ({ keyword, domain, onlyData }) => {
         });
 
         const postsResponse = await postsRes.json();
-        console.log('facebook posts: ', postsResponse);
+        // console.log('search xss posts: ', postsResponse);
         if (!postsResponse || postsResponse?.length === 0) {
           setLoading(false);
           return;
@@ -55,7 +55,7 @@ const SearchXss = ({ keyword, domain, onlyData }) => {
             post.content = post?.content?.join(' ');
           }
         });
-        console.log('normalizedPosts', normalizedPosts);
+        // console.log('normalizedPosts', normalizedPosts);
 
         const classifiedPosts = await classifyPosts(normalizedPosts);
 

@@ -1,4 +1,7 @@
-// 'use client';
+'use client';
+
+import { useEffect } from 'react';
+
 // import { useEffect, useState } from 'react';
 
 // const FacebookMentions = () => {
@@ -54,37 +57,50 @@
 
 // export default FacebookMentions;
 
-async function test() {
-  try {
-    const res = await fetch('http://107.189.26.43:5004/search', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        keyword: 'Facebook',
-      }),
-    });
+const Test = () => {
+  // const url =
+  //   'https://facebook-scraper3.p.rapidapi.com/search/posts?query=facebook';
+  // const options = {
+  //   method: 'GET',
+  //   headers: {
+  //     'x-rapidapi-key': 'JCencKSLCumshF194505UMZ3fVOjp1GA57EjsnaTRyaHjVY8Z7',
+  //     'x-rapidapi-host': 'facebook-scraper3.p.rapidapi.com',
+  //   },
+  // };
 
-    if (!res.ok) {
-      const errorData = await res.json();
-      console.error('API Error:', errorData);
-      return <div>Error: {errorData.error}</div>;
-    }
+  // try {
+  //   const response = await fetch(url, options);
+  //   const result = await response.json();
+  //   console.log(result);
+  // } catch (error) {
+  //   console.error(error);
+  // }
 
-    const data = await res.json();
-    console.log('data', data);
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const response = await fetch('/api/boardreader', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          keyword: 'google',
+          amount: 10,
+        }),
+      });
+      const result = await response.json();
+      console.log(result);
+    };
 
-    return (
-      <div>
-        <h1>Search Results</h1>
-        <pre>{JSON.stringify(data, null, 2)}</pre>
-      </div>
-    );
-  } catch (error) {
-    console.error('Request failed:', error);
-    return <div>Error: Failed to fetch data</div>;
-  }
-}
+    fetchPosts();
+  }, []);
 
-export default test;
+  return (
+    <div>
+      <h1>Search Results</h1>
+      {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
+    </div>
+  );
+};
+
+export default Test;
