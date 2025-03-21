@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsCard';
 import SectionTitle from '../SectionTitle';
 
-const SearchXss = ({ keyword, domain, onlyData }) => {
+const SearchXss = ({ keyword, search, onlyData }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -70,12 +70,12 @@ const SearchXss = ({ keyword, domain, onlyData }) => {
       }
     };
 
-    if (searchQuery === domain) {
+    if (searchQuery === search) {
       setPosts(postsMentions.slice(0, 3));
     } else {
       fetchPosts();
     }
-  }, [keyword, domain, searchQuery]);
+  }, [keyword, search, searchQuery, postsMentions, dispatch]);
 
   if (onlyData) {
     return null;

@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsCard';
 import SectionTitle from '../SectionTitle';
 
-const FacebookMentions = ({ keyword, domain, onlyData }) => {
+const FacebookMentions = ({ keyword, search, onlyData }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -25,25 +25,17 @@ const FacebookMentions = ({ keyword, domain, onlyData }) => {
       try {
         setLoading(true);
         // facebook
-        const facebookRes = await fetch('/api/fetchApifyPosts', {
+        const facebookRes = await fetch('/api/facebookPosts', {
           method: 'POST',
           body: JSON.stringify({
-            input: {
-              query: keyword, // replace with domain keyword
-              search_type: 'posts',
-              recent_posts: true,
-              max_posts: 100,
-              max_retries: 5,
-              proxy: {
-                useApifyProxy: true,
-              },
-            },
-            url: 'danek/facebook-search-rental',
+            keyword: keyword,
           }),
         });
 
-        const facebookPosts = await facebookRes.json();
-        // console.log('facebook posts: ', facebookPosts);
+        let facebookPosts = await facebookRes.json();
+        console.log('facebook posts: ', facebookPosts);
+        facebookPosts = facebookPosts?.posts;
+
         if (!facebookPosts || facebookPosts.length === 0) {
           setLoading(false);
           return;
@@ -65,12 +57,12 @@ const FacebookMentions = ({ keyword, domain, onlyData }) => {
       }
     };
 
-    if (searchQuery === domain) {
+    if (searchQuery === search) {
       setPosts(facebookMentions.slice(0, 3));
     } else {
       fetchPosts();
     }
-  }, [keyword, domain]);
+  }, [keyword, search, searchQuery, facebookMentions, dispatch]);
 
   if (onlyData) {
     return null;

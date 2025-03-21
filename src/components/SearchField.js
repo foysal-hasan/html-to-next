@@ -42,7 +42,10 @@ const SearchField = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col sm:flex-row gap-2 w-full"
+    >
       <input
         type="text"
         name="search"
@@ -108,10 +111,7 @@ export { SearchFieldWrapper };
 function SearchFieldWithScript() {
   return (
     <>
-      <div
-        className="search-field w-[300px] absolute px-[10px]"
-        id="searchContainer"
-      >
+      <div className="search-field  absolute px-[10px]" id="searchContainer">
         <SearchFieldWrapper />
       </div>
 

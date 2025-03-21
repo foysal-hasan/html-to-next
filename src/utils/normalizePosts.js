@@ -4,6 +4,15 @@ function normalizedDate(source, date) {
     // const timestamp = date; // Unix timestamp in seconds
     const newDate = new Date(date * 1000); // Convert to millisecond
     return newDate.toISOString();
+  } else if (source === 'threads') {
+    // Extract first date from threads date_posted format
+    const dateMatch = date.match(/(\d{2}-\d{2}-\d{4})/);
+    if (dateMatch) {
+      const [month, day, year] = dateMatch[0].split('-');
+      // console.log('date', month + '-' + day + '-' + year);
+      return new Date(`${day}-${month}-${year}`).toISOString();
+    }
+    return new Date().toISOString();
   }
 
   return date;
@@ -22,7 +31,7 @@ const normalizePosts = (posts, source) => {
   //     "thread_content": "4 Accounts in total\nVerification badge, Access to email and some socials (github, facebook, youtube)\n400.0K - 800.0k Followers\nGeo (US)\n  Price can be negotiated / %"
   // }
 
-  console.log(posts);
+  // console.log(posts);
   return posts?.map((post) => {
     const id =
       post.id ||
@@ -36,11 +45,12 @@ const normalizePosts = (posts, source) => {
         post?.postItem?.text ||
         post?.caption?.text ||
         post?.link?.description ||
-        post.content ||
-        post.text ||
-        post.caption ||
-        post.message ||
-        post.title ||
+        post?.content ||
+        post?.text ||
+        post?.caption ||
+        post?.message ||
+        post?.title ||
+        post?.post_body ||
         post?.thread_content ||
         post?.hidden_content?.join() ||
         '',
@@ -48,9 +58,10 @@ const normalizePosts = (posts, source) => {
         source,
         post?.postItem?.postDate ||
           post?.caption?.created_at ||
-          post.createdAt ||
-          post.date ||
-          post.timestamp ||
+          post?.createdAt ||
+          post?.date ||
+          post?.timestamp ||
+          post?.date_posted ||
           new Date().toISOString(),
       ),
       // post?.postItem?.postDate ||
@@ -59,7 +70,13 @@ const normalizePosts = (posts, source) => {
       // post.date ||
       // post.timestamp ||
       // new Date().toISOString(),
-      link: post?.link?.uri || post.thread_link || post.link || post.url || '#',
+      link:
+        post?.thread_url ||
+        post?.link?.uri ||
+        post?.thread_link ||
+        post?.link ||
+        post?.url ||
+        '#',
     };
   });
 };

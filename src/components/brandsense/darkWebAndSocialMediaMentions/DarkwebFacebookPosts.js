@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsCard';
 import SectionTitle from '../SectionTitle';
 
-const DarkwebFacebookPosts = ({ keyword, domain, onlyData }) => {
+const DarkwebFacebookPosts = ({ keyword, search, onlyData }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -67,12 +67,12 @@ const DarkwebFacebookPosts = ({ keyword, domain, onlyData }) => {
       }
     };
 
-    if (searchQuery === domain) {
+    if (searchQuery === search) {
       setPosts(darkWebFacebookMentions.slice(0, 3));
     } else {
       fetchPosts();
     }
-  }, [keyword]);
+  }, [keyword, search, searchQuery, darkWebFacebookMentions, dispatch]);
 
   if (onlyData) {
     return null;

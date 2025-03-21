@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsCard';
 import SectionTitle from '../SectionTitle';
 
-const VKPostsScraper = ({ keyword, domain, onlyData }) => {
+const VKPostsScraper = ({ keywords, search, onlyData }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const searchQuery = useAppSelector((state) => state.search.searchQuery);
@@ -28,7 +28,7 @@ const VKPostsScraper = ({ keyword, domain, onlyData }) => {
           },
           body: JSON.stringify({
             input: {
-              keywords: [keyword],
+              keywords: keywords,
             },
             url: 'easyapi/vk-posts-scraper',
           }),
@@ -62,12 +62,12 @@ const VKPostsScraper = ({ keyword, domain, onlyData }) => {
       }
     };
 
-    if (searchQuery === domain) {
+    if (searchQuery === search) {
       setPosts(vkPosts.slice(0, 3));
     } else {
       fetchPosts();
     }
-  }, [keyword, domain, searchQuery, dispatch, vkPosts]);
+  }, [keywords, search, searchQuery, dispatch, vkPosts]);
 
   if (onlyData) {
     return null;

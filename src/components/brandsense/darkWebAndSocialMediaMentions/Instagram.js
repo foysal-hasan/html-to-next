@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsCard';
 import SectionTitle from '../SectionTitle';
 
-const InstagramMentions = ({ keyword, domain, onlyData }) => {
+const InstagramMentions = ({ keywords, search, onlyData }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const searchQuery = useAppSelector((state) => state.search.searchQuery);
@@ -26,7 +26,7 @@ const InstagramMentions = ({ keyword, domain, onlyData }) => {
           method: 'POST',
           body: JSON.stringify({
             input: {
-              hashtags: [keyword],
+              hashtags: keywords,
               resultsType: 'posts',
               resultsLimit: 100,
             },
@@ -55,12 +55,12 @@ const InstagramMentions = ({ keyword, domain, onlyData }) => {
       }
     };
 
-    if (searchQuery === domain) {
+    if (searchQuery === search) {
       setPosts(instagramMentions?.slice(0, 3));
     } else {
       fetchInstagramPosts();
     }
-  }, [keyword, domain, searchQuery, instagramMentions, dispatch]);
+  }, [keywords, search, searchQuery, instagramMentions, dispatch]);
 
   if (onlyData) {
     return null;

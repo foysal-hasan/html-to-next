@@ -26,6 +26,7 @@ const initialState = {
   boardreader: [],
   breachforum: [],
   vkPosts: [],
+  threads: [],
 };
 
 const updateRiskAnalysis = (state, newMentions) => {
@@ -87,6 +88,7 @@ const postsSlice = createSlice({
       state.boardreader = [];
       state.breachforum = [];
       state.vkPosts = [];
+      state.threads = [];
     },
     setInstagramMentions(state, action) {
       state.instagramMentions = action.payload;
@@ -167,6 +169,12 @@ const postsSlice = createSlice({
       updateLanguageAnalysis(state, action.payload);
       updateAllPosts(state, action.payload);
     },
+    setThreads(state, action) {
+      state.threads = action.payload;
+      updateRiskAnalysis(state, action.payload);
+      updateLanguageAnalysis(state, action.payload);
+      updateAllPosts(state, action.payload);
+    },
   },
 });
 
@@ -187,6 +195,7 @@ export const {
   setBoardreader,
   setBreachforum,
   setVkPosts,
+  setThreads,
 } = postsSlice.actions;
 
 export default postsSlice.reducer;

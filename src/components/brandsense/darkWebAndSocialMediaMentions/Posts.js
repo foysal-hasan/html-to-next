@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsCard';
 import SectionTitle from '../SectionTitle';
 
-const Posts = ({ keyword, domain, onlyData }) => {
+const Posts = ({ keywords, search, onlyData }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -28,7 +28,7 @@ const Posts = ({ keyword, domain, onlyData }) => {
           method: 'POST',
           body: JSON.stringify({
             input: {
-              queries: [keyword],
+              queries: keywords,
               limit: 100,
               sort: 'latest',
               proxyConfiguration: {
@@ -63,12 +63,12 @@ const Posts = ({ keyword, domain, onlyData }) => {
       }
     };
 
-    if (searchQuery === domain) {
+    if (searchQuery === search) {
       setPosts(postsMentions.slice(0, 3));
     } else {
       fetchPosts();
     }
-  }, [keyword, domain]);
+  }, [keywords, search, searchQuery, postsMentions, dispatch]);
 
   if (onlyData) {
     return null;

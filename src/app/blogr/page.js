@@ -11,26 +11,32 @@ const isValidDomain = (domain) => {
 
 export default async function Blogr({ searchParams }) {
   const search = await searchParams;
-  const domain = search?.domain ?? '';
+  const domains = search?.domain ?? '';
 
-  if (!domain) {
+  console.log(domains);
+
+  if (!domains) {
     return (
       <div className="flex flex-col items-center justify-center h-[90vh]">
         <h1 className="text-white text-2xl mb-4">Enter a domain to search</h1>
-        <p className="text-gray-400">Example: example.com</p>
+        <p className="text-gray-400">Example: example.com, another.com</p>
       </div>
     );
   }
 
-  if (!isValidDomain(domain)) {
-    return (
-      <div className="flex flex-col items-center justify-center h-[90vh]">
-        <h1 className="text-white text-2xl mb-4">Invalid domain format</h1>
-        <p className="text-gray-400">
-          Please enter a valid domain (e.g., example.com)
-        </p>
-      </div>
-    );
+  const domainsArray = domains.split(',');
+
+  for (const domain of domainsArray) {
+    if (!isValidDomain(domain.trim())) {
+      return (
+        <div className="flex flex-col items-center justify-center h-[90vh]">
+          <h1 className="text-white text-2xl mb-4">Invalid domain format</h1>
+          <p className="text-gray-400">
+            Please enter a valid domain (e.g., example.com)
+          </p>
+        </div>
+      );
+    }
   }
 
   return (
@@ -43,7 +49,11 @@ export default async function Blogr({ searchParams }) {
         <DonutChart />
         <ChartBar />
       </div>
-      <DarkWebAndSocialMediaMentions domain={domain} onlyData={true} />
+      <DarkWebAndSocialMediaMentions
+        domains={domainsArray}
+        search={domains}
+        onlyData={true}
+      />
       {/* <RenderPosts domain={domain} source={telegram} />
       <RenderPosts domain={domain} source={instagram} />
       <RenderPosts domain={domain} source={facebook} />
@@ -53,7 +63,7 @@ export default async function Blogr({ searchParams }) {
       <RenderPosts domain={domain} source={darkwebFacebook} />
       <RenderPosts domain={domain} source={darkwebStealer} />
       <RenderPosts domain={domain} source={darkwebXss} /> */}
-      <RenderAllPosts domain={domain} />
+      <RenderAllPosts domain={search} />
     </>
   );
 }

@@ -4,8 +4,6 @@ import { setSearchQuery } from '@/lib/features/search/searchSlices';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { useEffect } from 'react';
 import DarkwebFacebookPosts from './darkWebAndSocialMediaMentions/DarkwebFacebookPosts';
-import DarkwebStealerMentions from './darkWebAndSocialMediaMentions/DarkwebStealerMentions';
-import DarkwebXSSPosts from './darkWebAndSocialMediaMentions/DarkwebXss';
 import SearchXss from './darkWebAndSocialMediaMentions/SearchXss';
 import ExportRiskPDF from './download';
 import SectionTitle from './SectionTitle';
@@ -19,19 +17,23 @@ import Breachforum from './darkWebAndSocialMediaMentions/Breachforum';
 import VKPostsScraper from './darkWebAndSocialMediaMentions/VKPostsScraper';
 import SearchExploit from './darkWebAndSocialMediaMentions/SearchExploit';
 import Boardreader from './darkWebAndSocialMediaMentions/Boardreader';
+import Threads from './darkWebAndSocialMediaMentions/Threads';
+import DarkwebXSSPosts from './darkWebAndSocialMediaMentions/DarkwebXss';
 
-const DarkWebAndSocialMediaMentions = ({ domain, onlyData }) => {
+const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
   const dispatch = useAppDispatch();
   const searchQuery = useAppSelector((state) => state.search.searchQuery);
 
   useEffect(() => {
-    if (searchQuery !== domain) {
+    if (searchQuery !== search) {
       dispatch(reset());
-      dispatch(setSearchQuery(domain));
+      dispatch(setSearchQuery(search));
     }
-  }, [domain, searchQuery, dispatch]);
+  }, [search, searchQuery, dispatch]);
 
-  const keyword = domain.split('.')[0];
+  // get all keywords from domains
+  const keywords = domains.map((domain) => domain.split('.')[0]?.trim());
+  console.log(keywords);
   return (
     <div className={`border-[#3b4854] ${!onlyData && 'border-b-2'}  pb-8`}>
       {!onlyData && (
@@ -40,50 +42,67 @@ const DarkWebAndSocialMediaMentions = ({ domain, onlyData }) => {
 
       <div className="max-w-4xl flex flex-col gap-10">
         <TelegramMentions
-          keyword={keyword}
-          domain={domain}
+          keyword={keywords[0]}
+          search={search}
           onlyData={onlyData}
         />
         <InstagramMentions
-          keyword={keyword}
-          domain={domain}
+          keywords={keywords}
+          search={search}
           onlyData={onlyData}
         />
 
         <FacebookMentions
-          keyword={keyword}
-          domain={domain}
-          onlyData={onlyData}
-        />
-        <TwitterMentions
-          keyword={keyword}
-          domain={domain}
+          keyword={keywords[0]}
+          search={search}
           onlyData={onlyData}
         />
 
-        <Posts keyword={keyword} domain={domain} onlyData={onlyData} />
+        <TwitterMentions
+          keywords={keywords}
+          search={search}
+          onlyData={onlyData}
+        />
+
+        <Posts keywords={keywords} search={search} onlyData={onlyData} />
 
         <DarkwebFacebookPosts
-          keyword={keyword}
-          domain={domain}
+          keyword={keywords[0]}
+          search={search}
           onlyData={onlyData}
         />
 
-        {/* <DarkwebStealerMentions
-          keyword={keyword}
-          domain={domain}
-          onlyData={onlyData}
-        />
-        <DarkwebXSSPosts
-          keyword={keyword}
-          domain={domain}
+        {/* <Breachforum
+          keyword={keywords[0]}
+          search={search}
           onlyData={onlyData}
         /> */}
-        <Breachforum keyword={keyword} domain={domain} onlyData={onlyData} />
-        <VKPostsScraper keyword={keyword} domain={domain} onlyData={onlyData} />
-        <SearchExploit keyword={keyword} domain={domain} onlyData={onlyData} />
-        <SearchXss keyword={keyword} domain={domain} onlyData={onlyData} />
-        <Boardreader keyword={keyword} domain={domain} onlyData={onlyData} />
+
+        <VKPostsScraper
+          keywords={keywords}
+          search={search}
+          onlyData={onlyData}
+        />
+        <SearchExploit
+          keyword={keywords.join(',')}
+          search={search}
+          onlyData={onlyData}
+        />
+        <SearchXss
+          keyword={keywords.join(',')}
+          search={search}
+          onlyData={onlyData}
+        />
+        <Boardreader
+          keyword={keywords.join(',')}
+          search={search}
+          onlyData={onlyData}
+        />
+        <Threads
+          keyword={keywords.join(',')}
+          search={search}
+          onlyData={onlyData}
+        />
       </div>
       <div
         className={`flex gap-5 items-center  ${

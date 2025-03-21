@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import filterPosts from '@/utils/filterPosts';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import { fetchTelegramPosts } from '../../hooks/fetchposts/telegram';
 import DarkWebAndSocialMediaMentionsCard from '../brandsense/DarkWebAndSocialMediaMentionsCard';
 import SectionLoader from '../SectionLoader';
@@ -56,7 +56,7 @@ const TwitterPostPreview = ({ post }) => {
 export default function RenderPostsPage({ domain }) {
   const allPosts = useAppSelector((state) => state.posts.allPosts);
   const [selectedPost, setSelectedPost] = useState(null);
-  const [visiblePosts, setVisiblePosts] = useState(5);
+  const [visiblePosts, setVisiblePosts] = useState(15);
   const [filters, setFilters] = useState({
     startDate: '',
     endDate: '',
@@ -64,15 +64,17 @@ export default function RenderPostsPage({ domain }) {
     source: '',
   });
 
-  console.log('selected post: ', selectedPost);
+  // console.log('selected post: ', selectedPost);
 
   useEffect(() => {
     setSelectedPost(allPosts[0]);
   }, [domain, allPosts]);
 
+  const scrollContainerRef = useRef(null);
+
   if (allPosts?.length <= 0) return <SectionLoader sectionTitle={'Posts'} />;
 
-  console.log('all posts: ', allPosts);
+  // console.log('all posts: ', allPosts);
 
   const filteredPosts = allPosts ? filterPosts(allPosts, filters) : [];
   // console.log(allPosts);
@@ -158,10 +160,12 @@ export default function RenderPostsPage({ domain }) {
           <div className="grid lg:grid-cols-3 gap-6">
             {/* Posts List */}
             <div
+              ref={scrollContainerRef}
               className="lg:col-span-1 max-h-[calc(100vh-12rem)] overflow-y-auto overflow-x-hidden pr-2"
               onScroll={handleScroll}
               style={{
                 scrollbarColor: '#2dd4bf #1f2937',
+                minHeight: '300px',
               }}
             >
               <div className="space-y-4">

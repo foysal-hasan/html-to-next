@@ -13,29 +13,36 @@ const isValidDomain = (domain) => {
 
 export default async function Brandsense({ searchParams }) {
   const search = await searchParams;
-  const domain = search?.domain ?? '';
+  const domains = search?.domain ?? '';
 
-  // console.log(domain);
+  console.log(domains);
 
-  if (!domain) {
+  if (!domains) {
     return (
       <div className="flex flex-col items-center justify-center h-[90vh]">
         <h1 className="text-white text-2xl mb-4">Enter a domain to search</h1>
-        <p className="text-gray-400">Example: example.com</p>
+        <p className="text-gray-400">Example: example.com, another.com</p>
       </div>
     );
   }
 
-  if (!isValidDomain(domain)) {
-    return (
-      <div className="flex flex-col items-center justify-center h-[90vh]">
-        <h1 className="text-white text-2xl mb-4">Invalid domain format</h1>
-        <p className="text-gray-400">
-          Please enter a valid domain (e.g., example.com)
-        </p>
-      </div>
-    );
+  const domainsArray = domains.split(',');
+
+  for (const domain of domainsArray) {
+    if (!isValidDomain(domain.trim())) {
+      return (
+        <div className="flex flex-col items-center justify-center h-[90vh]">
+          <h1 className="text-white text-2xl mb-4">Invalid domain format</h1>
+          <p className="text-gray-400">
+            Please enter a valid domain (e.g., example.com)
+          </p>
+        </div>
+      );
+    }
   }
+
+  // get first domain
+  const firstDomain = domainsArray[0].split('.')[0].trim();
 
   return (
     <div className="px-40 flex flex-1 justify-center py-5 pb-20 ">
@@ -49,11 +56,14 @@ export default async function Brandsense({ searchParams }) {
           <DonutChart />
         </div>
         {/* <Home /> */}
-        {/* <LeakedCredentials domain={domain} /> */}
-        <DarkWebAndSocialMediaMentions domain={domain} />
-        {/* <DomainImpersonation domain={domain} />
-        <PastebinMentionsSection domain={domain} />
-        <SensitiveInformation domain={domain} /> */}
+        <LeakedCredentials domain={firstDomain} />
+        <DarkWebAndSocialMediaMentions
+          domains={domainsArray}
+          search={domains}
+        />
+        <DomainImpersonation domain={firstDomain} />
+        <PastebinMentionsSection domain={firstDomain} />
+        <SensitiveInformation domain={firstDomain} />
       </div>
     </div>
   );

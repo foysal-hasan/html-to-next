@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsCard';
 import SectionTitle from '../SectionTitle';
 
-const Breachforum = ({ keyword, domain, onlyData }) => {
+const Breachforum = ({ keyword, search, onlyData }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const searchQuery = useAppSelector((state) => state.search.searchQuery);
@@ -60,12 +60,12 @@ const Breachforum = ({ keyword, domain, onlyData }) => {
       }
     };
 
-    if (searchQuery === domain) {
+    if (searchQuery === search) {
       setPosts(breachforumPosts.slice(0, 3));
     } else {
       fetchPosts();
     }
-  }, [keyword, domain, searchQuery, dispatch, breachforumPosts]);
+  }, [keyword, search, searchQuery, dispatch, breachforumPosts]);
 
   if (onlyData) {
     return null;

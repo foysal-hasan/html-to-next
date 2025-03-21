@@ -8,7 +8,7 @@ import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsC
 import SectionTitle from '../SectionTitle';
 import SectionLoader from '@/components/SectionLoader';
 
-const TwitterMentions = ({ keyword, domain, onlyData }) => {
+const TwitterMentions = ({ keywords, search, onlyData }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const searchQuery = useAppSelector((state) => state.search.searchQuery);
@@ -27,9 +27,7 @@ const TwitterMentions = ({ keyword, domain, onlyData }) => {
           method: 'POST',
           body: JSON.stringify({
             input: {
-              searchTerms: [
-                keyword, // replace with keyword domain
-              ],
+              searchTerms: keywords,
               sort: 'Latest',
               maxItems: 100,
             },
@@ -59,12 +57,12 @@ const TwitterMentions = ({ keyword, domain, onlyData }) => {
       }
     };
 
-    if (searchQuery === domain) {
+    if (searchQuery === search) {
       setPosts(twitterMentions.slice(0, 3));
     } else {
       fetchPosts();
     }
-  }, [keyword, domain]);
+  }, [keywords, search, searchQuery, twitterMentions, dispatch]);
 
   if (onlyData) {
     return null;

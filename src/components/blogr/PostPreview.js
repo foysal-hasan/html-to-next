@@ -93,7 +93,7 @@ const PostPreview = ({ post }) => {
         });
 
         const data = await response.json();
-        console.log('from post preview', data);
+        // console.log('from post preview', data);
         setTranslations({
           english: data.english,
           russian: data.russian,

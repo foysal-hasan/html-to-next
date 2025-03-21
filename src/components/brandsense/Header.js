@@ -1,12 +1,15 @@
-'use client'
-import Link from "next/link";
-import { SearchFieldWrapper } from "../SearchField";
-
+'use client';
+import Link from 'next/link';
+import { SearchFieldWrapper } from '../SearchField';
 
 import React, { useState } from 'react';
 import { HiMenu, HiX } from 'react-icons/hi';
 import { BiSearch } from 'react-icons/bi';
 import { IoHelpCircleOutline } from 'react-icons/io5';
+import { SlGraph, SlPlus } from 'react-icons/sl';
+import { CiViewTable } from 'react-icons/ci';
+import { FiMapPin } from 'react-icons/fi';
+import Image from 'next/image';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -19,50 +22,112 @@ export default function Header() {
           {/* Logo and Brand - Always Visible */}
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-4 text-white">
-              <div className="size-4">
-                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path fillRule="evenodd" clipRule="evenodd" d="M24 4H6V17.3333V30.6667H24V44H42V30.6667V17.3333H24V4Z" fill="currentColor"></path>
+              {/* <div className="size-4">
+                <svg
+                  viewBox="0 0 48 48"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M24 4H6V17.3333V30.6667H24V44H42V30.6667V17.3333H24V4Z"
+                    fill="currentColor"
+                  ></path>
                 </svg>
-              </div>
-              <h2 className="text-white text-lg font-bold leading-tight tracking-[-0.015em]">
+              </div> */}
+              {/* <h2 className="text-white text-lg font-bold leading-tight tracking-[-0.015em]">
                 BrandSense
-              </h2>
+              </h2> */}
+              <Image
+                src="/assets/logo-2.jpg"
+                alt="Logo"
+                width={100}
+                height={100}
+              />
             </div>
 
             {/* Desktop Navigation */}
-            <nav className="hidden xl:flex items-center gap-6 ml-8">
-              {['Acme Inc.', 'Hacker Report', 'Dashboard', 'Alerts', 'Reports', 'API', 'Docs'].map((item) => (
-                <a key={item} href="#" className="text-white text-sm font-medium hover:text-gray-300 transition-colors">
+            {/* <nav className="hidden xl:flex items-center gap-6 ml-8">
+              {[
+                'Acme Inc.',
+                'Hacker Report',
+                'Dashboard',
+                'Alerts',
+                'Reports',
+                'API',
+                'Docs',
+              ].map((item) => (
+                <a
+                  key={item}
+                  href="#"
+                  className="text-white text-sm font-medium hover:text-gray-300 transition-colors"
+                >
                   {item}
                 </a>
               ))}
-            </nav>
+            </nav> */}
+          </div>
+          <div className="w-full max-w-[900px] hidden md:block mx-4">
+            <SearchFieldWrapper />
           </div>
 
           {/* Right Section - Search, Help, Profile */}
           <div className="flex items-center gap-4">
-
             {/* Search - Hidden on Mobile */}
-            <div className="hidden md:flex items-center min-w-[200px] lg:min-w-[300px] h-10">
+            <div className="hidden lg:flex items-center min-w-[200px] lg:min-w-[300px] h-10">
               {/* <BiSearch className="text-[#9dabb9] ml-4" size={20} /> */}
-          <SearchFieldWrapper />
+              {/* <SearchFieldWrapper /> */}
               {/* <input
                 type="text"
                 placeholder="Search"
                 className="w-full bg-transparent border-none text-white placeholder-[#9dabb9] focus:ring-0 text-sm"
               /> */}
+
+              <div className="items-center gap-8 ml-4 flex">
+                <Link
+                  className="text-white text-sm font-medium leading-normal flex items-center gap-1"
+                  href="/graph"
+                >
+                  <SlGraph className="text-lg" />
+                  <span>Graph</span>
+                </Link>
+                <Link
+                  className="text-white text-sm font-medium leading-normal flex items-center gap-1"
+                  href="/blogr"
+                >
+                  <CiViewTable className="text-lg" />
+                  <span>Blog</span>
+                </Link>
+                <Link
+                  className="text-white text-sm font-medium leading-normal flex items-center gap-1"
+                  href="#"
+                >
+                  <FiMapPin className="text-lg" />
+                  <span>Map</span>
+                </Link>
+
+                {/* <Link
+                  className="text-white text-sm font-medium leading-normal flex items-center gap-1"
+                  href="#"
+                >
+                  <SlPlus className="text-lg" />
+                  <span>New Search</span>
+                </Link> */}
+              </div>
             </div>
 
             {/* Help Button */}
-            <button className="hidden sm:flex items-center justify-center h-10 px-3 bg-[#283139] text-white rounded-xl hover:bg-[#343d47] transition-colors">
+            {/* <button className="hidden sm:flex items-center justify-center h-10 px-3 bg-[#283139] text-white rounded-xl hover:bg-[#343d47] transition-colors">
               <IoHelpCircleOutline size={20} />
-            </button>
+            </button> */}
 
             {/* Profile Picture */}
             <div
               className="size-10 rounded-full bg-cover bg-center bg-no-repeat"
               style={{
-                backgroundImage: 'url("https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80")'
+                backgroundImage:
+                  'url("https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80")',
               }}
             />
 
@@ -78,22 +143,22 @@ export default function Header() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <nav className="lg:hidden py-4 space-y-2">
+          <nav className="lg:hidden py-4 space-y-4">
             {/* Mobile Search */}
             {/* <div className="flex items-center h-10  mb-4"> */}
-              {/* <BiSearch className="text-[#9dabb9] ml-4" size={20} />
+            {/* <BiSearch className="text-[#9dabb9] ml-4" size={20} />
               <input
                 type="text"
                 placeholder="Search"
                 className="w-full bg-transparent border-none text-white placeholder-[#9dabb9] focus:ring-0 text-sm"
               /> */}
             {/* </div> */}
-              <div className="md:hidden">
+            <div className="md:hidden">
               <SearchFieldWrapper />
-              </div>
+            </div>
 
             {/* Mobile Navigation Links */}
-            {['Acme Inc.', 'Hacker Report', 'Dashboard', 'Alerts', 'Reports', 'API', 'Docs'].map((item) => (
+            {/* {['Acme Inc.', 'Hacker Report', 'Dashboard', 'Alerts', 'Reports', 'API', 'Docs'].map((item) => (
               <a
                 key={item}
                 href="#"
@@ -101,15 +166,41 @@ export default function Header() {
               >
                 {item}
               </a>
-            ))}
+            ))} */}
+
+            <Link
+              className="text-white text-sm font-medium leading-normal flex items-center gap-1"
+              href="/graph"
+            >
+              <SlGraph className="text-lg" />
+              <span>Graph</span>
+            </Link>
+            <Link
+              className="text-white text-sm font-medium leading-normal flex items-center gap-1"
+              href="#"
+            >
+              <CiViewTable className="text-lg" />
+              <span>Blog</span>
+            </Link>
+            <Link
+              className="text-white text-sm font-medium leading-normal flex items-center gap-1"
+              href="#"
+            >
+              <FiMapPin className="text-lg" />
+              <span>Map</span>
+            </Link>
+            {/* <Link
+              className="text-white text-sm font-medium leading-normal hidden md:inline"
+              href="#"
+            >
+              New Search
+            </Link> */}
           </nav>
         )}
       </div>
     </header>
   );
 }
-
-
 
 // export default function Header() {
 //   return (
