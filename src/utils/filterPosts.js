@@ -9,6 +9,9 @@ const filterPosts = (posts, filters = {}, limit = null) => {
       if (new Date(post.date) >= endDateObj) return false;
     }
     // console.log('post.date', post.date, 'endDate', endDate);
+    // if (source === '') {
+    //   return true;
+    // }
 
     if (source && post.source !== source) return false;
     if (riskLevel && post.risk !== riskLevel) return false;

@@ -41,6 +41,10 @@ export const classifyPosts = async (posts) => {
       ...post,
       risk: classifiedPosts[index]?.risk || 'Unknown',
       language: classifiedPosts[index]?.language || 'others',
+      location: classifiedPosts[index]?.location || 'Unknown',
+      // translatedTitle: classifiedPosts[index]?.translations?.title || 'Unknown',
+      // translatedContent:
+      //   classifiedPosts[index]?.translations?.content || 'Unknown',
       // russianContent: classifiedPosts[index]?.russianContent || 'Unknown',
       // arabicContent: classifiedPosts[index]?.arabicContent || 'Unknown',
       // englishContent: classifiedPosts[index]?.englishContent || 'Unknown',

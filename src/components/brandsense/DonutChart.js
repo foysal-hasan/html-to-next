@@ -69,7 +69,7 @@ export default function DonutChart() {
       <h2 className="text-2xl font-bold mb-6 text-white">
         Risk Analysis Distribution
       </h2>
-      <div className="w-64 h-64 xl:w-96 xl:h-96">
+      <div className="w-64 h-64 xl:w-80 xl:h-80 lg:w-96 lg:h-96">
         <Doughnut data={data} options={options} className="flex" />
       </div>
     </div>

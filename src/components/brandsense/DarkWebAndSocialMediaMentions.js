@@ -18,7 +18,7 @@ import VKPostsScraper from './darkWebAndSocialMediaMentions/VKPostsScraper';
 import SearchExploit from './darkWebAndSocialMediaMentions/SearchExploit';
 import Boardreader from './darkWebAndSocialMediaMentions/Boardreader';
 import Threads from './darkWebAndSocialMediaMentions/Threads';
-import DarkwebXSSPosts from './darkWebAndSocialMediaMentions/DarkwebXss';
+// import DarkwebXSSPosts from './darkWebAndSocialMediaMentions/DarkwebXss';
 
 const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
   const dispatch = useAppDispatch();
@@ -51,58 +51,45 @@ const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
           search={search}
           onlyData={onlyData}
         />
-
         <FacebookMentions
           keyword={keywords[0]}
           search={search}
           onlyData={onlyData}
         />
-
         <TwitterMentions
           keywords={keywords}
           search={search}
           onlyData={onlyData}
         />
-
         <Posts keywords={keywords} search={search} onlyData={onlyData} />
-
         <DarkwebFacebookPosts
           keyword={keywords[0]}
           search={search}
           onlyData={onlyData}
         />
-
-        {/* <Breachforum
+        <Breachforum
           keyword={keywords[0]}
           search={search}
           onlyData={onlyData}
-        /> */}
-
+        />
         <VKPostsScraper
           keywords={keywords}
           search={search}
           onlyData={onlyData}
         />
         <SearchExploit
-          keyword={keywords.join(',')}
+          keyword={keywords[0]}
           search={search}
           onlyData={onlyData}
         />
-        <SearchXss
-          keyword={keywords.join(',')}
-          search={search}
-          onlyData={onlyData}
-        />
+        <SearchXss keyword={keywords[0]} search={search} onlyData={onlyData} />
+        *
         <Boardreader
-          keyword={keywords.join(',')}
+          keyword={keywords[0]}
           search={search}
           onlyData={onlyData}
         />
-        <Threads
-          keyword={keywords.join(',')}
-          search={search}
-          onlyData={onlyData}
-        />
+        <Threads keyword={keywords[0]} search={search} onlyData={onlyData} />
       </div>
       <div
         className={`flex gap-5 items-center  ${

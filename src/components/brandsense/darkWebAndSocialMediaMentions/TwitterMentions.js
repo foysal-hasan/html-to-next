@@ -42,7 +42,7 @@ const TwitterMentions = ({ keywords, search, onlyData }) => {
         }
 
         const normalizedPosts = normalizePosts(twitterPosts, 'twitter');
-        // console.log('normalized: ', normalizedPosts);
+        console.log('normalized: ', normalizedPosts);
 
         const classifiedPosts = await classifyPosts(normalizedPosts);
 

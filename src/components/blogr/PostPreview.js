@@ -77,6 +77,13 @@ const PostPreview = ({ post }) => {
     arabic: '',
   });
   const [isTranslating, setIsTranslating] = useState(false);
+  const [translatedTitles, setTranslatedTitles] = useState({
+    english: post?.title,
+    russian: '',
+    arabic: '',
+  });
+
+  const [isTranslatingTitle, setIsTranslatingTitle] = useState(false);
 
   useEffect(() => {
     const translateContent = async () => {
@@ -111,6 +118,37 @@ const PostPreview = ({ post }) => {
     }
   }, [post?.content]);
 
+  useEffect(() => {
+    const translateTitle = async () => {
+      setIsTranslatingTitle(true);
+      try {
+        const response = await fetch('/api/translate-tittle', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            title: post?.title,
+          }),
+        });
+        const data = await response.json();
+        setTranslatedTitles({
+          english: data.english,
+          russian: data.russian,
+          arabic: data.arabic,
+        });
+      } catch (err) {
+        console.error('Translation error:', err);
+      } finally {
+        setIsTranslatingTitle(false);
+      }
+    };
+
+    if (post?.title) {
+      translateTitle();
+    }
+  }, [post?.title]);
+
   if (!post) return null;
 
   const renderContent = () => {
@@ -123,6 +161,19 @@ const PostPreview = ({ post }) => {
         return translations.arabic;
       default:
         return translations.english;
+    }
+  };
+
+  const renderTitle = () => {
+    switch (selectedTab) {
+      case 'english':
+        return translatedTitles.english;
+      case 'russian':
+        return translatedTitles.russian;
+      case 'arabic':
+        return translatedTitles.arabic;
+      default:
+        return translatedTitles.english;
     }
   };
 
@@ -173,7 +224,10 @@ const PostPreview = ({ post }) => {
             <strong className="block text-gray-300 mb-2 capitalize">
               Source
             </strong>
-            <p>{post?.source}</p>
+            <p>
+              {post?.source?.slice(0, 1)?.toUpperCase() +
+                post?.source?.slice(1)}
+            </p>
           </div>
           <div>
             <strong className="block text-gray-300 mb-2">Date</strong>
@@ -182,7 +236,7 @@ const PostPreview = ({ post }) => {
         </div>
 
         {/* Title */}
-        {post?.thread_title && (
+        {/* {post?.thread_title && (
           <div className="bg-gray-700/50 p-4 rounded-lg">
             <strong className="block text-gray-300 mb-2">Title</strong>
             <p dangerouslySetInnerHTML={{ __html: post?.thread_title }} />
@@ -201,6 +255,177 @@ const PostPreview = ({ post }) => {
                 }}
               />
             )}
+          </div>
+        )} */}
+
+        {/* {post?.title && (
+          <div className="bg-gray-700/50 p-4 rounded-lg">
+            <strong className="block text-gray-300 mb-2">Title</strong>
+            <p
+              dangerouslySetInnerHTML={{
+                __html: renderTitle(post?.translatedTitle),
+              }}
+            />
+          </div>
+        )} */}
+
+        <div className="bg-gray-700/50 p-4 rounded-lg">
+          <strong className="block text-gray-300 mb-2">Title</strong>
+          {isTranslatingTitle ? (
+            <div className="flex items-center justify-center py-2">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+            </div>
+          ) : renderTitle() ? (
+            <p
+              dangerouslySetInnerHTML={{
+                __html: renderTitle(),
+              }}
+            />
+          ) : (
+            <p>No content available</p>
+          )}
+        </div>
+
+        {post?.source === 'Instagram' && (
+          <div className="bg-gray-700/50 p-4 rounded-lg">
+            <div className="flex gap-4 justify-between">
+              <div>
+                <strong className="block text-gray-300 mb-2">Username</strong>
+                <p dangerouslySetInnerHTML={{ __html: post?.ownerUsername }} />
+              </div>
+
+              <div>
+                <strong className="block text-gray-300 mb-2">Full Name</strong>
+                <p dangerouslySetInnerHTML={{ __html: post?.ownerFullName }} />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {post?.source === 'facebook' && (
+          <div className="bg-gray-700/50 p-4 rounded-lg">
+            <div className="flex gap-4 justify-between">
+              <div>
+                <strong className="block text-gray-300 mb-2">Name</strong>
+                <p dangerouslySetInnerHTML={{ __html: post?.author?.name }} />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {post?.source === 'twitter' && (
+          <div className="bg-gray-700/50 p-4 rounded-lg">
+            <div className="flex gap-4 justify-between">
+              <div className="flex items-center gap-2">
+                <img
+                  src={post?.author?.profilePicture}
+                  alt="Profile Image"
+                  className="w-10 h-10 rounded-full"
+                />
+              </div>
+              <div>
+                <strong className="block text-gray-300 mb-2">Username</strong>
+                <p
+                  dangerouslySetInnerHTML={{ __html: post?.author?.userName }}
+                />
+              </div>
+
+              <div>
+                <strong className="block text-gray-300 mb-2">Full Name</strong>
+                <p dangerouslySetInnerHTML={{ __html: post?.author?.name }} />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {post?.source === 'posts' && (
+          <div className="bg-gray-700/50 p-4 rounded-lg">
+            <div className="flex gap-4 justify-between">
+              <div className="flex items-center gap-2">
+                <img
+                  src={post?.authorAvatar}
+                  alt="Profile Image"
+                  className="w-10 h-10 rounded-full"
+                />
+              </div>
+              <div>
+                <strong className="block text-gray-300 mb-2">Username</strong>
+                <p dangerouslySetInnerHTML={{ __html: post?.authorUsername }} />
+              </div>
+
+              <div>
+                <strong className="block text-gray-300 mb-2">Full Name</strong>
+                <p dangerouslySetInnerHTML={{ __html: post?.authorName }} />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* darkwebfacebook */}
+        {(post?.source === 'darkwebfacebook' ||
+          post?.source === 'darkwebxss') && (
+          <div className="bg-gray-700/50 p-4 rounded-lg">
+            <div className="flex gap-4 justify-between">
+              <div>
+                <strong className="block text-gray-300 mb-2">Username</strong>
+                <p
+                  dangerouslySetInnerHTML={{
+                    __html: post?.posted_by?.split(' ')[1],
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* vk */}
+        {post?.source === 'vk' && (
+          <div className="bg-gray-700/50 p-4 rounded-lg">
+            <div className="flex gap-4 justify-between">
+              <div className="flex items-center gap-2">
+                <img
+                  src={post?.author?.avatar}
+                  alt="Profile Image"
+                  className="w-10 h-10 rounded-full"
+                />
+              </div>
+              <div>
+                <strong className="block text-gray-300 mb-2">Full Name</strong>
+                <p dangerouslySetInnerHTML={{ __html: post?.author?.name }} />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* SearchExploit */}
+        {post?.source === 'searchExploit' && (
+          <div className="bg-gray-700/50 p-4 rounded-lg">
+            <div className="flex gap-4 justify-between">
+              <div>
+                <strong className="block text-gray-300 mb-2">Username</strong>
+                <p
+                  dangerouslySetInnerHTML={{
+                    __html: post?.username,
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* SearchXss */}
+        {post?.source === 'searchXss' && (
+          <div className="bg-gray-700/50 p-4 rounded-lg">
+            <div className="flex gap-4 justify-between">
+              <div>
+                <strong className="block text-gray-300 mb-2">Username</strong>
+                <p
+                  dangerouslySetInnerHTML={{
+                    __html: post?.author,
+                  }}
+                />
+              </div>
+            </div>
           </div>
         )}
 
@@ -239,12 +464,12 @@ const PostPreview = ({ post }) => {
                   />
                   <img
                     alt="Post Image"
-                    class="rounded w-full h-full object-cover"
+                    className="rounded w-full h-full object-cover"
                     src="https://static40.tgcnt.ru/posts/_0/e2/e2d009ccef9a29178e16123b504283c3.jpg"
                   ></img>
                   <img
                     alt="Post Image"
-                    class="rounded w-full h-full object-cover"
+                    className="rounded w-full h-full object-cover"
                     src="https://static40.tgcnt.ru/posts/_0/e2/e2d009ccef9a29178e16123b504283c3.jpg"
                   ></img>
                 </div>
@@ -287,12 +512,25 @@ const PostPreview = ({ post }) => {
             <div className="flex items-center justify-center py-4">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
             </div>
-          ) : renderContent() ? (
-            <p dangerouslySetInnerHTML={{ __html: renderContent() }} />
+          ) : renderContent(post?.translatedContent) ? (
+            <p
+              dangerouslySetInnerHTML={{
+                __html: renderContent(post?.translatedContent),
+              }}
+            />
           ) : (
             <p>No content available</p>
           )}
         </div>
+
+        {/* <div className="bg-gray-700/50 p-4 rounded-lg">
+          <strong className="block text-gray-300 mb-2">Content</strong>
+          <p
+            dangerouslySetInnerHTML={{
+              __html: renderContent(post?.translatedContent),
+            }}
+          />
+        </div> */}
 
         {/* Risk Level */}
         {post?.risk && (

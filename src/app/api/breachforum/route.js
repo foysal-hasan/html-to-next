@@ -5,7 +5,7 @@ export async function POST(request) {
     // console.log('Searching for keyword:', keyword);
 
     const response = await fetch(
-      'http://144.172.92.117:5000/scrape?keyword=Google',
+      `http://144.172.92.117:5000/scrape?keyword=${keyword}`,
     );
 
     if (!response.ok) {

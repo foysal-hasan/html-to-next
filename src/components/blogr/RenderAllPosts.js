@@ -1,16 +1,12 @@
 'use client';
-import { fetchTwitterPosts } from '@/hooks/fetchposts/twitterPosts';
-import { reset } from '@/lib/features/posts/postsSlices';
-import { useAppDispatch, useAppSelector } from '@/lib/hooks';
+import { useAppSelector } from '@/lib/hooks';
 import filterPosts from '@/utils/filterPosts';
-import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
-import { useEffect, useState, useRef, useLayoutEffect } from 'react';
-import { fetchTelegramPosts } from '../../hooks/fetchposts/telegram';
+import { useEffect, useRef, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../brandsense/DarkWebAndSocialMediaMentionsCard';
+import ExportRiskPDF from '../brandsense/download';
 import SectionLoader from '../SectionLoader';
 import PostPreview from './PostPreview';
-import ExportRiskPDF from '../brandsense/download';
 
 const TwitterPostPreview = ({ post }) => {
   return (
@@ -74,7 +70,7 @@ export default function RenderPostsPage({ domain }) {
 
   if (allPosts?.length <= 0) return <SectionLoader sectionTitle={'Posts'} />;
 
-  // console.log('all posts: ', allPosts);
+  console.log('all posts: ', allPosts);
 
   const filteredPosts = allPosts ? filterPosts(allPosts, filters) : [];
   // console.log(allPosts);
@@ -152,6 +148,8 @@ export default function RenderPostsPage({ domain }) {
                 <option value="searchExploit">Search Exploit</option>
                 <option value="searchXss">Search XSS</option>
                 <option value="breachforum">Breachforum</option>
+                <option value="darkwebxss">Boardreader</option>
+                <option value="threads">Threads</option>
               </select>
             </div>
           </div>
@@ -169,7 +167,7 @@ export default function RenderPostsPage({ domain }) {
               }}
             >
               <div className="space-y-4">
-                {filteredPosts?.slice(0, visiblePosts).map((post, index) => (
+                {filteredPosts?.map((post, index) => (
                   <div
                     key={index}
                     onClick={() => setSelectedPost(post)}

@@ -1,3 +1,4 @@
+import Heatmap from '@/components/blogr/heatmap';
 import RenderAllPosts from '@/components/blogr/RenderAllPosts';
 import ChartBar from '@/components/brandsense/ChartBar';
 import DarkWebAndSocialMediaMentions from '@/components/brandsense/DarkWebAndSocialMediaMentions';
@@ -43,11 +44,14 @@ export default async function Blogr({ searchParams }) {
     <>
       <div
         className="mt-10 flex items-center justify-center gap-10 
-      lg:flex-row flex-col-reverse flex-1
+      lg:flex-row flex-col-reverse flex-1 
       "
       >
         <DonutChart />
         <ChartBar />
+      </div>
+      <div className="w-full max-w-[700px] h-[300px] sm:h-[400px] md:h-[500px] mx-auto mt-5 sm:mt-10 rounded-lg overflow-hidden">
+        <Heatmap />
       </div>
       <DarkWebAndSocialMediaMentions
         domains={domainsArray}

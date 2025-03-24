@@ -31,7 +31,7 @@ const normalizePosts = (posts, source) => {
   //     "thread_content": "4 Accounts in total\nVerification badge, Access to email and some socials (github, facebook, youtube)\n400.0K - 800.0k Followers\nGeo (US)\n  Price can be negotiated / %"
   // }
 
-  // console.log(posts);
+  console.log(posts);
   return posts?.map((post) => {
     const id =
       post.id ||
@@ -77,6 +77,22 @@ const normalizePosts = (posts, source) => {
         post?.link ||
         post?.url ||
         '#',
+      title:
+        post?.thread_title ||
+        post?.title ||
+        (
+          post?.postItem?.text ||
+          post?.caption?.text ||
+          post?.link?.description ||
+          post?.content ||
+          post?.text ||
+          post?.caption ||
+          post?.message ||
+          post?.post_body ||
+          post?.thread_content ||
+          post?.hidden_content?.join()
+        )?.substring(0, 80) ||
+        '',
     };
   });
 };
