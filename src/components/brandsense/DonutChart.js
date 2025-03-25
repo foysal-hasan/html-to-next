@@ -65,11 +65,12 @@ export default function DonutChart() {
     },
   };
   return (
-    <div className="flex flex-col items-center bg-gray-800 rounded-lg p-5 xl:p-10">
+    <div className="flex flex-1 flex-col w-full items-center bg-gray-800 rounded-lg p-5 xl:p-10 h-[435px]">
       <h2 className="text-2xl font-bold mb-6 text-white">
         Risk Analysis Distribution
       </h2>
-      <div className="w-64 h-64 xl:w-80 xl:h-80 lg:w-96 lg:h-96">
+      {/* <div className="w-64 h-64 xl:w-80 xl:h-80 lg:w-96 lg:h-96"> */}
+      <div className="flex-1">
         <Doughnut data={data} options={options} className="flex" />
       </div>
     </div>

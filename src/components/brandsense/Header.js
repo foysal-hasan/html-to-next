@@ -1,6 +1,5 @@
 'use client';
 import Link from 'next/link';
-import { SearchFieldWrapper } from '../SearchField';
 
 import React, { useState } from 'react';
 import { HiMenu, HiX } from 'react-icons/hi';
@@ -10,6 +9,7 @@ import { SlGraph, SlPlus } from 'react-icons/sl';
 import { CiViewTable } from 'react-icons/ci';
 import { FiMapPin } from 'react-icons/fi';
 import Image from 'next/image';
+import SearchFieldWrapper from '../SearchFieldWithMultiKeyword';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -42,8 +42,8 @@ export default function Header() {
               <Image
                 src="/assets/logo-2.jpg"
                 alt="Logo"
-                width={100}
-                height={100}
+                width={110}
+                height={110}
               />
             </div>
 

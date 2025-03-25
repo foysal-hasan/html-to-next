@@ -27,6 +27,7 @@ const initialState = {
   breachforum: [],
   vkPosts: [],
   threads: [],
+  darkWebPosts: [],
 };
 
 const updateRiskAnalysis = (state, newMentions) => {
@@ -74,6 +75,12 @@ const postsSlice = createSlice({
         medium: 0,
         high: 0,
       };
+      state.languageAnalysis = {
+        russian: 0,
+        arabic: 0,
+        english: 0,
+        others: 0,
+      };
       state.instagramMentions = [];
       state.twitterMentions = [];
       state.facebookMentions = [];
@@ -89,6 +96,7 @@ const postsSlice = createSlice({
       state.breachforum = [];
       state.vkPosts = [];
       state.threads = [];
+      state.darkWebPosts = [];
     },
     setInstagramMentions(state, action) {
       state.instagramMentions = action.payload;
@@ -175,6 +183,12 @@ const postsSlice = createSlice({
       updateLanguageAnalysis(state, action.payload);
       updateAllPosts(state, action.payload);
     },
+    setDarkWebPosts(state, action) {
+      state.darkWebPosts = [...state.darkWebPosts, ...action.payload];
+      updateRiskAnalysis(state, action.payload);
+      updateLanguageAnalysis(state, action.payload);
+      updateAllPosts(state, action.payload);
+    },
   },
 });
 
@@ -196,6 +210,7 @@ export const {
   setBreachforum,
   setVkPosts,
   setThreads,
+  setDarkWebPosts,
 } = postsSlice.actions;
 
 export default postsSlice.reducer;

@@ -247,13 +247,13 @@ const ExportRiskPDF = () => {
         <div className="flex gap-4">
           <button
             onClick={exportCSV}
-            className="px-4 py-2 bg-gradient-to-r from-teal-400 to-blue-600 text-white font-semibold rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-teal-500"
+            className="px-4 py-2 bg-gradient-to-r from-teal-400 to-blue-600 text-white  rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-teal-500"
           >
             Export CSV
           </button>
           <button
             onClick={exportPDF}
-            className="bg-blue-500 px-4 py-2 bg-gradient-to-r from-teal-400 to-blue-600 text-white font-semibold rounded-lg hover:opacity-90 focus:outline-none focus:ring-teal-500"
+            className="bg-blue-500 px-4 py-2 bg-gradient-to-r from-teal-400 to-blue-600 text-white  rounded-lg hover:opacity-90 focus:outline-none focus:ring-teal-500"
           >
             Export PDF
           </button>

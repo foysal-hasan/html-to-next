@@ -120,12 +120,17 @@ export default function ChartBar() {
     return null;
 
   return (
-    <div className="flex flex-col md:flex-row items-center bg-gray-800 rounded-lg p-5 xl:p-10 gap-8">
-      <div className="w-64 h-64 xl:w-80 xl:h-80 lg:w-96 lg:h-96 flex items-center justify-center">
-        <Bar data={riskData} options={options} className="flex" />
+    <div className="flex flex-1 flex-col w-full md:flex-row items-center justify-center bg-gray-800 rounded-lg p-5 xl:p-10 gap-8 h-[435px]">
+      {/* <div className="w-64 h-64 xl:w-80 xl:h-80 lg:w-96 lg:h-96 flex items-center justify-center"> */}
+      <div className="flex-1 flex items-center justify-center">
+        <Bar data={riskData} options={options} className="flex xl:text-2xl" />
       </div>
-      <div className="w-64 h-64 xl:w-80 xl:h-80 lg:w-96 lg:h-96 flex items-center justify-center">
-        <Bar data={languageData} options={options} className="flex" />
+      <div className="flex-1 flex items-center justify-center">
+        <Bar
+          data={languageData}
+          options={options}
+          className="flex xl:text-2xl"
+        />
       </div>
     </div>
   );

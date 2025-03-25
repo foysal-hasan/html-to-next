@@ -22,6 +22,7 @@ const getIconBySource = (source) => {
     case 'darkwebxss':
     case 'darkweb':
     case 'searchXss':
+    case 'darkWebPosts':
       return (
         <Image src={icons.darkweb} alt="darkweb Icon" width={50} height={50} />
       );
@@ -182,7 +183,7 @@ const PostPreview = ({ post }) => {
       <h2 className="text-2xl font-bold mb-6">Post Preview</h2>
       <div className="space-y-6">
         {/* Tabs */}
-        <div className="flex space-x-4 mb-4">
+        <div className="flex flex-col sm:flex-row gap-4 sm:space-x-4 mb-4">
           <button
             className={`px-4 py-2 rounded-lg ${
               selectedTab === 'english'
@@ -216,11 +217,11 @@ const PostPreview = ({ post }) => {
         </div>
 
         {/* Date */}
-        <div className="bg-gray-700/50 p-4 rounded-lg flex justify-between">
-          <div className="flex items-center">
+        <div className="bg-gray-700/50 p-4 rounded-lg flex flex-col sm:flex-row  gap-6 sm:justify-between">
+          <div className="flex items-center flex-1">
             {getIconBySource(post?.source)}
           </div>
-          <div>
+          <div className="flex-1">
             <strong className="block text-gray-300 mb-2 capitalize">
               Source
             </strong>
@@ -229,9 +230,11 @@ const PostPreview = ({ post }) => {
                 post?.source?.slice(1)}
             </p>
           </div>
-          <div>
+          <div className="flex-1">
             <strong className="block text-gray-300 mb-2">Date</strong>
-            <p>{post?.date ? new Date(post?.date).toLocaleString() : 'N/A'}</p>
+            <p>
+              {post?.date ? new Date(post?.date).toLocaleDateString() : 'N/A'}
+            </p>
           </div>
         </div>
 
@@ -269,6 +272,169 @@ const PostPreview = ({ post }) => {
           </div>
         )} */}
 
+        {/* start author info */}
+        {post?.source === 'Instagram' && (
+          <div className="bg-gray-700/50 p-4 rounded-lg">
+            <div className="flex gap-4 justify-between">
+              <div className="flex-1">
+                <strong className="block text-gray-300 mb-2">Username</strong>
+                <p dangerouslySetInnerHTML={{ __html: post?.ownerUsername }} />
+              </div>
+
+              <div className="flex-1">
+                <strong className="block text-gray-300 mb-2">Full Name</strong>
+                <p dangerouslySetInnerHTML={{ __html: post?.ownerFullName }} />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {post?.source === 'facebook' && (
+          <div className="bg-gray-700/50 p-4 rounded-lg">
+            <div className="flex gap-4 justify-between">
+              <div className="flex-1">
+                <strong className="block text-gray-300 mb-2">Name</strong>
+                <p dangerouslySetInnerHTML={{ __html: post?.author?.name }} />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {post?.source === 'twitter' && (
+          <div className="bg-gray-700/50 p-4 rounded-lg">
+            <div className="flex gap-4 justify-between">
+              <div className="flex items-center gap-2 flex-1">
+                <img
+                  src={post?.author?.profilePicture}
+                  alt="Profile Image"
+                  className="w-10 h-10 rounded-full"
+                />
+              </div>
+              <div className="flex-1">
+                <strong className="block text-gray-300 mb-2">Username</strong>
+                <p
+                  dangerouslySetInnerHTML={{ __html: post?.author?.userName }}
+                />
+              </div>
+
+              <div className="flex-1">
+                <strong className="block text-gray-300 mb-2">Full Name</strong>
+                <p dangerouslySetInnerHTML={{ __html: post?.author?.name }} />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {post?.source === 'posts' && (
+          <div className="bg-gray-700/50 p-4 rounded-lg">
+            <div className="flex gap-4 justify-between">
+              <div className="flex items-center gap-2 flex-1">
+                <img
+                  src={post?.authorAvatar}
+                  alt="Profile Image"
+                  className="w-10 h-10 rounded-full"
+                />
+              </div>
+              <div className="flex-1">
+                <strong className="block text-gray-300 mb-2">Username</strong>
+                <p dangerouslySetInnerHTML={{ __html: post?.authorUsername }} />
+              </div>
+
+              <div className="flex-1">
+                <strong className="block text-gray-300 mb-2">Full Name</strong>
+                <p dangerouslySetInnerHTML={{ __html: post?.authorName }} />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* darkwebfacebook */}
+        {(post?.source === 'darkwebfacebook' ||
+          post?.source === 'darkwebxss') && (
+          <div className="bg-gray-700/50 p-4 rounded-lg">
+            <div className="flex gap-4 justify-between">
+              <div className="flex-1">
+                <strong className="block text-gray-300 mb-2">Username</strong>
+                <p
+                  dangerouslySetInnerHTML={{
+                    __html: post?.posted_by?.split(' ')[1],
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* vk */}
+        {post?.source === 'vk' && (
+          <div className="bg-gray-700/50 p-4 rounded-lg">
+            <div className="flex gap-4 justify-between">
+              <div className="flex items-center gap-2 flex-1">
+                <img
+                  src={post?.author?.avatar}
+                  alt="Profile Image"
+                  className="w-10 h-10 rounded-full"
+                />
+              </div>
+              <div className="flex-1">
+                <strong className="block text-gray-300 mb-2">Full Name</strong>
+                <p dangerouslySetInnerHTML={{ __html: post?.author?.name }} />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* SearchExploit */}
+        {post?.source === 'searchExploit' && (
+          <div className="bg-gray-700/50 p-4 rounded-lg">
+            <div className="flex gap-4 justify-between">
+              <div className="flex-1">
+                <strong className="block text-gray-300 mb-2">Username</strong>
+                <p
+                  dangerouslySetInnerHTML={{
+                    __html: post?.username,
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* SearchXss */}
+        {post?.source === 'searchXss' && (
+          <div className="bg-gray-700/50 p-4 rounded-lg">
+            <div className="flex gap-4 justify-between">
+              <div className="flex-1">
+                <strong className="block text-gray-300 mb-2">Username</strong>
+                <p
+                  dangerouslySetInnerHTML={{
+                    __html: post?.author,
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* darkWebPosts */}
+        {post?.source === 'darkWebPosts' &&
+          (post?.author || post?.username) && (
+            <div className="bg-gray-700/50 p-4 rounded-lg">
+              <div className="flex gap-4 justify-between">
+                <div className="flex-1">
+                  <strong className="block text-gray-300 mb-2">Username</strong>
+                  <p
+                    dangerouslySetInnerHTML={{
+                      __html: post?.author || post?.username,
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+        {/* end author info */}
+
         <div className="bg-gray-700/50 p-4 rounded-lg">
           <strong className="block text-gray-300 mb-2">Title</strong>
           {isTranslatingTitle ? (
@@ -285,149 +451,6 @@ const PostPreview = ({ post }) => {
             <p>No content available</p>
           )}
         </div>
-
-        {post?.source === 'Instagram' && (
-          <div className="bg-gray-700/50 p-4 rounded-lg">
-            <div className="flex gap-4 justify-between">
-              <div>
-                <strong className="block text-gray-300 mb-2">Username</strong>
-                <p dangerouslySetInnerHTML={{ __html: post?.ownerUsername }} />
-              </div>
-
-              <div>
-                <strong className="block text-gray-300 mb-2">Full Name</strong>
-                <p dangerouslySetInnerHTML={{ __html: post?.ownerFullName }} />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {post?.source === 'facebook' && (
-          <div className="bg-gray-700/50 p-4 rounded-lg">
-            <div className="flex gap-4 justify-between">
-              <div>
-                <strong className="block text-gray-300 mb-2">Name</strong>
-                <p dangerouslySetInnerHTML={{ __html: post?.author?.name }} />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {post?.source === 'twitter' && (
-          <div className="bg-gray-700/50 p-4 rounded-lg">
-            <div className="flex gap-4 justify-between">
-              <div className="flex items-center gap-2">
-                <img
-                  src={post?.author?.profilePicture}
-                  alt="Profile Image"
-                  className="w-10 h-10 rounded-full"
-                />
-              </div>
-              <div>
-                <strong className="block text-gray-300 mb-2">Username</strong>
-                <p
-                  dangerouslySetInnerHTML={{ __html: post?.author?.userName }}
-                />
-              </div>
-
-              <div>
-                <strong className="block text-gray-300 mb-2">Full Name</strong>
-                <p dangerouslySetInnerHTML={{ __html: post?.author?.name }} />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {post?.source === 'posts' && (
-          <div className="bg-gray-700/50 p-4 rounded-lg">
-            <div className="flex gap-4 justify-between">
-              <div className="flex items-center gap-2">
-                <img
-                  src={post?.authorAvatar}
-                  alt="Profile Image"
-                  className="w-10 h-10 rounded-full"
-                />
-              </div>
-              <div>
-                <strong className="block text-gray-300 mb-2">Username</strong>
-                <p dangerouslySetInnerHTML={{ __html: post?.authorUsername }} />
-              </div>
-
-              <div>
-                <strong className="block text-gray-300 mb-2">Full Name</strong>
-                <p dangerouslySetInnerHTML={{ __html: post?.authorName }} />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* darkwebfacebook */}
-        {(post?.source === 'darkwebfacebook' ||
-          post?.source === 'darkwebxss') && (
-          <div className="bg-gray-700/50 p-4 rounded-lg">
-            <div className="flex gap-4 justify-between">
-              <div>
-                <strong className="block text-gray-300 mb-2">Username</strong>
-                <p
-                  dangerouslySetInnerHTML={{
-                    __html: post?.posted_by?.split(' ')[1],
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* vk */}
-        {post?.source === 'vk' && (
-          <div className="bg-gray-700/50 p-4 rounded-lg">
-            <div className="flex gap-4 justify-between">
-              <div className="flex items-center gap-2">
-                <img
-                  src={post?.author?.avatar}
-                  alt="Profile Image"
-                  className="w-10 h-10 rounded-full"
-                />
-              </div>
-              <div>
-                <strong className="block text-gray-300 mb-2">Full Name</strong>
-                <p dangerouslySetInnerHTML={{ __html: post?.author?.name }} />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* SearchExploit */}
-        {post?.source === 'searchExploit' && (
-          <div className="bg-gray-700/50 p-4 rounded-lg">
-            <div className="flex gap-4 justify-between">
-              <div>
-                <strong className="block text-gray-300 mb-2">Username</strong>
-                <p
-                  dangerouslySetInnerHTML={{
-                    __html: post?.username,
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* SearchXss */}
-        {post?.source === 'searchXss' && (
-          <div className="bg-gray-700/50 p-4 rounded-lg">
-            <div className="flex gap-4 justify-between">
-              <div>
-                <strong className="block text-gray-300 mb-2">Username</strong>
-                <p
-                  dangerouslySetInnerHTML={{
-                    __html: post?.author,
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Images or Media */}
         {post?.source !== 'Instagram' &&
@@ -447,7 +470,7 @@ const PostPreview = ({ post }) => {
               } gap-4 place-items-center`}
             >
               {post?.image && (
-                <div className="flex justify-center w-full max-w-2xl mx-auto p-8">
+                <div className="flex justify-center w-full mx-auto">
                   <img
                     src={post?.image?.uri}
                     alt="Post Image"
@@ -456,22 +479,12 @@ const PostPreview = ({ post }) => {
                 </div>
               )}
               {post?.media?.file_url && (
-                <div className="flex justify-center w-full max-w-2xl mx-auto flex-wrap gap-8 p-8">
+                <div className="flex justify-center w-full  mx-auto flex-wrap">
                   <img
                     src={post?.media?.file_url}
                     alt="Post Image"
                     className="rounded w-full h-full object-cover"
                   />
-                  <img
-                    alt="Post Image"
-                    className="rounded w-full h-full object-cover"
-                    src="https://static40.tgcnt.ru/posts/_0/e2/e2d009ccef9a29178e16123b504283c3.jpg"
-                  ></img>
-                  <img
-                    alt="Post Image"
-                    className="rounded w-full h-full object-cover"
-                    src="https://static40.tgcnt.ru/posts/_0/e2/e2d009ccef9a29178e16123b504283c3.jpg"
-                  ></img>
                 </div>
               )}
               {post?.media &&
@@ -479,7 +492,7 @@ const PostPreview = ({ post }) => {
                 post?.media.map((img, index) => (
                   <div
                     key={index}
-                    className="flex justify-center w-full max-w-2xl mx-auto flex-wrap gap-8 p-8"
+                    className="flex justify-center w-full mx-auto flex-wrap gap-8"
                   >
                     <img
                       src={img}
@@ -492,7 +505,7 @@ const PostPreview = ({ post }) => {
                 post?.images.map((img, index) => (
                   <div
                     key={index}
-                    className="flex justify-center w-full max-w-2xl mx-auto flex-wrap gap-4"
+                    className="flex justify-center w-full mx-auto flex-wrap gap-4"
                   >
                     <img
                       src={img?.thumb}

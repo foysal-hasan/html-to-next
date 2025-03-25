@@ -95,13 +95,22 @@ const Heatmap = () => {
         container: mapContainerRef.current,
         style: 'mapbox://styles/mapbox/dark-v11',
         center: [-120, 50],
-        zoom: 1.5,
+        zoom: 4,
       });
 
       mapRef.current.on('load', () => {
         mapRef.current.addSource('posts', {
           type: 'geojson',
           data: geojson,
+        });
+
+        mapRef.current.setFog({
+          range: [0, 10], // how far fog appears from the camera
+          color: '#111827', // base color of fog
+          'high-color': '#111827', // color of sky above horizon
+          'horizon-blend': 0, // disables blending near horizon
+          'space-color': '#111827',
+          'star-intensity': 0,
         });
 
         // mapRef.current.addLayer({
@@ -278,7 +287,13 @@ const Heatmap = () => {
 
   if (!posts) return null;
 
-  return <div id="map" ref={mapContainerRef} style={{ height: '100%' }}></div>;
+  return (
+    <div
+      id="map"
+      ref={mapContainerRef}
+      style={{ height: '100%', width: '100%' }}
+    ></div>
+  );
 };
 
 export default Heatmap;

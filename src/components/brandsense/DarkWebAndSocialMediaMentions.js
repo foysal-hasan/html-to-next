@@ -18,6 +18,7 @@ import VKPostsScraper from './darkWebAndSocialMediaMentions/VKPostsScraper';
 import SearchExploit from './darkWebAndSocialMediaMentions/SearchExploit';
 import Boardreader from './darkWebAndSocialMediaMentions/Boardreader';
 import Threads from './darkWebAndSocialMediaMentions/Threads';
+import DarkWebPosts from './darkWebAndSocialMediaMentions/DarkWebPosts';
 // import DarkwebXSSPosts from './darkWebAndSocialMediaMentions/DarkwebXss';
 
 const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
@@ -62,34 +63,34 @@ const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
           onlyData={onlyData}
         />
         <Posts keywords={keywords} search={search} onlyData={onlyData} />
+
         <DarkwebFacebookPosts
           keyword={keywords[0]}
           search={search}
           onlyData={onlyData}
         />
-        <Breachforum
-          keyword={keywords[0]}
-          search={search}
-          onlyData={onlyData}
-        />
+
+        <Breachforum keyword={keywords[0]} search={search} onlyData={true} />
         <VKPostsScraper
           keywords={keywords}
           search={search}
           onlyData={onlyData}
         />
-        <SearchExploit
-          keyword={keywords[0]}
-          search={search}
-          onlyData={onlyData}
-        />
-        <SearchXss keyword={keywords[0]} search={search} onlyData={onlyData} />
-        *
+        <SearchExploit keyword={keywords[0]} search={search} onlyData={true} />
+        <SearchXss keyword={keywords[0]} search={search} onlyData={true} />
+
         <Boardreader
           keyword={keywords[0]}
           search={search}
           onlyData={onlyData}
         />
-        <Threads keyword={keywords[0]} search={search} onlyData={onlyData} />
+        <Threads keyword={keywords[0]} search={search} onlyData={true} />
+
+        <DarkWebPosts
+          keyword={keywords[0]}
+          search={search}
+          onlyData={onlyData}
+        />
       </div>
       <div
         className={`flex gap-5 items-center  ${

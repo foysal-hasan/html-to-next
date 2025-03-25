@@ -31,7 +31,7 @@ const normalizePosts = (posts, source) => {
   //     "thread_content": "4 Accounts in total\nVerification badge, Access to email and some socials (github, facebook, youtube)\n400.0K - 800.0k Followers\nGeo (US)\n  Price can be negotiated / %"
   // }
 
-  console.log(posts);
+  // console.log(posts);
   return posts?.map((post) => {
     const id =
       post.id ||

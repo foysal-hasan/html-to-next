@@ -145,11 +145,12 @@ export default function RenderPostsPage({ domain }) {
                 {/* <option value="darkweb">Dark Web Stealer</option>
                 <option value="darkwebxss">Dark Web XSS</option> */}
                 <option value="posts">Posts</option>
-                <option value="searchExploit">Search Exploit</option>
+                {/* <option value="searchExploit">Search Exploit</option>
                 <option value="searchXss">Search XSS</option>
-                <option value="breachforum">Breachforum</option>
+                <option value="breachforum">Breachforum</option> */}
                 <option value="darkwebxss">Boardreader</option>
-                <option value="threads">Threads</option>
+                {/* <option value="threads">Threads</option> */}
+                <option value="darkWebPosts">Dark Web</option>
               </select>
             </div>
           </div>

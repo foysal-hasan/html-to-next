@@ -43,14 +43,22 @@ export default async function Blogr({ searchParams }) {
   return (
     <>
       <div
-        className="mt-10 flex items-center justify-center gap-10 
-      lg:flex-row flex-col-reverse flex-1 
+        className="container mx-auto  mt-10  flex items-center justify-center gap-10 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-10
+      xl:flex-row flex-col-reverse
       "
       >
-        <DonutChart />
-        <ChartBar />
+        <div className="flex-1 w-full">
+          <DonutChart />
+        </div>
+        <div className="flex-1 w-full">
+          <ChartBar />
+        </div>
       </div>
-      <div className="w-full max-w-[700px] h-[300px] sm:h-[400px] md:h-[500px] mx-auto mt-5 sm:mt-10 rounded-lg overflow-hidden">
+      <div
+        className="container h-[500px] sm:h-[400px] md:h-[500px] mx-auto mt-5 sm:mt-10 rounded-lg overflow-hidden
+      px-4 sm:px-6 lg:px-8 
+      "
+      >
         <Heatmap />
       </div>
       <DarkWebAndSocialMediaMentions

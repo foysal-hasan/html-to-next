@@ -1,7 +1,7 @@
 'use client';
 import SectionLoader from '@/components/SectionLoader';
 import { classifyPosts } from '@/lib/api/classify';
-import { setBreachforum } from '@/lib/features/posts/postsSlices';
+import { setDarkWebPosts } from '@/lib/features/posts/postsSlices';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import normalizePosts from '@/utils/normalizePosts';
 import { useEffect, useState } from 'react';
@@ -13,7 +13,8 @@ const Breachforum = ({ keyword, search, onlyData }) => {
   const [loading, setLoading] = useState(false);
   const searchQuery = useAppSelector((state) => state.search.searchQuery);
 
-  const breachforumPosts = useAppSelector((state) => state.posts.breachforum);
+  // const breachforumPosts = useAppSelector((state) => state.posts.breachforum);
+  const darkWebPosts = useAppSelector((state) => state.posts.darkWebPosts);
 
   const dispatch = useAppDispatch();
 
@@ -37,20 +38,25 @@ const Breachforum = ({ keyword, search, onlyData }) => {
         }
 
         const breachforumData = await breachforumRes.json();
-        console.log('breachforumData', breachforumData);
+        // console.log('breachforumData', breachforumData);
 
         if (!breachforumData || breachforumData.length === 0) {
           setLoading(false);
           return;
         }
 
+        // const normalizedPosts = normalizePosts(
+        //   breachforumData?.all_posts || [],
+        //   'breachforum',
+        // );
+
         const normalizedPosts = normalizePosts(
           breachforumData?.all_posts || [],
-          'breachforum',
+          'darkWebPosts',
         );
 
         const classifiedPosts = await classifyPosts(normalizedPosts);
-        dispatch(setBreachforum(classifiedPosts));
+        dispatch(setDarkWebPosts(classifiedPosts));
 
         setPosts(classifiedPosts.slice(0, 3));
       } catch (error) {
@@ -61,11 +67,11 @@ const Breachforum = ({ keyword, search, onlyData }) => {
     };
 
     if (searchQuery === search) {
-      setPosts(breachforumPosts.slice(0, 3));
+      setPosts(darkWebPosts.slice(0, 3));
     } else {
       fetchPosts();
     }
-  }, [keyword, search, searchQuery, dispatch, breachforumPosts]);
+  }, [keyword, search, searchQuery, dispatch, darkWebPosts]);
 
   if (onlyData) {
     return null;

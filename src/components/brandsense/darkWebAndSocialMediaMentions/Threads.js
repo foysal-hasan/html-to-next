@@ -1,6 +1,6 @@
 'use client';
 import { classifyPosts } from '@/lib/api/classify';
-import { setThreads } from '@/lib/features/posts/postsSlices';
+import { setDarkWebPosts } from '@/lib/features/posts/postsSlices';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import normalizePosts from '@/utils/normalizePosts';
 import { useEffect, useState } from 'react';
@@ -13,7 +13,8 @@ const Threads = ({ keyword, search, onlyData }) => {
   const [loading, setLoading] = useState(false);
   const searchQuery = useAppSelector((state) => state.search.searchQuery);
 
-  const threadsMentions = useAppSelector((state) => state.posts.threads);
+  // const threadsMentions = useAppSelector((state) => state.posts.threads);
+  const darkWebPosts = useAppSelector((state) => state.posts.darkWebPosts);
 
   const dispatch = useAppDispatch();
 
@@ -43,14 +44,17 @@ const Threads = ({ keyword, search, onlyData }) => {
           return;
         }
 
-        const normalizedThreadsPosts = normalizePosts(threadsPosts, 'threads');
+        const normalizedThreadsPosts = normalizePosts(
+          threadsPosts,
+          'darkWebPosts',
+        );
         // console.log('normalized threads: ', normalizedThreadsPosts);
 
         const classifiedThreadsPosts = await classifyPosts(
           normalizedThreadsPosts,
         );
         // console.log('classifiedThreadsPosts', classifiedThreadsPosts);
-        dispatch(setThreads(classifiedThreadsPosts));
+        dispatch(setDarkWebPosts(classifiedThreadsPosts));
 
         // setPosts((prevPosts) => [
         //   ...prevPosts,
@@ -66,19 +70,11 @@ const Threads = ({ keyword, search, onlyData }) => {
     };
 
     if (searchQuery === search) {
-      setPosts(threadsMentions.slice(0, 3));
+      setPosts(darkWebPosts.slice(0, 3));
     } else {
       fetchPosts();
     }
-  }, [
-    keyword,
-    searchQuery,
-    threadsMentions,
-    dispatch,
-    onlyData,
-    loading,
-    search,
-  ]);
+  }, [keyword, searchQuery, darkWebPosts, dispatch, onlyData, loading, search]);
 
   if (onlyData) {
     return null;

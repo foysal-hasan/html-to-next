@@ -1,10 +1,7 @@
 'use client';
 import SectionLoader from '@/components/SectionLoader';
 import { classifyPosts } from '@/lib/api/classify';
-import {
-  setSearchExploitMentions,
-  setSearchXss,
-} from '@/lib/features/posts/postsSlices';
+import { setDarkWebPosts } from '@/lib/features/posts/postsSlices';
 
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import normalizePosts from '@/utils/normalizePosts';
@@ -18,7 +15,8 @@ const SearchXss = ({ keyword, search, onlyData }) => {
 
   const searchQuery = useAppSelector((state) => state.search.searchQuery);
 
-  const postsMentions = useAppSelector((state) => state.posts.searchXss);
+  // const postsMentions = useAppSelector((state) => state.posts.searchXss);
+  const darkWebPosts = useAppSelector((state) => state.posts.darkWebPosts);
 
   const dispatch = useAppDispatch();
 
@@ -46,7 +44,7 @@ const SearchXss = ({ keyword, search, onlyData }) => {
           return;
         }
 
-        const normalizedPosts = normalizePosts(postsResponse, 'searchXss');
+        const normalizedPosts = normalizePosts(postsResponse, 'darkWebPosts');
         // console.log('normalized: ', normalizedPosts);
 
         // content is array make it string
@@ -60,7 +58,7 @@ const SearchXss = ({ keyword, search, onlyData }) => {
         const classifiedPosts = await classifyPosts(normalizedPosts);
 
         // console.log('classifiedPosts', classifiedPosts);
-        dispatch(setSearchXss(classifiedPosts));
+        dispatch(setDarkWebPosts(classifiedPosts));
 
         setPosts(classifiedPosts.slice(0, 3)); // Show only 2-3 posts
       } catch (error) {
@@ -71,11 +69,11 @@ const SearchXss = ({ keyword, search, onlyData }) => {
     };
 
     if (searchQuery === search) {
-      setPosts(postsMentions.slice(0, 3));
+      setPosts(darkWebPosts.slice(0, 3));
     } else {
       fetchPosts();
     }
-  }, [keyword, search, searchQuery, postsMentions, dispatch]);
+  }, [keyword, search, searchQuery, darkWebPosts, dispatch]);
 
   if (onlyData) {
     return null;
