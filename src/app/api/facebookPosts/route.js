@@ -2,7 +2,7 @@ import { infiniteQueryOptions } from '@tanstack/react-query';
 
 export async function POST(req) {
   const body = await req.json();
-  console.log('body', body);
+  // console.log('body', body);
 
   try {
     const response = await fetch(

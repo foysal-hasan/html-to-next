@@ -158,7 +158,7 @@ export async function POST(req) {
         buffer = ''; // Clear the buffer after successful parsing
       } catch (parseError) {
         // If parsing fails, wait for more chunks
-        console.log('Waiting for more chunks to complete JSON...');
+        // console.log('Waiting for more chunks to complete JSON...');
       }
     }
 

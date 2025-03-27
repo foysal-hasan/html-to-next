@@ -1,6 +1,6 @@
 export async function POST(req) {
   const body = await req.json();
-  console.log('body', body);
+  // console.log('body', body);
 
   try {
     const response = await fetch('http://144.172.92.117:42069/search', {
@@ -15,7 +15,7 @@ export async function POST(req) {
 
     return Response.json({ posts: data?.results });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
 
     return Response.json([]);
   }

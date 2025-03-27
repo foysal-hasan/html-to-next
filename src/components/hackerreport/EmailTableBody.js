@@ -1,5 +1,5 @@
-import { getEmails } from "@/hooks/hackerreport/getEmails";
-import React from "react";
+import { getEmails } from '@/hooks/hackerreport/getEmails';
+import React from 'react';
 
 async function EmailTableBody({ domain }) {
   // const { response } = await getEmails(domain);
@@ -37,7 +37,7 @@ async function EmailTableBody({ domain }) {
     </tbody>;
   }
 
-  console.log(response?.email_list);
+  // console.log(response?.email_list);
 
   return (
     <tbody>

@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const icons = {
   darkweb: '/assets/dark-web.png',
@@ -527,6 +527,7 @@ const PostPreview = ({ post }) => {
             </div>
           ) : renderContent(post?.translatedContent) ? (
             <p
+              className="break-all"
               dangerouslySetInnerHTML={{
                 __html: renderContent(post?.translatedContent),
               }}

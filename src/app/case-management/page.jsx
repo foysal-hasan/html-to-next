@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import Tables from "@/components/Table";
-import { SearchOutlined } from "@ant-design/icons";
-import { Col, Form, Input, Row, Tabs } from "antd";
+import Tables from '@/components/Table';
+import { SearchOutlined } from '@ant-design/icons';
+import { Col, Form, Input, Row, Tabs } from 'antd';
 
 const onChange = (key) => {
   console.log(key);
@@ -10,18 +10,18 @@ const onChange = (key) => {
 
 const items = [
   {
-    key: "1",
-    label: "Tab 1",
+    key: '1',
+    label: 'Tab 1',
     children: <Tables />,
   },
   {
-    key: "2",
-    label: "Tab 2",
+    key: '2',
+    label: 'Tab 2',
     children: <Tables />,
   },
   {
-    key: "3",
-    label: "Tab 3",
+    key: '3',
+    label: 'Tab 3',
     children: <Tables />,
   },
 ];
@@ -44,7 +44,7 @@ const CaseManagementPage = () => {
               name="username"
               className="w-[100%]"
               rules={[
-                { required: true, message: "Please input your Username!" },
+                { required: true, message: 'Please input your Username!' },
               ]}
             >
               <Input prefix={<SearchOutlined />} placeholder="Search..." />

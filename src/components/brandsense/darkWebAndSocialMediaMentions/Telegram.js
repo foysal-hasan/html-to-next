@@ -44,11 +44,11 @@ const TelegramMentions = ({ keyword, search, onlyData }) => {
         }
 
         const normalizedPosts = normalizePosts(rawPosts, 'telegram');
-        console.log('normalized: ', normalizedPosts);
+        // console.log('normalized: ', normalizedPosts);
 
         const classifiedPosts = await classifyPosts(normalizedPosts);
 
-        console.log('classifiedPosts', classifiedPosts);
+        // console.log('classifiedPosts', classifiedPosts);
         dispatch(setTelegramMentions(classifiedPosts));
 
         setPosts(classifiedPosts.slice(0, 3)); // Show only 2-3 posts

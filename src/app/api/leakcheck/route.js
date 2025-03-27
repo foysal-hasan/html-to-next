@@ -1,4 +1,3 @@
-
 export async function GET(req, res) {
   const { searchParams } = new URL(req.url);
   const domain = searchParams.get('domain');
@@ -11,13 +10,13 @@ export async function GET(req, res) {
           'Content-Type': 'application/json',
           'X-API-Key': process.env.LEAKCHECK_API_KEY,
         },
-      }
+      },
     );
     const data = await response.json();
     return Response.json(data?.result);
   } catch (error) {
-   console.log(error);
-   
+    //  console.log(error);
+
     return Response.json([]);
   }
 }

@@ -59,16 +59,16 @@ export default function Home() {
           .call(input);
 
         // Fetch and print Actor results from the run's dataset (if any)
-        console.log('Results from dataset');
-        console.log(
-          `💾 Check your data here: https://console.apify.com/storage/datasets/${run.defaultDatasetId}`,
-        );
+        // console.log('Results from dataset');
+        // console.log(
+        //   `💾 Check your data here: https://console.apify.com/storage/datasets/${run.defaultDatasetId}`,
+        // );
         const { items } = await client
           .dataset(run.defaultDatasetId)
           .listItems();
-        console.log(items);
+        // console.log(items);
       } catch (error) {
-        console.error(`Apify API Error:`, error);
+        // console.error(`Apify API Error:`, error);
       }
     };
     fetchApifyPosts();

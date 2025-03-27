@@ -19,7 +19,7 @@ const fetchDomains = (domain) => {
       includeSearchTerms: [domain?.split('.')[0]],
       excludeSearchTerms: [],
     };
-  
+
     const options = {
       method: 'POST',
       headers: {
@@ -27,26 +27,27 @@ const fetchDomains = (domain) => {
       },
       body: JSON.stringify(body),
     };
-  
-  
-      const response = await fetch(url, options);
-      const result = await response.json();
-     return result?.domainsList
-  
+
+    const response = await fetch(url, options);
+    const result = await response.json();
+    return result?.domainsList;
   };
-}
-
-
+};
 
 const Top = ({ domain }) => {
   // const [domains, setDomains] = useState([]);
   // const [errorMessage, setErrorMessage] = useState('');
-  const {data: domains, isLoading: loading, error, isError } = useQuery({
+  const {
+    data: domains,
+    isLoading: loading,
+    error,
+    isError,
+  } = useQuery({
     queryKey: ['domainImpersonation-top', domain],
-    queryFn: fetchDomains(domain)
-  })
+    queryFn: fetchDomains(domain),
+  });
 
-  console.log(domain);
+  // console.log(domain);
 
   // useEffect(() => {
   //   const fetchDomains = async () => {
@@ -576,7 +577,12 @@ const Bottom = ({ domain }) => {
 const DomainImpersonation = ({ domain }) => {
   console.log(domain);
 
-  const { data: domains, isLoading: loading, error, isError } = useQuery({
+  const {
+    data: domains,
+    isLoading: loading,
+    error,
+    isError,
+  } = useQuery({
     queryKey: ['domainImpersonation-top', domain],
     queryFn: fetchDomains(domain),
   });
@@ -620,13 +626,20 @@ const DomainImpersonation = ({ domain }) => {
   const handleDownload = () => {
     const docDefinition = {
       content: [
-        { text: 'Domain Impersonation', style: 'header', margin: [0, 0, 0, 10] },
+        {
+          text: 'Domain Impersonation',
+          style: 'header',
+          margin: [0, 0, 0, 10],
+        },
         ...domains.map((item, index) => ({
           stack: [
             { text: `Domain Name: ${item?.domainName}`, style: 'subheader' },
             { text: `Date: ${item?.date}`, style: 'subheader' },
             { text: `Action: ${item?.action}`, style: 'subheader' },
-            { text: '----------------------------------------', margin: [0, 10, 0, 0] },
+            {
+              text: '----------------------------------------',
+              margin: [0, 10, 0, 0],
+            },
           ],
           margin: [0, 10, 0, 0],
         })),
@@ -658,7 +671,7 @@ const DomainImpersonation = ({ domain }) => {
       <div className="flex gap-5 items-center justify-center mt-5">
         <div className="flex gap-2">
           <CustomButton
-            text={showAll ? "Show Less" : "View More"}
+            text={showAll ? 'Show Less' : 'View More'}
             onClick={() => setShowAll(!showAll)}
           />
           <CustomButton text="Download" onClick={handleDownload} />

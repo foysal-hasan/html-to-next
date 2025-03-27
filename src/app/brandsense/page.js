@@ -15,7 +15,7 @@ export default async function Brandsense({ searchParams }) {
   const search = await searchParams;
   const domains = search?.domain ?? '';
 
-  console.log(domains);
+  // console.log(domains);
 
   if (!domains) {
     return (

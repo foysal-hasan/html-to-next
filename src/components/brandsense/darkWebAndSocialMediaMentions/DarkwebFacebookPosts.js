@@ -43,7 +43,7 @@ const DarkwebFacebookPosts = ({ keyword, search, onlyData }) => {
           }),
         });
         const darkwebFacebookPosts = await darkwebFacebookRes.json();
-        console.log('darkweb Facebook posts: ', darkwebFacebookPosts);
+        // console.log('darkweb Facebook posts: ', darkwebFacebookPosts);
         if (!darkwebFacebookPosts || darkwebFacebookPosts.length === 0) {
           setLoading(false);
           return;

@@ -1,11 +1,11 @@
-"use client";
-import { useState } from "react";
+'use client';
+import { useState } from 'react';
 
 export default function TopSearch() {
-  const [searchString, setsearchString] = useState("");
+  const [searchString, setsearchString] = useState('');
 
   const handleSearch = (searchTerm) => {
-    console.log(searchTerm);
+    // console.log(searchTerm);
     setsearchString(searchTerm);
   };
 

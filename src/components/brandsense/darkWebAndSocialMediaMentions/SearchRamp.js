@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsCard';
 import SectionTitle from '../SectionTitle';
 
-const Breachforum = ({ keyword, search, onlyData }) => {
+const SearchRamp = ({ keyword, search, onlyData }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const searchQuery = useAppSelector((state) => state.search.searchQuery);
@@ -22,25 +22,27 @@ const Breachforum = ({ keyword, search, onlyData }) => {
     const fetchPosts = async () => {
       try {
         setLoading(true);
-        const breachforumRes = await fetch('/api/breachforum', {
+        const searchRampRes = await fetch('/api/darkWebPosts', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
           body: JSON.stringify({
-            keyword: keyword,
+            input: {
+              keyword: keyword,
+              start_date: '2025-01-01',
+              end_date: new Date().toISOString().split('T')[0],
+            },
+            url: 'http://107.189.26.43:5005/search_ramp',
           }),
         });
 
-        if (!breachforumRes.ok) {
+        if (!searchRampRes.ok) {
           setLoading(false);
           return;
         }
 
-        const breachforumData = await breachforumRes.json();
-        // console.log('breachforumData', breachforumData);
+        const searchRampData = await searchRampRes.json();
+        // console.log('searchRampData', searchRampData);
 
-        if (!breachforumData || breachforumData.length === 0) {
+        if (!searchRampData || searchRampData.length === 0) {
           setLoading(false);
           return;
         }
@@ -51,9 +53,9 @@ const Breachforum = ({ keyword, search, onlyData }) => {
         // );
 
         const normalizedPosts = normalizePosts(
-          breachforumData?.data || [],
+          searchRampData || [],
           'darkWebPosts',
-          'breachforum',
+          'searchRamp',
         );
 
         // console.log('normalizedPosts', normalizedPosts);
@@ -95,4 +97,4 @@ const Breachforum = ({ keyword, search, onlyData }) => {
   );
 };
 
-export default Breachforum;
+export default SearchRamp;

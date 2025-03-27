@@ -42,7 +42,7 @@ const TwitterMentions = ({ keywords, search, onlyData }) => {
         }
 
         const normalizedPosts = normalizePosts(twitterPosts, 'twitter');
-        console.log('normalized: ', normalizedPosts);
+        // console.log('normalized: ', normalizedPosts);
 
         const classifiedPosts = await classifyPosts(normalizedPosts);
 
@@ -51,7 +51,7 @@ const TwitterMentions = ({ keywords, search, onlyData }) => {
 
         setPosts(classifiedPosts.slice(0, 3)); // Show only 2-3 posts
       } catch (error) {
-        console.error('Instagram API Error:', error);
+        // console.error('Instagram API Error:', error);
       } finally {
         setLoading(false);
       }

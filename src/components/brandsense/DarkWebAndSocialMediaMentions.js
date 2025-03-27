@@ -3,23 +3,24 @@ import { reset } from '@/lib/features/posts/postsSlices';
 import { setSearchQuery } from '@/lib/features/search/searchSlices';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { useEffect } from 'react';
-import DarkwebFacebookPosts from './darkWebAndSocialMediaMentions/DarkwebFacebookPosts';
-import SearchXss from './darkWebAndSocialMediaMentions/SearchXss';
+import DarkWebPosts from './darkWebAndSocialMediaMentions/DarkWebPosts';
 import ExportRiskPDF from './download';
 import SectionTitle from './SectionTitle';
 import ViewMoreButton from './ViewMoreButton';
-import Posts from './darkWebAndSocialMediaMentions/Posts';
-import TelegramMentions from './darkWebAndSocialMediaMentions/Telegram';
-import InstagramMentions from './darkWebAndSocialMediaMentions/Instagram';
-import FacebookMentions from './darkWebAndSocialMediaMentions/FacebookMentions';
-import TwitterMentions from './darkWebAndSocialMediaMentions/TwitterMentions';
-import Breachforum from './darkWebAndSocialMediaMentions/Breachforum';
-import VKPostsScraper from './darkWebAndSocialMediaMentions/VKPostsScraper';
-import SearchExploit from './darkWebAndSocialMediaMentions/SearchExploit';
-import Boardreader from './darkWebAndSocialMediaMentions/Boardreader';
-import Threads from './darkWebAndSocialMediaMentions/Threads';
-import DarkWebPosts from './darkWebAndSocialMediaMentions/DarkWebPosts';
 // import DarkwebXSSPosts from './darkWebAndSocialMediaMentions/DarkwebXss';
+import Boardreader from './darkWebAndSocialMediaMentions/Boardreader';
+import Breachforum from './darkWebAndSocialMediaMentions/Breachforum';
+import DarkwebFacebookPosts from './darkWebAndSocialMediaMentions/DarkwebFacebookPosts';
+import FacebookMentions from './darkWebAndSocialMediaMentions/FacebookMentions';
+import InstagramMentions from './darkWebAndSocialMediaMentions/Instagram';
+import Posts from './darkWebAndSocialMediaMentions/Posts';
+import SearchExploit from './darkWebAndSocialMediaMentions/SearchExploit';
+import SearchRamp from './darkWebAndSocialMediaMentions/SearchRamp';
+import SearchXss from './darkWebAndSocialMediaMentions/SearchXss';
+import TelegramMentions from './darkWebAndSocialMediaMentions/Telegram';
+import Threads from './darkWebAndSocialMediaMentions/Threads';
+import TwitterMentions from './darkWebAndSocialMediaMentions/TwitterMentions';
+import VKPostsScraper from './darkWebAndSocialMediaMentions/VKPostsScraper';
 
 const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
   const dispatch = useAppDispatch();
@@ -34,7 +35,7 @@ const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
 
   // get all keywords from domains
   const keywords = domains.map((domain) => domain.split('.')[0]?.trim());
-  console.log(keywords);
+  // console.log(keywords);
   return (
     <div className={`border-[#3b4854] ${!onlyData && 'border-b-2'}  pb-8`}>
       {!onlyData && (
@@ -71,6 +72,7 @@ const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
         />
 
         <Breachforum keyword={keywords[0]} search={search} onlyData={true} />
+        <SearchRamp keyword={keywords[0]} search={search} onlyData={true} />
         <VKPostsScraper
           keywords={keywords}
           search={search}

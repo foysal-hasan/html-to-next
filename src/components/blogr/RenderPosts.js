@@ -134,7 +134,6 @@ const TelegramPostPreview = ({ post }) => {
   );
 };
 
-
 const PostsMentionPreview = ({ post }) => {
   return (
     <div
@@ -188,7 +187,7 @@ export default function RenderPosts({ domain, source }) {
   // console.log('search: ', searchQuery);
   // console.log('domain: ', domain);
   // console.log('search === domain', searchQuery === domain);
-  console.log('dark web fecbook', storePosts?.darkWebFacebookMentions);
+  // console.log('dark web fecbook', storePosts?.darkWebFacebookMentions);
 
   const keyword = domain.split('.')[0];
 
@@ -199,10 +198,10 @@ export default function RenderPosts({ domain, source }) {
   });
 
   useEffect(() => {
-    console.log('working', keyword);
+    // console.log('working', keyword);
     setPosts([]);
 
-    dispatch(reset())
+    dispatch(reset());
     const fetchPosts = async () => {
       try {
         setLoading(true);
@@ -218,7 +217,7 @@ export default function RenderPosts({ domain, source }) {
           });
 
           const rawPosts = await res.json();
-          console.log('raw posts: ', rawPosts);
+          // console.log('raw posts: ', rawPosts);
 
           if (!rawPosts || rawPosts.length === 0) {
             setLoading(false);
@@ -229,11 +228,11 @@ export default function RenderPosts({ domain, source }) {
             rawPosts[0]?.topPosts || [],
             'instagram',
           );
-          console.log('normalized: ', normalizedPosts);
+          // console.log('normalized: ', normalizedPosts);
 
           const classifiedPosts = await classifyPosts(normalizedPosts);
 
-          console.log('classifiedPosts', classifiedPosts);
+          // console.log('classifiedPosts', classifiedPosts);
           dispatch(setInstagramMentions(classifiedPosts));
 
           setPosts(classifiedPosts);
@@ -414,7 +413,7 @@ export default function RenderPosts({ domain, source }) {
           // console.log('normalized: ', normalizedPosts);
 
           const classifiedPosts = await classifyPosts(normalizedPosts);
-          console.log('classifiedPosts', classifiedPosts);
+          // console.log('classifiedPosts', classifiedPosts);
           dispatch(setDarkWebFacebookMentions(classifiedPosts));
 
           setPosts(classifiedPosts);
@@ -494,8 +493,8 @@ export default function RenderPosts({ domain, source }) {
         }
         // darkwebStealer end
       } catch (error) {
-        console.log(error);
-        console.log('Something went wrong');
+        // console.log(error);
+        // console.log('Something went wrong');
       } finally {
         setLoading(false);
       }
@@ -535,7 +534,7 @@ export default function RenderPosts({ domain, source }) {
           break;
         case darkwebFacebook:
           if (storePosts.darkWebFacebookMentions?.length > 0) {
-            console.log(storePosts.darkWebFacebookMentions);
+            // console.log(storePosts.darkWebFacebookMentions);
 
             setPosts(storePosts.darkWebFacebookMentions);
             setSelectedPost(storePosts.darkWebFacebookMentions[0]);
@@ -612,11 +611,11 @@ export default function RenderPosts({ domain, source }) {
       sectionTitle = 'Posts';
   }
 
-  console.log('Section Title: ', sectionTitle);
-  console.log('loading = ', loading);
+  // console.log('Section Title: ', sectionTitle);
+  // console.log('loading = ', loading);
 
   const filteredPosts = posts ? filterPosts(posts, filters) : [];
-  console.log(posts);
+  // console.log(posts);
 
   // if (loading) return <SectionLoader sectionTitle={sectionTitle} />;
 
@@ -631,5 +630,4 @@ export default function RenderPosts({ domain, source }) {
   };
 
   return null;
-
 }

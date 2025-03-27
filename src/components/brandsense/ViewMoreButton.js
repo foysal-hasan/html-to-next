@@ -5,7 +5,7 @@ import CustomButton from './CustomButton';
 
 export default function ViewMoreButton() {
   const searchQuery = useAppSelector((state) => state.search.searchQuery);
-  console.log('search: ', searchQuery);
+  // console.log('search: ', searchQuery);
 
   return (
     <Link

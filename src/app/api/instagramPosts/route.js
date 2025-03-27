@@ -1,6 +1,6 @@
 export async function POST(req) {
   const body = await req.json();
-  console.log(body);
+  // console.log(body);
 
   try {
     const response = await fetch(
@@ -14,7 +14,7 @@ export async function POST(req) {
       },
     );
     const data = await response.json();
-    console.log(data?.data?.items);
+    // console.log(data?.data?.items);
 
     return Response.json(data?.data?.items);
   } catch (error) {

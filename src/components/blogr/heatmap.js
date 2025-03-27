@@ -1,8 +1,8 @@
 'use client';
-import React, { useEffect, useRef, useState } from 'react';
+import { useAppSelector } from '@/lib/hooks';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { useAppSelector } from '@/lib/hooks';
+import { useEffect, useRef, useState } from 'react';
 
 const geocodeLocation = async (locationName) => {
   try {
@@ -15,7 +15,7 @@ const geocodeLocation = async (locationName) => {
     const data = await response.json();
 
     if (!data.features || data.features.length === 0) {
-      console.log('No coordinates found for location:', locationName);
+      // console.log('No coordinates found for location:', locationName);
       return null;
     }
 
@@ -81,7 +81,7 @@ const Heatmap = () => {
           },
         });
       }
-      console.log('Features', features);
+      // console.log('Features', features);
       setGeojson({ type: 'FeatureCollection', features });
     };
 
@@ -106,10 +106,10 @@ const Heatmap = () => {
 
         mapRef.current.setFog({
           range: [0, 10], // how far fog appears from the camera
-          color: '#111827', // base color of fog
-          'high-color': '#111827', // color of sky above horizon
+          color: '#1F2937', // base color of fog
+          'high-color': '#1F2937', // color of sky above horizon
           'horizon-blend': 0, // disables blending near horizon
-          'space-color': '#111827',
+          'space-color': '#1F2937',
           'star-intensity': 0,
         });
 
@@ -279,7 +279,7 @@ const Heatmap = () => {
       // Update GeoJSON source when data changes
       const source = mapRef.current.getSource('posts');
       if (source) {
-        console.log('Updating GeoJSON source', geojson);
+        // console.log('Updating GeoJSON source', geojson);
         source.setData(geojson);
       }
     }
@@ -291,7 +291,11 @@ const Heatmap = () => {
     <div
       id="map"
       ref={mapContainerRef}
-      style={{ height: '100%', width: '100%' }}
+      style={{
+        height: '100%',
+        width: '100%',
+        borderRadius: '8px',
+      }}
     ></div>
   );
 };

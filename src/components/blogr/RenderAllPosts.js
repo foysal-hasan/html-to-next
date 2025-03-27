@@ -70,7 +70,7 @@ export default function RenderPostsPage({ domain }) {
 
   if (allPosts?.length <= 0) return <SectionLoader sectionTitle={'Posts'} />;
 
-  console.log('all posts: ', allPosts);
+  // console.log('all posts: ', allPosts);
 
   const filteredPosts = allPosts ? filterPosts(allPosts, filters) : [];
   // console.log(allPosts);

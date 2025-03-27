@@ -244,7 +244,7 @@ const ExportRiskPDF = () => {
     <div className="flex flex-col gap-4 mt-6">
       {/* Actual implementation */}
       <div>
-        <div className="flex gap-4">
+        <div className="flex gap-4 flex-col md:flex-row">
           <button
             onClick={exportCSV}
             className="px-4 py-2 bg-gradient-to-r from-teal-400 to-blue-600 text-white  rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-teal-500"

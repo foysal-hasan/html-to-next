@@ -13,8 +13,8 @@ export async function POST(request) {
     }
 
     const data = await response.json();
-    console.log('Data:', data);
-    return Response.json(data);
+    // console.log('Data:', data);
+    return Response.json({ data: data });
   } catch (error) {
     // console.error('Breachforum API Error:', error);
     // return Response.json({ error: 'Failed to fetch data' }, { status: 500 });

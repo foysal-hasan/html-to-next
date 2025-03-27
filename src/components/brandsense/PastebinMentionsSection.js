@@ -27,10 +27,15 @@ const PastebinMentionsSection = ({ domain }) => {
   // const [loading, setLoading] = useState(true);
   const [showAll, setShowAll] = useState(false);
 
-  const {data: apiResults, isLoading: loading, error, isError} = useQuery({
+  const {
+    data: apiResults,
+    isLoading: loading,
+    error,
+    isError,
+  } = useQuery({
     queryKey: ['pastebinMentions', domain],
-    queryFn: fetchApiResults(domain)
-  })
+    queryFn: fetchApiResults(domain),
+  });
   // useEffect(() => {
   //   const fetchApiResults = async () => {
   //     const url = `https://google-search72.p.rapidapi.com/search?q=site:pastebin.com ${domain}&lr=en-US&num=20`;
@@ -57,10 +62,9 @@ const PastebinMentionsSection = ({ domain }) => {
 
   //   fetchApiResults();
   // }, [domain]);
-  
+
   // if (isError) return null;
-  console.log(isError);
-  
+  // console.log(isError);
 
   const handleDownload = () => {
     const docDefinition = {
@@ -104,7 +108,6 @@ const PastebinMentionsSection = ({ domain }) => {
   };
 
   if (!apiResults || apiResults?.length == 0) return null;
-
 
   return (
     <div className="border-[#3b4854] border-b-2 pb-8">

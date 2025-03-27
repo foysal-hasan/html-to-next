@@ -86,7 +86,7 @@ export default async function Hackerreport({ searchParams }) {
     // ];
     // console.log(scanDetails?.data?.technologies);
     technologies = scanDetails?.data?.technologies || [];
-    console.log(technologies);
+    // console.log(technologies);
   } catch (err) {
     return (
       <div className="flex flex-col items-center justify-center h-[90vh]">

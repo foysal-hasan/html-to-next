@@ -14,7 +14,7 @@ export default async function Blogr({ searchParams }) {
   const search = await searchParams;
   const domains = search?.domain ?? '';
 
-  console.log(domains);
+  // console.log(domains);
 
   if (!domains) {
     return (
@@ -55,8 +55,8 @@ export default async function Blogr({ searchParams }) {
         </div>
       </div>
       <div
-        className="container h-[500px] sm:h-[400px] md:h-[500px] mx-auto mt-5 sm:mt-10 rounded-lg overflow-hidden
-      px-4 sm:px-6 lg:px-8 
+        className="container h-[500px] sm:h-[400px] md:h-[600px] mx-auto mt-5 sm:mt-10 rounded-xl overflow-hidden
+      px-4 sm:px-6 lg:px-8
       "
       >
         <Heatmap />

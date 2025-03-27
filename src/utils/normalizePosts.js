@@ -1,10 +1,40 @@
-function normalizedDate(source, date) {
+const months = {
+  янв: '01',
+  фев: '02',
+  мар: '03',
+  апр: '04',
+  май: '05',
+  июн: '06',
+  июл: '07',
+  авг: '08',
+  сен: '09',
+  окт: '10',
+  ноя: '11',
+  дек: '12',
+};
+
+function convertRussianDate(dateStr) {
+  try {
+    const [day, monthRus, yearTime] = dateStr.trim().split(' ');
+    const [year, time] = yearTime.split(' в ');
+    const month = months[monthRus.toLowerCase().slice(0, 3)];
+
+    const formattedStr = `${year}-${month}-${day}`;
+    const date = new Date(formattedStr);
+
+    return date.toISOString(); // or return date.toLocaleString(), etc.
+  } catch (e) {
+    return new Date().toISOString();
+  }
+}
+
+function normalizedDate(source, date, dateFormater) {
   if (source === 'telegram' || source === 'facebook') {
-    console.log('date', date);
+    // console.log('date', date);
     // const timestamp = date; // Unix timestamp in seconds
     const newDate = new Date(date * 1000); // Convert to millisecond
     return newDate.toISOString();
-  } else if (source === 'threads') {
+  } else if (dateFormater === 'threads') {
     // Extract first date from threads date_posted format
     const dateMatch = date.match(/(\d{2}-\d{2}-\d{4})/);
     if (dateMatch) {
@@ -13,13 +43,23 @@ function normalizedDate(source, date) {
       return new Date(`${day}-${month}-${year}`).toISOString();
     }
     return new Date().toISOString();
+  } else if (dateFormater === 'breachforum') {
+    // try to parse the date if it is not working return current date
+    try {
+      const newDate = date.split('at')[0];
+      return new Date(newDate).toISOString();
+    } catch (error) {
+      // console.log('error', error);
+      return new Date().toISOString();
+    }
+  } else if (dateFormater === 'searchRamp') {
+    return convertRussianDate(date);
   }
-
   return date;
 }
 
 // Normalize posts
-const normalizePosts = (posts, source) => {
+const normalizePosts = (posts, source, dateFormater) => {
   // console.log('posts from normalized', posts);
 
   //   {
@@ -45,7 +85,9 @@ const normalizePosts = (posts, source) => {
         post?.postItem?.text ||
         post?.caption?.text ||
         post?.link?.description ||
-        post?.content ||
+        (dateFormater === 'searchRamp'
+          ? post?.content.join('\n')
+          : post?.content) ||
         post?.text ||
         post?.caption ||
         post?.message ||
@@ -62,7 +104,9 @@ const normalizePosts = (posts, source) => {
           post?.date ||
           post?.timestamp ||
           post?.date_posted ||
+          post?.post_date ||
           new Date().toISOString(),
+        dateFormater,
       ),
       // post?.postItem?.postDate ||
       // post?.caption?.created_at ||

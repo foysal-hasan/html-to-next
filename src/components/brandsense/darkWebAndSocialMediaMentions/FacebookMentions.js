@@ -33,7 +33,7 @@ const FacebookMentions = ({ keyword, search, onlyData }) => {
         });
 
         let facebookPosts = await facebookRes.json();
-        console.log('facebook posts: ', facebookPosts);
+        // console.log('facebook posts: ', facebookPosts);
         facebookPosts = facebookPosts?.posts;
 
         if (!facebookPosts || facebookPosts.length === 0) {

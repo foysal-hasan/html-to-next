@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import LoadingState from "./LoadingState";
+import { useState, useEffect } from 'react';
+import LoadingState from './LoadingState';
 
 export default function HistoricalDNSClient({ domain }) {
-  const [activeTab, setActiveTab] = useState("A");
+  const [activeTab, setActiveTab] = useState('A');
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const recordTypes = ["A", "AAAA", "MX", "NS", "SOA", "TXT"];
+  const recordTypes = ['A', 'AAAA', 'MX', 'NS', 'SOA', 'TXT'];
 
   useEffect(() => {
     const fetchRecords = async () => {
@@ -17,17 +17,17 @@ export default function HistoricalDNSClient({ domain }) {
       try {
         const res = await fetch(
           `/api/dns?domain=${encodeURIComponent(
-            domain
-          )}&type=${encodeURIComponent(activeTab)}`
+            domain,
+          )}&type=${encodeURIComponent(activeTab)}`,
         );
         if (!res.ok) {
-          throw new Error("Failed to fetch DNS records");
+          throw new Error('Failed to fetch DNS records');
         }
         const data = await res.json();
         setRecords(data.records);
         setError(null);
       } catch (err) {
-        console.error("Error fetching DNS records:", err);
+        console.error('Error fetching DNS records:', err);
         setError(err.message);
         setRecords([]);
       } finally {
@@ -38,7 +38,7 @@ export default function HistoricalDNSClient({ domain }) {
     fetchRecords();
   }, [domain, activeTab]);
 
-  console.log(records);
+  // console.log(records);
   if (loading) {
     return <LoadingState />;
   }
@@ -58,8 +58,8 @@ export default function HistoricalDNSClient({ domain }) {
             onClick={() => setActiveTab(type)}
             className={`px-4 py-2 rounded-lg text-sm font-medium ${
               activeTab === type
-                ? "bg-blue-600 text-white"
-                : "bg-[#1e2124] text-gray-400 hover:bg-[#2a2e32]"
+                ? 'bg-blue-600 text-white'
+                : 'bg-[#1e2124] text-gray-400 hover:bg-[#2a2e32]'
             }`}
           >
             {type}
@@ -72,7 +72,7 @@ export default function HistoricalDNSClient({ domain }) {
           <thead>
             <tr className="bg-[#1e2124]">
               <th className="px-4 py-3 text-left text-white text-sm font-medium leading-normal">
-                {activeTab === "A" || activeTab === "AAAA" ? "IP" : "Value"}
+                {activeTab === 'A' || activeTab === 'AAAA' ? 'IP' : 'Value'}
               </th>
               <th className="px-4 py-3 text-left text-white text-sm font-medium leading-normal">
                 Organization
@@ -121,7 +121,7 @@ export default function HistoricalDNSClient({ domain }) {
               records.map((record, index) => (
                 <tr
                   key={`${index}-${JSON.stringify(
-                    record.values || record.addresses
+                    record.values || record.addresses,
                   )}`}
                   className="border-t border-[#41474e]"
                 >
@@ -136,27 +136,27 @@ export default function HistoricalDNSClient({ domain }) {
                       <div className="space-y-1">
                         {record.addresses.map((address, aIndex) => (
                           <div key={`${aIndex}`}>
-                            {typeof address === "object"
+                            {typeof address === 'object'
                               ? JSON.stringify(address)
                               : address}
                           </div>
                         ))}
                       </div>
                     ) : (
-                      "N/A"
+                      'N/A'
                     )}
                   </td>
                   <td className="px-4 py-3 text-sm text-white">
-                    {record.organization || "N/A"}
+                    {record.organization || 'N/A'}
                   </td>
                   <td className="px-4 py-3 text-sm text-white">
-                    {record.firstSeen || "N/A"}
+                    {record.firstSeen || 'N/A'}
                   </td>
                   <td className="px-4 py-3 text-sm text-white">
-                    {record.lastSeen || "N/A"}
+                    {record.lastSeen || 'N/A'}
                   </td>
                   <td className="px-4 py-3 text-sm text-white">
-                    {record.durationSeen || "N/A"}
+                    {record.durationSeen || 'N/A'}
                   </td>
                 </tr>
               ))

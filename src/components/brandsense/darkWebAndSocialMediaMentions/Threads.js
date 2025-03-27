@@ -47,6 +47,7 @@ const Threads = ({ keyword, search, onlyData }) => {
         const normalizedThreadsPosts = normalizePosts(
           threadsPosts,
           'darkWebPosts',
+          'threads',
         );
         // console.log('normalized threads: ', normalizedThreadsPosts);
 

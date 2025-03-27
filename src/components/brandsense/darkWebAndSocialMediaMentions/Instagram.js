@@ -35,7 +35,7 @@ const InstagramMentions = ({ keywords, search, onlyData }) => {
         });
 
         const rawPosts = await res.json();
-        console.log('rawPosts', rawPosts);
+        // console.log('rawPosts', rawPosts);
         if (!rawPosts || rawPosts.length === 0) {
           setLoading(false);
           return;
@@ -43,7 +43,7 @@ const InstagramMentions = ({ keywords, search, onlyData }) => {
 
         const normalizedPosts = normalizePosts(rawPosts || [], 'Instagram');
 
-        console.log('normalizedPosts', normalizedPosts);
+        // console.log('normalizedPosts', normalizedPosts);
         const classifiedPosts = await classifyPosts(normalizedPosts);
         dispatch(setInstagramMentions(classifiedPosts));
 

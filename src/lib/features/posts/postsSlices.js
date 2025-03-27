@@ -121,7 +121,7 @@ const postsSlice = createSlice({
       updateRiskAnalysis(state, action.payload || []);
       updateLanguageAnalysis(state, action.payload || []);
       updateAllPosts(state, action.payload || []);
-      console.log('state: ', action.payload);
+      // console.log('state: ', action.payload);
     },
     setDarkWebXSSMentions(state, action) {
       state.darkWebXSSMentions = action.payload;
