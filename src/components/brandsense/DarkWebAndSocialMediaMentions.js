@@ -3,24 +3,23 @@ import { reset } from '@/lib/features/posts/postsSlices';
 import { setSearchQuery } from '@/lib/features/search/searchSlices';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { useEffect } from 'react';
+import Breachforum from './darkWebAndSocialMediaMentions/Breachforum';
 import DarkwebFacebookPosts from './darkWebAndSocialMediaMentions/DarkwebFacebookPosts';
+import DarkWebPosts from './darkWebAndSocialMediaMentions/DarkWebPosts';
+import DarkWebSearch from './darkWebAndSocialMediaMentions/DarkWebSearch';
 import FacebookMentions from './darkWebAndSocialMediaMentions/FacebookMentions';
 import InstagramMentions from './darkWebAndSocialMediaMentions/Instagram';
 import Posts from './darkWebAndSocialMediaMentions/Posts';
+import SearchExploit from './darkWebAndSocialMediaMentions/SearchExploit';
+import SearchRamp from './darkWebAndSocialMediaMentions/SearchRamp';
+import SearchXss from './darkWebAndSocialMediaMentions/SearchXss';
 import TelegramMentions from './darkWebAndSocialMediaMentions/Telegram';
+import Threads from './darkWebAndSocialMediaMentions/Threads';
 import TwitterMentions from './darkWebAndSocialMediaMentions/TwitterMentions';
+import VKPostsScraper from './darkWebAndSocialMediaMentions/VKPostsScraper';
 import ExportRiskPDF from './download';
 import SectionTitle from './SectionTitle';
 import ViewMoreButton from './ViewMoreButton';
-import VKPostsScraper from './darkWebAndSocialMediaMentions/VKPostsScraper';
-import DarkWebPosts from './darkWebAndSocialMediaMentions/DarkWebPosts';
-import Threads from './darkWebAndSocialMediaMentions/Threads';
-import SearchXss from './darkWebAndSocialMediaMentions/SearchXss';
-import SearchExploit from './darkWebAndSocialMediaMentions/SearchExploit';
-import SearchRamp from './darkWebAndSocialMediaMentions/SearchRamp';
-import Breachforum from './darkWebAndSocialMediaMentions/Breachforum';
-import DarkWebSearch from './darkWebAndSocialMediaMentions/DarkWebSearch';
-import Boardreader from './darkWebAndSocialMediaMentions/Boardreader';
 // import DarkwebXSSPosts from './darkWebAndSocialMediaMentions/DarkwebXss';
 
 const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
@@ -110,7 +109,7 @@ const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
       )}
 
       <div className="max-w-4xl flex flex-col gap-10">
-        {/*<TelegramMentions
+        <TelegramMentions
           keyword={keywords[0]}
           onlyData={onlyData}
           search={search}
@@ -119,14 +118,14 @@ const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
           keywords={keywords}
           onlyData={onlyData}
           search={search}
-        />*/}
+        />
 
         <FacebookMentions
           keyword={keywords[0]}
           onlyData={onlyData}
           search={search}
         />
-        {/*
+
         <TwitterMentions
           keywords={keywords}
           onlyData={onlyData}
@@ -138,13 +137,13 @@ const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
           keyword={keywords[0]}
           onlyData={onlyData}
           search={search}
-        />*/}
+        />
 
-        {/* <VKPostsScraper
+        <VKPostsScraper
           keywords={keywords}
           onlyData={onlyData}
           search={search}
-        /> */}
+        />
 
         {/* <Boardreader
           keyword={keywords[0]}
@@ -152,7 +151,7 @@ const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
           search={search}
         /> */}
 
-        {/* <Breachforum keyword={keywords[0]} search={search} onlyData={true} />
+        <Breachforum keyword={keywords[0]} search={search} onlyData={true} />
         <SearchRamp keyword={keywords[0]} search={search} onlyData={true} />
 
         <SearchExploit keyword={keywords[0]} search={search} onlyData={true} />
@@ -162,7 +161,7 @@ const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
 
         <DarkWebSearch keyword={keywords[0]} search={search} onlyData={true} />
 
-        <DarkWebPosts keyword={keywords[0]} onlyData={onlyData} /> */}
+        <DarkWebPosts keyword={keywords[0]} onlyData={onlyData} />
       </div>
       <div
         className={`flex gap-5 items-center  ${
