@@ -1,4 +1,3 @@
-import BlogrHeader from '@/components/blogr/header';
 import Header from '@/components/brandsense/Header';
 
 export const metadata = {

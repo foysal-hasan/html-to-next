@@ -184,6 +184,8 @@ const postsSlice = createSlice({
       updateAllPosts(state, action.payload);
     },
     setDarkWebPosts(state, action) {
+      // console.log('from darkweb action: ', action.payload);
+
       state.darkWebPosts = [...state.darkWebPosts, ...action.payload];
       updateRiskAnalysis(state, action.payload);
       updateLanguageAnalysis(state, action.payload);

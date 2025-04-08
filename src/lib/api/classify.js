@@ -21,6 +21,9 @@
 
 export const classifyPosts = async (posts) => {
   try {
+    if (posts?.length == 0) {
+      return [];
+    }
     const response = await fetch('/api/classify', {
       method: 'POST',
       headers: {

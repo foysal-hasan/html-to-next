@@ -22,11 +22,11 @@ export async function POST(req) {
       }),
     });
     const data = await response.json();
-    // console.log(data);
+    console.log(data);
 
     return Response.json({ posts: data?.posts });
   } catch (error) {
-    // console.log(error);
+    console.log(error);
 
     return Response.json([]);
   }

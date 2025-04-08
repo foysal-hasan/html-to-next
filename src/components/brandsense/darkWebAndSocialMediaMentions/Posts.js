@@ -8,6 +8,8 @@ import normalizePosts from '@/utils/normalizePosts';
 import { useEffect, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsCard';
 import SectionTitle from '../SectionTitle';
+import checkSearchQuery from '@/utils/checkSearchQuery';
+import { useCallback } from 'react';
 
 const Posts = ({ keywords, search, onlyData }) => {
   const [posts, setPosts] = useState([]);
@@ -19,56 +21,56 @@ const Posts = ({ keywords, search, onlyData }) => {
 
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        setLoading(true);
-        // facebook
-        const postsRes = await fetch('/api/fetchApifyPosts', {
-          method: 'POST',
-          body: JSON.stringify({
-            input: {
-              queries: keywords,
-              limit: 100,
-              sort: 'latest',
-              proxyConfiguration: {
-                useApifyProxy: true,
-                apifyProxyGroups: [],
-              },
+  const fetchPosts = useCallback(async () => {
+    try {
+      setLoading(true);
+      // facebook
+      const postsRes = await fetch('/api/fetchApifyPosts', {
+        method: 'POST',
+        body: JSON.stringify({
+          input: {
+            queries: keywords,
+            limit: 100,
+            sort: 'latest',
+            proxyConfiguration: {
+              useApifyProxy: true,
+              apifyProxyGroups: [],
             },
-            url: 'U9JtSIIjR6gyldBIN',
-          }),
-        });
+          },
+          url: 'U9JtSIIjR6gyldBIN',
+        }),
+      });
 
-        const postsResponse = await postsRes.json();
-        // console.log('facebook posts: ', postsResponse);
-        if (!postsResponse || postsResponse.length === 0) {
-          setLoading(false);
-          return;
-        }
-
-        const normalizedPosts = normalizePosts(postsResponse, 'posts');
-        // console.log('normalized: ', normalizedPosts);
-
-        const classifiedPosts = await classifyPosts(normalizedPosts);
-
-        // console.log('classifiedPosts', classifiedPosts);
-        dispatch(setPostsMentions(classifiedPosts));
-
-        setPosts(classifiedPosts.slice(0, 3)); // Show only 2-3 posts
-      } catch (error) {
-        console.error('Instagram API Error:', error);
-      } finally {
+      const postsResponse = await postsRes.json();
+      // console.log('facebook posts: ', postsResponse);
+      if (!postsResponse || postsResponse.length === 0) {
         setLoading(false);
+        return;
       }
-    };
 
-    if (searchQuery === search) {
+      const normalizedPosts = normalizePosts(postsResponse, 'posts');
+      // console.log('normalized: ', normalizedPosts);
+
+      const classifiedPosts = await classifyPosts(normalizedPosts);
+
+      // console.log('classifiedPosts', classifiedPosts);
+      dispatch(setPostsMentions(classifiedPosts));
+
+      setPosts(classifiedPosts.slice(0, 3)); // Show only 2-3 posts
+    } catch (error) {
+      console.error('Instagram API Error:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [keywords, dispatch]);
+
+  useEffect(() => {
+    if (checkSearchQuery(searchQuery, search)) {
       setPosts(postsMentions.slice(0, 3));
     } else {
       fetchPosts();
     }
-  }, [keywords, search, searchQuery, postsMentions, dispatch]);
+  }, [search, searchQuery, postsMentions, fetchPosts]);
 
   if (onlyData) {
     return null;

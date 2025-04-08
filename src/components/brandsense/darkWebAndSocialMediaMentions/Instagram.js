@@ -7,6 +7,8 @@ import normalizePosts from '@/utils/normalizePosts';
 import { useEffect, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsCard';
 import SectionTitle from '../SectionTitle';
+import checkSearchQuery from '@/utils/checkSearchQuery';
+import { useCallback } from 'react';
 
 const InstagramMentions = ({ keywords, search, onlyData }) => {
   const [posts, setPosts] = useState([]);
@@ -18,49 +20,49 @@ const InstagramMentions = ({ keywords, search, onlyData }) => {
   );
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    const fetchInstagramPosts = async () => {
-      try {
-        setLoading(true);
-        const res = await fetch('/api/fetchApifyPosts', {
-          method: 'POST',
-          body: JSON.stringify({
-            input: {
-              hashtags: keywords,
-              resultsType: 'posts',
-              resultsLimit: 100,
-            },
-            url: 'apify/instagram-hashtag-scraper',
-          }),
-        });
+  const fetchInstagramPosts = useCallback(async () => {
+    try {
+      setLoading(true);
+      const res = await fetch('/api/fetchApifyPosts', {
+        method: 'POST',
+        body: JSON.stringify({
+          input: {
+            hashtags: keywords,
+            resultsType: 'posts',
+            resultsLimit: 100,
+          },
+          url: 'apify/instagram-hashtag-scraper',
+        }),
+      });
 
-        const rawPosts = await res.json();
-        // console.log('rawPosts', rawPosts);
-        if (!rawPosts || rawPosts.length === 0) {
-          setLoading(false);
-          return;
-        }
-
-        const normalizedPosts = normalizePosts(rawPosts || [], 'Instagram');
-
-        // console.log('normalizedPosts', normalizedPosts);
-        const classifiedPosts = await classifyPosts(normalizedPosts);
-        dispatch(setInstagramMentions(classifiedPosts));
-
-        setPosts(classifiedPosts.slice(0, 3)); // Show only 2-3 posts
-      } catch (error) {
-        console.error('Instagram API Error:', error);
-      } finally {
+      const rawPosts = await res.json();
+      // console.log('rawPosts', rawPosts);
+      if (!rawPosts || rawPosts.length === 0) {
         setLoading(false);
+        return;
       }
-    };
 
-    if (searchQuery === search) {
+      const normalizedPosts = normalizePosts(rawPosts || [], 'Instagram');
+
+      // console.log('normalizedPosts', normalizedPosts);
+      const classifiedPosts = await classifyPosts(normalizedPosts);
+      dispatch(setInstagramMentions(classifiedPosts));
+
+      setPosts(classifiedPosts.slice(0, 3)); // Show only 2-3 posts
+    } catch (error) {
+      console.error('Instagram API Error:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [keywords, dispatch]);
+
+  useEffect(() => {
+    if (checkSearchQuery(searchQuery, search)) {
       setPosts(instagramMentions?.slice(0, 3));
     } else {
       fetchInstagramPosts();
     }
-  }, [keywords, search, searchQuery, instagramMentions, dispatch]);
+  }, [search, searchQuery, instagramMentions, fetchInstagramPosts]);
 
   if (onlyData) {
     return null;

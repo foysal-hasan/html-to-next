@@ -10,12 +10,11 @@ import SectionTitle from '../SectionTitle';
 import checkSearchQuery from '@/utils/checkSearchQuery';
 import { useCallback } from 'react';
 
-const Breachforum = ({ keyword, search, onlyData }) => {
+const DarkWebSearch = ({ keyword, search, onlyData }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const searchQuery = useAppSelector((state) => state.search.searchQuery);
 
-  // const breachforumPosts = useAppSelector((state) => state.posts.breachforum);
   const darkWebPosts = useAppSelector((state) => state.posts.darkWebPosts);
 
   const dispatch = useAppDispatch();
@@ -23,38 +22,35 @@ const Breachforum = ({ keyword, search, onlyData }) => {
   const fetchPosts = useCallback(async () => {
     try {
       setLoading(true);
-      const breachforumRes = await fetch('/api/breachforum', {
+      const darkWebSearchRes = await fetch('/api/darkWebSearch', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify({
-          keyword: keyword,
+          input: {
+            q: keyword,
+            fromdate: '2025-01-01',
+            todate: new Date().toISOString().split('T')[0],
+          },
+          url: 'http://107.189.26.43:5069/search',
         }),
       });
 
-      if (!breachforumRes.ok) {
+      if (!darkWebSearchRes.ok) {
         setLoading(false);
         return;
       }
 
-      const breachforumData = await breachforumRes.json();
-      // console.log('breachforumData', breachforumData);
+      const darkWebSearchData = await darkWebSearchRes.json();
+      // console.log('darkWebSearchData', darkWebSearchData);
 
-      if (!breachforumData || breachforumData.length === 0) {
+      if (!darkWebSearchData || darkWebSearchData.length === 0) {
         setLoading(false);
         return;
       }
-
-      // const normalizedPosts = normalizePosts(
-      //   breachforumData?.all_posts || [],
-      //   'breachforum',
-      // );
 
       const normalizedPosts = normalizePosts(
-        breachforumData?.data || [],
+        darkWebSearchData || [],
         'darkWebPosts',
-        'breachforum',
+        'darkWebSearch',
       );
 
       // console.log('normalizedPosts', normalizedPosts);
@@ -73,7 +69,7 @@ const Breachforum = ({ keyword, search, onlyData }) => {
   useEffect(() => {
     if (checkSearchQuery(searchQuery, search)) {
       setPosts(darkWebPosts.slice(0, 3));
-    } else if (darkWebPosts?.length == 0) {
+    } else {
       fetchPosts();
     }
   }, [search, searchQuery, fetchPosts, darkWebPosts]);
@@ -81,7 +77,7 @@ const Breachforum = ({ keyword, search, onlyData }) => {
   if (onlyData) {
     return null;
   }
-  if (loading) return <SectionLoader sectionTitle={'Breachforum'} />;
+  if (loading) return <SectionLoader sectionTitle={'Dark Web Search'} />;
 
   if (!posts || posts.length === 0 || onlyData) {
     return null;
@@ -89,7 +85,7 @@ const Breachforum = ({ keyword, search, onlyData }) => {
 
   return (
     <div>
-      <SectionTitle>Breachforum</SectionTitle>
+      <SectionTitle>Dark Web Search</SectionTitle>
       {posts?.map((post, index) => (
         <DarkWebAndSocialMediaMentionsCard key={index} {...post} />
       ))}
@@ -97,4 +93,4 @@ const Breachforum = ({ keyword, search, onlyData }) => {
   );
 };
 
-export default Breachforum;
+export default DarkWebSearch;

@@ -7,6 +7,8 @@ import normalizePosts from '@/utils/normalizePosts';
 import { useEffect, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsCard';
 import SectionTitle from '../SectionTitle';
+import checkSearchQuery from '@/utils/checkSearchQuery';
+import { useCallback } from 'react';
 
 const SearchRamp = ({ keyword, search, onlyData }) => {
   const [posts, setPosts] = useState([]);
@@ -18,70 +20,70 @@ const SearchRamp = ({ keyword, search, onlyData }) => {
 
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        setLoading(true);
-        const searchRampRes = await fetch('/api/darkWebPosts', {
-          method: 'POST',
-          body: JSON.stringify({
-            input: {
-              keyword: keyword,
-              start_date: '2025-01-01',
-              end_date: new Date().toISOString().split('T')[0],
-            },
-            url: 'http://107.189.26.43:5005/search_ramp',
-          }),
-        });
+  const fetchPosts = useCallback(async () => {
+    try {
+      setLoading(true);
+      const searchRampRes = await fetch('/api/darkWebPosts', {
+        method: 'POST',
+        body: JSON.stringify({
+          input: {
+            keyword: keyword,
+            start_date: '2025-01-01',
+            end_date: new Date().toISOString().split('T')[0],
+          },
+          url: 'http://107.189.26.43:5005/search_ramp',
+        }),
+      });
 
-        if (!searchRampRes.ok) {
-          setLoading(false);
-          return;
-        }
-
-        const searchRampData = await searchRampRes.json();
-        // console.log('searchRampData', searchRampData);
-
-        if (!searchRampData || searchRampData.length === 0) {
-          setLoading(false);
-          return;
-        }
-
-        // const normalizedPosts = normalizePosts(
-        //   breachforumData?.all_posts || [],
-        //   'breachforum',
-        // );
-
-        const normalizedPosts = normalizePosts(
-          searchRampData || [],
-          'darkWebPosts',
-          'searchRamp',
-        );
-
-        // console.log('normalizedPosts', normalizedPosts);
-
-        const classifiedPosts = await classifyPosts(normalizedPosts);
-        dispatch(setDarkWebPosts(classifiedPosts));
-
-        setPosts(classifiedPosts.slice(0, 3));
-      } catch (error) {
-        console.error('Request failed:', error);
-      } finally {
+      if (!searchRampRes.ok) {
         setLoading(false);
+        return;
       }
-    };
 
-    if (searchQuery === search) {
+      const searchRampData = await searchRampRes.json();
+      // console.log('searchRampData', searchRampData);
+
+      if (!searchRampData || searchRampData.length === 0) {
+        setLoading(false);
+        return;
+      }
+
+      // const normalizedPosts = normalizePosts(
+      //   breachforumData?.all_posts || [],
+      //   'breachforum',
+      // );
+
+      const normalizedPosts = normalizePosts(
+        searchRampData || [],
+        'darkWebPosts',
+        'searchRamp',
+      );
+
+      // console.log('normalizedPosts', normalizedPosts);
+
+      const classifiedPosts = await classifyPosts(normalizedPosts);
+      dispatch(setDarkWebPosts(classifiedPosts));
+
+      setPosts(classifiedPosts.slice(0, 3));
+    } catch (error) {
+      console.error('Request failed:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [keyword, dispatch]);
+
+  useEffect(() => {
+    if (checkSearchQuery(searchQuery, search)) {
       setPosts(darkWebPosts.slice(0, 3));
     } else {
       fetchPosts();
     }
-  }, [keyword, search, searchQuery, dispatch, darkWebPosts]);
+  }, [search, searchQuery, fetchPosts, darkWebPosts]);
 
   if (onlyData) {
     return null;
   }
-  if (loading) return <SectionLoader sectionTitle={'Breachforum'} />;
+  if (loading) return <SectionLoader sectionTitle={'Search Ramp'} />;
 
   if (!posts || posts.length === 0 || onlyData) {
     return null;
@@ -89,7 +91,7 @@ const SearchRamp = ({ keyword, search, onlyData }) => {
 
   return (
     <div>
-      <SectionTitle>Breachforum</SectionTitle>
+      <SectionTitle>Search Ramp</SectionTitle>
       {posts?.map((post, index) => (
         <DarkWebAndSocialMediaMentionsCard key={index} {...post} />
       ))}

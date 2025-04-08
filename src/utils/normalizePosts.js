@@ -54,6 +54,21 @@ function normalizedDate(source, date, dateFormater) {
     }
   } else if (dateFormater === 'searchRamp') {
     return convertRussianDate(date);
+  } else if (dateFormater === 'darkWebSearch') {
+    // 23rd March, 2025 - 18:42
+  } else if (dateFormater === 'darkWebSearch') {
+    // Parse date format like "23rd March, 2025 - 18:42"
+    try {
+      // Remove ordinal indicators (st, nd, rd, th)
+      const cleanDate = date.replace(/(\d+)(st|nd|rd|th)/, '$1');
+      // Split date and time
+      const [datePart, timePart] = cleanDate.split(' - ');
+      // Create a date object
+      const dateObj = new Date(`${datePart} ${timePart}`);
+      return dateObj.toISOString();
+    } catch (error) {
+      return new Date().toISOString();
+    }
   }
   return date;
 }
@@ -105,6 +120,7 @@ const normalizePosts = (posts, source, dateFormater) => {
           post?.timestamp ||
           post?.date_posted ||
           post?.post_date ||
+          post?.posted_at ||
           new Date().toISOString(),
         dateFormater,
       ),

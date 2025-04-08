@@ -3,31 +3,98 @@ import { reset } from '@/lib/features/posts/postsSlices';
 import { setSearchQuery } from '@/lib/features/search/searchSlices';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { useEffect } from 'react';
-import DarkWebPosts from './darkWebAndSocialMediaMentions/DarkWebPosts';
-import ExportRiskPDF from './download';
-import SectionTitle from './SectionTitle';
-import ViewMoreButton from './ViewMoreButton';
-// import DarkwebXSSPosts from './darkWebAndSocialMediaMentions/DarkwebXss';
-import Boardreader from './darkWebAndSocialMediaMentions/Boardreader';
-import Breachforum from './darkWebAndSocialMediaMentions/Breachforum';
 import DarkwebFacebookPosts from './darkWebAndSocialMediaMentions/DarkwebFacebookPosts';
 import FacebookMentions from './darkWebAndSocialMediaMentions/FacebookMentions';
 import InstagramMentions from './darkWebAndSocialMediaMentions/Instagram';
 import Posts from './darkWebAndSocialMediaMentions/Posts';
+import TelegramMentions from './darkWebAndSocialMediaMentions/Telegram';
+import TwitterMentions from './darkWebAndSocialMediaMentions/TwitterMentions';
+import ExportRiskPDF from './download';
+import SectionTitle from './SectionTitle';
+import ViewMoreButton from './ViewMoreButton';
+import VKPostsScraper from './darkWebAndSocialMediaMentions/VKPostsScraper';
+import DarkWebPosts from './darkWebAndSocialMediaMentions/DarkWebPosts';
+import Threads from './darkWebAndSocialMediaMentions/Threads';
+import SearchXss from './darkWebAndSocialMediaMentions/SearchXss';
 import SearchExploit from './darkWebAndSocialMediaMentions/SearchExploit';
 import SearchRamp from './darkWebAndSocialMediaMentions/SearchRamp';
-import SearchXss from './darkWebAndSocialMediaMentions/SearchXss';
-import TelegramMentions from './darkWebAndSocialMediaMentions/Telegram';
-import Threads from './darkWebAndSocialMediaMentions/Threads';
-import TwitterMentions from './darkWebAndSocialMediaMentions/TwitterMentions';
-import VKPostsScraper from './darkWebAndSocialMediaMentions/VKPostsScraper';
+import Breachforum from './darkWebAndSocialMediaMentions/Breachforum';
+import DarkWebSearch from './darkWebAndSocialMediaMentions/DarkWebSearch';
+import Boardreader from './darkWebAndSocialMediaMentions/Boardreader';
+// import DarkwebXSSPosts from './darkWebAndSocialMediaMentions/DarkwebXss';
 
 const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
   const dispatch = useAppDispatch();
   const searchQuery = useAppSelector((state) => state.search.searchQuery);
 
   useEffect(() => {
-    if (searchQuery !== search) {
+    // if (searchQuery !== search) {
+    //   console.log('if not equal to = ', searchQuery, search);
+    //   // extract domains from searchQuery without .com, .ru, etc.
+    //   const searchDomains = searchQuery.split(',').map((domain) => {
+    //     return domain.split('.')[0].trim();
+    //   });
+    //   console.log('after process:', searchDomains.join(',') + ' ' + search);
+    //   console.log(
+    //     'isTrue',
+    //     searchDomains.join(',').trim() !== search.trim(),
+    //     searchDomains.join(',').trim(),
+    //     search.trim(),
+    //   );
+
+    //   dispatch(reset());
+    //   dispatch(setSearchQuery(search));
+    // }
+
+    // extract domains from searchQuery without .com, .ru, etc.
+    // const searchDomains = searchQuery.split(',').map((domain) => {
+    //   return domain.split('.')[0];
+    // });
+    // console.log('after process: ', searchDomains.join(','), search);
+
+    // if (searchDomains.join(',').trim() !== search) {
+    //   console.log('if not equal to = ', searchQuery, search);
+
+    //   dispatch(reset());
+    //   dispatch(setSearchQuery(search));
+    // }
+
+    // if (searchDomains.join(',') !== search) {
+    //   dispatch(reset());
+    //   dispatch(setSearchQuery(search));
+    // }
+
+    // Extract domains from searchQuery without .com, .ru, etc.
+    const searchQueryDomains = searchQuery?.split(',')?.map((domain) => {
+      return domain.split('.')[0].trim(); // Ensure no extra spaces around the domains
+    });
+    // console.log('=======================');
+    // console.log('search =>', search);
+    // console.log('=======================');
+
+    const searchDomains = search?.split(',')?.map((domain) => {
+      return domain.split('.')[0].trim(); // Extract domains from search as well
+    });
+
+    const joinedSearchQueryDomains = searchQueryDomains?.join(',')?.trim(); // Join domains and remove leading/trailing spaces
+    const joinedSearchDomains = searchDomains?.join(',')?.trim();
+
+    // console.log(
+    //   'after process: searchQueryDomains =',
+    //   `'${joinedSearchQueryDomains}'`,
+    //   'searchDomains =',
+    //   `'${joinedSearchDomains}'`,
+    // );
+
+    // Normalize both strings to lowercase and trim again to ensure no hidden characters
+    const cleanedSearchQueryDomains = joinedSearchQueryDomains
+      ?.toLowerCase()
+      ?.trim();
+    const cleanedSearchDomains = joinedSearchDomains?.toLowerCase()?.trim();
+
+    if (cleanedSearchQueryDomains !== cleanedSearchDomains) {
+      console.log('if not equal to = ', searchQuery, search);
+
       dispatch(reset());
       dispatch(setSearchQuery(search));
     }
@@ -43,56 +110,59 @@ const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
       )}
 
       <div className="max-w-4xl flex flex-col gap-10">
-        <TelegramMentions
+        {/*<TelegramMentions
           keyword={keywords[0]}
-          search={search}
           onlyData={onlyData}
+          search={search}
         />
         <InstagramMentions
           keywords={keywords}
-          search={search}
           onlyData={onlyData}
-        />
+          search={search}
+        />*/}
+
         <FacebookMentions
           keyword={keywords[0]}
-          search={search}
           onlyData={onlyData}
+          search={search}
         />
+        {/*
         <TwitterMentions
           keywords={keywords}
-          search={search}
           onlyData={onlyData}
+          search={search}
         />
-        <Posts keywords={keywords} search={search} onlyData={onlyData} />
+        <Posts keywords={keywords} onlyData={onlyData} search={search} />
 
         <DarkwebFacebookPosts
           keyword={keywords[0]}
-          search={search}
           onlyData={onlyData}
-        />
+          search={search}
+        />*/}
 
-        <Breachforum keyword={keywords[0]} search={search} onlyData={true} />
-        <SearchRamp keyword={keywords[0]} search={search} onlyData={true} />
-        <VKPostsScraper
+        {/* <VKPostsScraper
           keywords={keywords}
-          search={search}
           onlyData={onlyData}
-        />
+          search={search}
+        /> */}
+
+        {/* <Boardreader
+          keyword={keywords[0]}
+          onlyData={onlyData}
+          search={search}
+        /> */}
+
+        {/* <Breachforum keyword={keywords[0]} search={search} onlyData={true} />
+        <SearchRamp keyword={keywords[0]} search={search} onlyData={true} />
+
         <SearchExploit keyword={keywords[0]} search={search} onlyData={true} />
         <SearchXss keyword={keywords[0]} search={search} onlyData={true} />
 
-        <Boardreader
-          keyword={keywords[0]}
-          search={search}
-          onlyData={onlyData}
-        />
-        <Threads keyword={keywords[0]} search={search} onlyData={true} />
+        <Threads keyword={keywords[0]} onlyData={true} search={search} />
 
-        <DarkWebPosts
-          keyword={keywords[0]}
-          search={search}
-          onlyData={onlyData}
-        />
+        <DarkWebSearch keyword={keywords[0]} search={search} onlyData={true} />
+
+        <DarkWebPosts keyword={keywords[0]} onlyData={onlyData} /> */}
       </div>
       <div
         className={`flex gap-5 items-center  ${

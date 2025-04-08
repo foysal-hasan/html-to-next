@@ -7,6 +7,8 @@ import normalizePosts from '@/utils/normalizePosts';
 import { useEffect, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsCard';
 import SectionTitle from '../SectionTitle';
+import checkSearchQuery from '@/utils/checkSearchQuery';
+import { useCallback } from 'react';
 
 const FacebookMentions = ({ keyword, search, onlyData }) => {
   const [posts, setPosts] = useState([]);
@@ -20,49 +22,49 @@ const FacebookMentions = ({ keyword, search, onlyData }) => {
 
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        setLoading(true);
-        // facebook
-        const facebookRes = await fetch('/api/facebookPosts', {
-          method: 'POST',
-          body: JSON.stringify({
-            keyword: keyword,
-          }),
-        });
+  const fetchPosts = useCallback(async () => {
+    try {
+      setLoading(true);
+      // facebook
+      const facebookRes = await fetch('/api/facebookPosts', {
+        method: 'POST',
+        body: JSON.stringify({
+          keyword: keyword,
+        }),
+      });
 
-        let facebookPosts = await facebookRes.json();
-        // console.log('facebook posts: ', facebookPosts);
-        facebookPosts = facebookPosts?.posts;
+      let facebookPosts = await facebookRes.json();
+      // console.log('facebook posts: ', facebookPosts);
+      facebookPosts = facebookPosts?.posts;
 
-        if (!facebookPosts || facebookPosts.length === 0) {
-          setLoading(false);
-          return;
-        }
-
-        const normalizedPosts = normalizePosts(facebookPosts, 'facebook');
-        // console.log('normalized: ', normalizedPosts);
-
-        const classifiedPosts = await classifyPosts(normalizedPosts);
-
-        // console.log('classifiedPosts', classifiedPosts);
-        dispatch(setFacebookMentions(classifiedPosts));
-
-        setPosts(classifiedPosts.slice(0, 3)); // Show only 2-3 posts
-      } catch (error) {
-        console.error('Instagram API Error:', error);
-      } finally {
+      if (!facebookPosts || facebookPosts.length === 0) {
         setLoading(false);
+        return;
       }
-    };
 
-    if (searchQuery === search) {
+      const normalizedPosts = normalizePosts(facebookPosts, 'facebook');
+      // console.log('normalized: ', normalizedPosts);
+
+      const classifiedPosts = await classifyPosts(normalizedPosts);
+
+      // console.log('classifiedPosts', classifiedPosts);
+      dispatch(setFacebookMentions(classifiedPosts));
+
+      setPosts(classifiedPosts.slice(0, 3)); // Show only 2-3 posts
+    } catch (error) {
+      console.error('Instagram API Error:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [keyword, dispatch]);
+
+  useEffect(() => {
+    if (checkSearchQuery(searchQuery, search)) {
       setPosts(facebookMentions.slice(0, 3));
     } else {
       fetchPosts();
     }
-  }, [keyword, search, searchQuery, facebookMentions, dispatch]);
+  }, [search, searchQuery, facebookMentions, fetchPosts]);
 
   if (onlyData) {
     return null;

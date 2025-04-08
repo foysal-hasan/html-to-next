@@ -1,14 +1,12 @@
 'use client';
 import Link from 'next/link';
 
-import React, { useState } from 'react';
-import { HiMenu, HiX } from 'react-icons/hi';
-import { BiSearch } from 'react-icons/bi';
-import { IoHelpCircleOutline } from 'react-icons/io5';
-import { SlGraph, SlPlus } from 'react-icons/sl';
+import Image from 'next/image';
+import { useState } from 'react';
 import { CiViewTable } from 'react-icons/ci';
 import { FiMapPin } from 'react-icons/fi';
-import Image from 'next/image';
+import { HiMenu, HiX } from 'react-icons/hi';
+import { SlGraph } from 'react-icons/sl';
 import SearchFieldWrapper from '../SearchFieldWithMultiKeyword';
 
 export default function Header() {

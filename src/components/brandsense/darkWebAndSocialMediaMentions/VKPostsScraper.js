@@ -3,8 +3,9 @@ import SectionLoader from '@/components/SectionLoader';
 import { classifyPosts } from '@/lib/api/classify';
 import { setVkPosts } from '@/lib/features/posts/postsSlices';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
+import checkSearchQuery from '@/utils/checkSearchQuery';
 import normalizePosts from '@/utils/normalizePosts';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsCard';
 import SectionTitle from '../SectionTitle';
 
@@ -17,57 +18,58 @@ const VKPostsScraper = ({ keywords, search, onlyData }) => {
 
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        setLoading(true);
-        const vkRes = await fetch('/api/fetchApifyPosts', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
+  // wrap in useCallback
+  const fetchPosts = useCallback(async () => {
+    try {
+      setLoading(true);
+      const vkRes = await fetch('/api/fetchApifyPosts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          input: {
+            keywords: keywords,
           },
-          body: JSON.stringify({
-            input: {
-              keywords: keywords,
-            },
-            url: 'easyapi/vk-posts-scraper',
-          }),
-        });
+          url: 'easyapi/vk-posts-scraper',
+        }),
+      });
 
-        if (!vkRes.ok) {
-          setLoading(false);
-          return;
-        }
-
-        const vkData = await vkRes.json();
-
-        if (!vkData || vkData.length === 0) {
-          setLoading(false);
-          return;
-        }
-
-        // console.log('vkData', vkData);
-
-        const normalizedPosts = normalizePosts(vkData, 'vk');
-        const classifiedPosts = await classifyPosts(normalizedPosts);
-
-        // console.log('classifiedPosts', classifiedPosts);
-
-        dispatch(setVkPosts(classifiedPosts));
-        setPosts(classifiedPosts.slice(0, 3));
-      } catch (error) {
-        console.error('VK Posts API Error:', error);
-      } finally {
+      if (!vkRes.ok) {
         setLoading(false);
+        return;
       }
-    };
 
-    if (searchQuery === search) {
+      const vkData = await vkRes.json();
+
+      if (!vkData || vkData.length === 0) {
+        setLoading(false);
+        return;
+      }
+
+      // console.log('vkData', vkData);
+
+      const normalizedPosts = normalizePosts(vkData, 'vk');
+      const classifiedPosts = await classifyPosts(normalizedPosts);
+
+      // console.log('classifiedPosts', classifiedPosts);
+
+      dispatch(setVkPosts(classifiedPosts));
+      setPosts(classifiedPosts.slice(0, 3));
+    } catch (error) {
+      console.error('VK Posts API Error:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [keywords, dispatch]);
+
+  useEffect(() => {
+    if (checkSearchQuery(searchQuery, search)) {
       setPosts(vkPosts.slice(0, 3));
     } else {
       fetchPosts();
     }
-  }, [keywords, search, searchQuery, dispatch, vkPosts]);
+  }, [search, searchQuery, vkPosts, fetchPosts]);
 
   if (onlyData) {
     return null;

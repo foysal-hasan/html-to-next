@@ -13,20 +13,24 @@ const SearchFieldWithMultiKeyword = () => {
   const [error, setError] = useState('');
   const [showTooltip, setShowTooltip] = useState(false);
 
-  // Domain validation regex
+  // Determine if we're on a blogr page
+  const isBlogrPage = pathname.includes('/blogr');
+
+  // Use different validation based on page type
   const domainRegex =
     /^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
 
   // Monitor URL changes
   useEffect(() => {
     if (isLoading) {
-      const currentQuery = searchParams.get('domain');
+      const queryParam = isBlogrPage ? 'keywords' : 'domain';
+      const currentQuery = searchParams.get(queryParam);
       // If current URL query matches the last searched query, stop loading
       if (currentQuery === lastSearchedQuery) {
         setIsLoading(false);
       }
     }
-  }, [searchParams, lastSearchedQuery, isLoading]);
+  }, [searchParams, lastSearchedQuery, isLoading, isBlogrPage]);
 
   // Hide tooltip after 3 seconds
   useEffect(() => {
@@ -40,25 +44,31 @@ const SearchFieldWithMultiKeyword = () => {
     }
   }, [error]);
 
-  const validateAndAddDomain = (domain) => {
-    const trimmedDomain = domain.trim().toLowerCase();
+  const validateAndAddInput = (input) => {
+    const trimmedInput = input.trim().toLowerCase();
 
-    if (!trimmedDomain) {
-      setError('Please enter a domain');
+    if (!trimmedInput) {
+      setError(
+        isBlogrPage ? 'Please enter a keyword' : 'Please enter a domain',
+      );
       return false;
     }
 
-    if (!domainRegex.test(trimmedDomain)) {
+    if (!isBlogrPage && !domainRegex.test(trimmedInput)) {
       setError('Please enter a valid domain (e.g., example.com)');
       return false;
     }
 
-    if (tags.includes(trimmedDomain)) {
-      setError('This domain has already been added');
+    if (tags.includes(trimmedInput)) {
+      setError(
+        isBlogrPage
+          ? 'This keyword has already been added'
+          : 'This domain has already been added',
+      );
       return false;
     }
 
-    setTags([...tags, trimmedDomain]);
+    setTags([...tags, trimmedInput]);
     setError('');
     return true;
   };
@@ -66,7 +76,7 @@ const SearchFieldWithMultiKeyword = () => {
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && text.trim()) {
       e.preventDefault();
-      if (validateAndAddDomain(text)) {
+      if (validateAndAddInput(text)) {
         setText('');
       }
     }
@@ -79,7 +89,11 @@ const SearchFieldWithMultiKeyword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (tags.length === 0) {
-      setError('Please add at least one domain before searching');
+      setError(
+        isBlogrPage
+          ? 'Please add at least one keyword before searching'
+          : 'Please add at least one domain before searching',
+      );
       return;
     }
 
@@ -88,8 +102,9 @@ const SearchFieldWithMultiKeyword = () => {
     // Store the query we're searching for
     setLastSearchedQuery(searchQuery);
 
-    // Push to new route
-    router.push(`${pathname}?domain=${encodeURIComponent(searchQuery)}`);
+    // Push to new route with appropriate query parameter
+    const queryParam = isBlogrPage ? 'keywords' : 'domain';
+    router.push(`${pathname}?${queryParam}=${encodeURIComponent(searchQuery)}`);
 
     // Clear tags after search
     setTags([]);
@@ -125,7 +140,9 @@ const SearchFieldWithMultiKeyword = () => {
               onKeyDown={handleKeyDown}
               placeholder={
                 tags.length === 0
-                  ? 'Enter domains (press Enter after each)'
+                  ? isBlogrPage
+                    ? 'Enter keywords (press Enter after each)'
+                    : 'Enter domains (press Enter after each)'
                   : ''
               }
               className="flex-1 bg-transparent text-white outline-none min-w-[120px]"

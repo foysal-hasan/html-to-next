@@ -1,22 +1,25 @@
 export async function POST(req) {
-  const body = await req.json();
-  // console.log('body', body);
-
   try {
+    const body = await req.json();
+    console.log('Request body:', body);
+
     const response = await fetch('http://144.172.92.117:42069/search', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'text/plain',
-      },
-      body: body?.keyword,
+      headers: { 'Content-Type': 'text/plain' },
+      body: body?.keyword || '', // Fallback for missing keyword
     });
+
+    // if (!response.ok) {
+    //   throw new Error(`API error: ${response.status}`);
+    // }
+
     const data = await response.json();
-    // console.log(data);
+    console.log('API response:', data);
 
-    return Response.json({ posts: data?.results });
+    // Handle cases where data.results might be missing
+    return Response.json({ posts: data?.results ?? [] });
   } catch (error) {
-    // console.log(error);
-
-    return Response.json([]);
+    console.error('Error:', error);
+    return Response.json({ posts: [], error: error.message }, { status: 500 });
   }
 }

@@ -66,6 +66,7 @@ export default function RenderPostsPage({ domain }) {
     setSelectedPost(allPosts[0]);
   }, [domain, allPosts]);
 
+  /////////////////////////
   const scrollContainerRef = useRef(null);
 
   if (allPosts?.length <= 0) return <SectionLoader sectionTitle={'Posts'} />;
@@ -73,7 +74,13 @@ export default function RenderPostsPage({ domain }) {
   // console.log('all posts: ', allPosts);
 
   const filteredPosts = allPosts ? filterPosts(allPosts, filters) : [];
-  // console.log(allPosts);
+  // console.log(filteredPosts);
+
+  // useEffect(() => {
+  //   if (allPosts?.length == 0) {
+  //     setSelectedPost(null);
+  //   }
+  // }, [filters, allPosts]);
 
   const handleScroll = (e) => {
     const bottom =
@@ -148,7 +155,7 @@ export default function RenderPostsPage({ domain }) {
                 {/* <option value="searchExploit">Search Exploit</option>
                 <option value="searchXss">Search XSS</option>
                 <option value="breachforum">Breachforum</option> */}
-                <option value="darkwebxss">Boardreader</option>
+                {/* <option value="darkwebxss">Boardreader</option> */}
                 {/* <option value="threads">Threads</option> */}
                 <option value="darkWebPosts">Dark Web</option>
               </select>
@@ -156,40 +163,73 @@ export default function RenderPostsPage({ domain }) {
           </div>
 
           {/* Content Grid */}
-          <div className="grid lg:grid-cols-3 gap-6">
-            {/* Posts List */}
-            <div
-              ref={scrollContainerRef}
-              className="lg:col-span-1 max-h-[calc(100vh-12rem)] overflow-y-auto overflow-x-hidden pr-2"
-              onScroll={handleScroll}
-              style={{
-                scrollbarColor: '#2dd4bf #1f2937',
-                minHeight: '300px',
-              }}
-            >
-              <div className="space-y-4">
-                {filteredPosts?.map((post, index) => (
-                  <div
-                    key={index}
-                    onClick={() => setSelectedPost(post)}
-                    className="cursor-pointer"
-                  >
-                    <DarkWebAndSocialMediaMentionsCard
-                      url={post.link}
-                      date={post.date}
-                      content={post.content}
-                      risk={post.risk}
-                      id={post.id}
-                      selectedPost={selectedPost?.id}
-                      page={'blogr'}
-                    />
-                  </div>
-                ))}
+          {filteredPosts?.length > 0 && (
+            <div className="grid lg:grid-cols-3 gap-6">
+              {/* Posts List */}
+              <div
+                ref={scrollContainerRef}
+                className="lg:col-span-1 max-h-[calc(100vh-12rem)] overflow-y-auto overflow-x-hidden pr-2"
+                onScroll={handleScroll}
+                style={{
+                  scrollbarColor: '#2dd4bf #1f2937',
+                  minHeight: '300px',
+                }}
+              >
+                <div className="space-y-4">
+                  {filteredPosts?.map((post, index) => {
+                    if (!post.content) return null;
+                    return (
+                      <div
+                        key={index}
+                        onClick={() => setSelectedPost(post)}
+                        className="cursor-pointer"
+                      >
+                        <DarkWebAndSocialMediaMentionsCard
+                          url={post.link}
+                          date={post.date}
+                          content={post.content}
+                          risk={post.risk}
+                          id={post.id}
+                          selectedPost={selectedPost?.id}
+                          page={'blogr'}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {filteredPosts.length > 0 && <PostPreview post={selectedPost} />}
+            </div>
+          )}
+
+          {filteredPosts?.length === 0 && (
+            <div className="lg:col-span-2 flex items-center justify-center h-[calc(100vh-12rem)] bg-gray-800 rounded-lg p-6">
+              <div className="text-center">
+                <svg
+                  className="w-16 h-16 mx-auto text-gray-500 mb-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M12 13a1 1 0 100-2 1 1 0 000 2z"
+                  ></path>
+                </svg>
+                <h3 className="text-xl font-semibold text-gray-200 mb-2">
+                  No Posts Found
+                </h3>
+                <p className="text-gray-400">
+                  There are currently no posts available for your selected
+                  criteria. Try adjusting your filters or check back later.
+                </p>
               </div>
             </div>
-
-            <PostPreview post={selectedPost} />
-          </div>
+          )}
         </div>
       </div>
     </main>

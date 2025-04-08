@@ -20,6 +20,7 @@ const DarkWebAndSocialMediaMentionsCard = ({
   id,
   page,
 }) => {
+  // if (!content) return;
   return (
     <div
       className={`flex gap-4  px-4 py-3 justify-between rounded-md mr-3 ${

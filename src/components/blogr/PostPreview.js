@@ -71,42 +71,104 @@ const getIconBySource = (source) => {
 };
 
 const PostPreview = ({ post }) => {
-  const [selectedTab, setSelectedTab] = useState('english');
-  const [translations, setTranslations] = useState({
-    english: post?.content,
-    russian: '',
-    arabic: '',
-  });
+  const [selectedTab, setSelectedTab] = useState('en');
+  const [title, setTitle] = useState(post?.title);
+  const [content, setContent] = useState(post?.content);
   const [isTranslating, setIsTranslating] = useState(false);
-  const [translatedTitles, setTranslatedTitles] = useState({
-    english: post?.title,
-    russian: '',
-    arabic: '',
-  });
-
   const [isTranslatingTitle, setIsTranslatingTitle] = useState(false);
+
+  // const [translations, setTranslations] = useState({
+  //   english: post?.content,
+  //   russian: '',
+  //   arabic: '',
+  // });
+  // const [isTranslating, setIsTranslating] = useState(false);
+  // const [translatedTitles, setTranslatedTitles] = useState({
+  //   english: post?.title,
+  //   russian: '',
+  //   arabic: '',
+  // });
+
+  // const [isTranslatingTitle, setIsTranslatingTitle] = useState(false);
+
+  // useEffect(() => {
+  //   const translateContent = async () => {
+  //     try {
+  //       setIsTranslating(true);
+  //       const response = await fetch('/api/translate-language', {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify({
+  //           content: post?.content,
+  //         }),
+  //       });
+
+  //       const data = await response.json();
+  //       // console.log('from post preview', data);
+  //       setTranslations({
+  //         english: data.english,
+  //         russian: data.russian,
+  //         arabic: data.arabic,
+  //       });
+  //     } catch (error) {
+  //       console.error('Translation error:', error);
+  //     } finally {
+  //       setIsTranslating(false);
+  //     }
+  //   };
+
+  //   if (post?.content) {
+  //     translateContent();
+  //   }
+  // }, [post?.content]);
+
+  // useEffect(() => {
+  //   const translateTitle = async () => {
+  //     setIsTranslatingTitle(true);
+  //     try {
+  //       const response = await fetch('/api/translate-tittle', {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify({
+  //           title: post?.title,
+  //         }),
+  //       });
+  //       const data = await response.json();
+  //       setTranslatedTitles({
+  //         english: data.english,
+  //         russian: data.russian,
+  //         arabic: data.arabic,
+  //       });
+  //     } catch (err) {
+  //       console.error('Translation error:', err);
+  //     } finally {
+  //       setIsTranslatingTitle(false);
+  //     }
+  //   };
+
+  //   if (post?.title) {
+  //     translateTitle();
+  //   }
+  // }, [post?.title]);
 
   useEffect(() => {
     const translateContent = async () => {
       try {
         setIsTranslating(true);
-        const response = await fetch('/api/translate-language', {
+        const response = await fetch('/api/translate-from-rapidapi', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
           body: JSON.stringify({
-            content: post?.content,
+            text: post?.content,
+            targetLang: selectedTab,
           }),
         });
 
         const data = await response.json();
-        // console.log('from post preview', data);
-        setTranslations({
-          english: data.english,
-          russian: data.russian,
-          arabic: data.arabic,
-        });
+        setContent(data.result);
       } catch (error) {
         console.error('Translation error:', error);
       } finally {
@@ -117,29 +179,24 @@ const PostPreview = ({ post }) => {
     if (post?.content) {
       translateContent();
     }
-  }, [post?.content]);
+  }, [selectedTab, post?.content]);
 
   useEffect(() => {
     const translateTitle = async () => {
-      setIsTranslatingTitle(true);
       try {
-        const response = await fetch('/api/translate-tittle', {
+        setIsTranslatingTitle(true);
+        const response = await fetch('/api/translate-from-rapidapi', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
           body: JSON.stringify({
-            title: post?.title,
+            text: post?.title,
+            targetLang: selectedTab,
           }),
         });
+
         const data = await response.json();
-        setTranslatedTitles({
-          english: data.english,
-          russian: data.russian,
-          arabic: data.arabic,
-        });
-      } catch (err) {
-        console.error('Translation error:', err);
+        setTitle(data.result);
+      } catch (error) {
+        console.error('Translation error:', error);
       } finally {
         setIsTranslatingTitle(false);
       }
@@ -148,35 +205,34 @@ const PostPreview = ({ post }) => {
     if (post?.title) {
       translateTitle();
     }
-  }, [post?.title]);
-
+  }, [selectedTab, post?.title]);
   if (!post) return null;
 
-  const renderContent = () => {
-    switch (selectedTab) {
-      case 'english':
-        return translations.english;
-      case 'russian':
-        return translations.russian;
-      case 'arabic':
-        return translations.arabic;
-      default:
-        return translations.english;
-    }
-  };
+  // const renderContent = () => {
+  //   switch (selectedTab) {
+  //     case 'english':
+  //       return translations.english;
+  //     case 'russian':
+  //       return translations.russian;
+  //     case 'arabic':
+  //       return translations.arabic;
+  //     default:
+  //       return translations.english;
+  //   }
+  // };
 
-  const renderTitle = () => {
-    switch (selectedTab) {
-      case 'english':
-        return translatedTitles.english;
-      case 'russian':
-        return translatedTitles.russian;
-      case 'arabic':
-        return translatedTitles.arabic;
-      default:
-        return translatedTitles.english;
-    }
-  };
+  // const renderTitle = () => {
+  //   switch (selectedTab) {
+  //     case 'english':
+  //       return translatedTitles.english;
+  //     case 'russian':
+  //       return translatedTitles.russian;
+  //     case 'arabic':
+  //       return translatedTitles.arabic;
+  //     default:
+  //       return translatedTitles.english;
+  //   }
+  // };
 
   return (
     <div className="p-6 bg-gray-800 rounded-lg text-white break-words min-h-[calc(100vh-12rem)] lg:col-span-2">
@@ -186,31 +242,31 @@ const PostPreview = ({ post }) => {
         <div className="flex flex-col sm:flex-row gap-4 sm:space-x-4 mb-4">
           <button
             className={`px-4 py-2 rounded-lg ${
-              selectedTab === 'english'
+              selectedTab === 'en'
                 ? 'bg-gradient-to-r from-teal-400 to-blue-600 text-white font-semibold rounded-lg hover:opacity-90 focus:outline-none  focus:ring-teal-500'
                 : 'bg-gray-700'
             }`}
-            onClick={() => setSelectedTab('english')}
+            onClick={() => setSelectedTab('en')}
           >
             English
           </button>
           <button
             className={`px-4 py-2 rounded-lg ${
-              selectedTab === 'russian'
+              selectedTab === 'ru'
                 ? 'bg-gradient-to-r from-teal-400 to-blue-600 text-white font-semibold rounded-lg hover:opacity-90 focus:outline-none  focus:ring-teal-500'
                 : 'bg-gray-700'
             }`}
-            onClick={() => setSelectedTab('russian')}
+            onClick={() => setSelectedTab('ru')}
           >
             Russian
           </button>
           <button
             className={`px-4 py-2 rounded-lg ${
-              selectedTab === 'arabic'
+              selectedTab === 'ar'
                 ? 'bg-gradient-to-r from-teal-400 to-blue-600 text-white font-semibold rounded-lg hover:opacity-90 focus:outline-none  focus:ring-teal-500'
                 : 'bg-gray-700'
             }`}
-            onClick={() => setSelectedTab('arabic')}
+            onClick={() => setSelectedTab('ar')}
           >
             Arabic
           </button>
@@ -292,6 +348,14 @@ const PostPreview = ({ post }) => {
         {post?.source === 'facebook' && (
           <div className="bg-gray-700/50 p-4 rounded-lg">
             <div className="flex gap-4 justify-between">
+              <div className="flex items-center gap-2 flex-1">
+                <img
+                  src={post?.author?.profile_picture_url}
+                  alt="Profile Image"
+                  className="w-10 h-10 rounded-full"
+                />
+              </div>
+
               <div className="flex-1">
                 <strong className="block text-gray-300 mb-2">Name</strong>
                 <p dangerouslySetInnerHTML={{ __html: post?.author?.name }} />
@@ -441,10 +505,10 @@ const PostPreview = ({ post }) => {
             <div className="flex items-center justify-center py-2">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
             </div>
-          ) : renderTitle() ? (
+          ) : title ? (
             <p
               dangerouslySetInnerHTML={{
-                __html: renderTitle(),
+                __html: title,
               }}
             />
           ) : (
@@ -454,6 +518,7 @@ const PostPreview = ({ post }) => {
 
         {/* Images or Media */}
         {post?.source !== 'Instagram' &&
+        post?.source !== 'facebook' &&
         (post?.image ||
           post?.media ||
           post?.images ||
@@ -518,6 +583,24 @@ const PostPreview = ({ post }) => {
           </div>
         ) : null}
 
+        {/* if source is facebook display videos */}
+        {post?.source === 'facebook' &&
+          post?.video_files &&
+          post?.video_files?.video_hd_file && (
+            <div className="bg-gray-700/50 p-4 rounded-lg mb-4">
+              <strong className="block text-gray-300 mb-2">Video</strong>
+              <div className="flex justify-center w-full mx-auto">
+                <video
+                  src={post?.video_files?.video_hd_file}
+                  controls
+                  className="rounded w-full max-h-[500px]"
+                >
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </div>
+          )}
+
         {/* Content */}
         <div className="bg-gray-700/50 p-4 rounded-lg">
           <strong className="block text-gray-300 mb-2">Content</strong>
@@ -525,11 +608,11 @@ const PostPreview = ({ post }) => {
             <div className="flex items-center justify-center py-4">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
             </div>
-          ) : renderContent(post?.translatedContent) ? (
+          ) : content ? (
             <p
               className="break-all"
               dangerouslySetInnerHTML={{
-                __html: renderContent(post?.translatedContent),
+                __html: content,
               }}
             />
           ) : (

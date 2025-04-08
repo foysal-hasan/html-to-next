@@ -4,41 +4,40 @@ import ChartBar from '@/components/brandsense/ChartBar';
 import DarkWebAndSocialMediaMentions from '@/components/brandsense/DarkWebAndSocialMediaMentions';
 import DonutChart from '@/components/brandsense/DonutChart';
 
-const isValidDomain = (domain) => {
-  const domainRegex =
-    /^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
-  return domainRegex.test(domain);
+export const metadata = {
+  title: 'Galileo Design',
+  description: 'Galileo Design',
 };
 
 export default async function Blogr({ searchParams }) {
   const search = await searchParams;
-  const domains = search?.domain ?? '';
+  const keywords = search?.keywords ?? '';
 
   // console.log(domains);
 
-  if (!domains) {
+  if (!keywords) {
     return (
       <div className="flex flex-col items-center justify-center h-[90vh]">
-        <h1 className="text-white text-2xl mb-4">Enter a domain to search</h1>
-        <p className="text-gray-400">Example: example.com, another.com</p>
+        <h1 className="text-white text-2xl mb-4">Enter a keyword to search</h1>
+        <p className="text-gray-400">Example: keyword1, keyword2</p>
       </div>
     );
   }
 
-  const domainsArray = domains.split(',');
+  const keywordsArray = keywords.split(',');
 
-  for (const domain of domainsArray) {
-    if (!isValidDomain(domain.trim())) {
-      return (
-        <div className="flex flex-col items-center justify-center h-[90vh]">
-          <h1 className="text-white text-2xl mb-4">Invalid domain format</h1>
-          <p className="text-gray-400">
-            Please enter a valid domain (e.g., example.com)
-          </p>
-        </div>
-      );
-    }
-  }
+  // for (const domain of domainsArray) {
+  //   if (!isValidDomain(domain.trim())) {
+  //     return (
+  //       <div className="flex flex-col items-center justify-center h-[90vh]">
+  //         <h1 className="text-white text-2xl mb-4">Invalid domain format</h1>
+  //         <p className="text-gray-400">
+  //           Please enter a valid domain (e.g., example.com)
+  //         </p>
+  //       </div>
+  //     );
+  //   }
+  // }
 
   return (
     <>
@@ -62,8 +61,8 @@ export default async function Blogr({ searchParams }) {
         <Heatmap />
       </div>
       <DarkWebAndSocialMediaMentions
-        domains={domainsArray}
-        search={domains}
+        domains={keywordsArray}
+        search={keywords}
         onlyData={true}
       />
       {/* <RenderPosts domain={domain} source={telegram} />
@@ -75,7 +74,7 @@ export default async function Blogr({ searchParams }) {
       <RenderPosts domain={domain} source={darkwebFacebook} />
       <RenderPosts domain={domain} source={darkwebStealer} />
       <RenderPosts domain={domain} source={darkwebXss} /> */}
-      <RenderAllPosts domain={search} />
+      <RenderAllPosts keywords={keywordsArray} search={keywords} />
     </>
   );
 }

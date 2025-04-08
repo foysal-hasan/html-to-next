@@ -1,6 +1,8 @@
-import SearchFieldWrapper from '@/components/SearchFieldWithMultiKeyword';
+'use client';
 
-export default async function SearchRamp() {
+import { useEffect } from 'react';
+
+export default function Test() {
   // try {
   //   const response = await fetch('http://107.189.26.43:5005/search_ramp', {
   //     method: 'POST',
@@ -36,6 +38,51 @@ export default async function SearchRamp() {
   //   console.error('Error:', error);
   // }
 
+  // const url =
+  //   'https://deep-translate1.p.rapidapi.com/language/translate/v2/detect';
+  // const options = {
+  //   method: 'POST',
+  //   headers: {
+  //     'x-rapidapi-host': 'deep-translate1.p.rapidapi.com',
+  //     'Content-Type': 'application/json',
+  //     'x-rapidapi-key': 'JCencKsLCumshFl94505UMz3fVOjp1GA57EjsnaTRyaHjVY8Z7',
+  //   },
+  //   body: {
+  //     data: {
+  //       detections: [
+  //         {
+  //           language: 'en',
+  //           isReliable: false,
+  //           confidence: 0.9867512,
+  //         },
+  //       ],
+  //     },
+  //   },
+  // };
+
+  useEffect(() => {
+    const url = 'http://107.189.26.43:5002/scrape';
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'contentContent-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        keyword: 'google',
+        amount: 10,
+        from_date: '01/01/2025',
+        to_date: '01/15/2025',
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
   return (
     <div className="p-4">
       {/* {result && (
@@ -43,8 +90,6 @@ export default async function SearchRamp() {
           {JSON.stringify(result, null, 2)}
         </pre>
       )} */}
-
-      <SearchFieldWrapper />
 
       <h1>hello world</h1>
     </div>
