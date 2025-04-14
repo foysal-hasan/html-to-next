@@ -13,6 +13,14 @@ import TelegramMentions from './darkWebAndSocialMediaMentions/Telegram';
 import DarkWebPosts from './darkWebAndSocialMediaMentions/DarkWebPosts';
 import SearchExploit from './darkWebAndSocialMediaMentions/SearchExploit';
 import DarkWebSearch from './darkWebAndSocialMediaMentions/DarkWebSearch';
+import Threads from './darkWebAndSocialMediaMentions/Threads';
+import Breachforum from './darkWebAndSocialMediaMentions/Breachforum';
+import SearchRamp from './darkWebAndSocialMediaMentions/SearchRamp';
+import InstagramMentions from './darkWebAndSocialMediaMentions/Instagram';
+import TwitterMentions from './darkWebAndSocialMediaMentions/TwitterMentions';
+import Posts from './darkWebAndSocialMediaMentions/Posts';
+import DarkwebFacebookPosts from './darkWebAndSocialMediaMentions/DarkwebFacebookPosts';
+import VKPostsScraper from './darkWebAndSocialMediaMentions/VKPostsScraper';
 // import DarkwebXSSPosts from './darkWebAndSocialMediaMentions/DarkwebXss';
 
 const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
@@ -102,7 +110,7 @@ const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
       )}
 
       <div className="max-w-4xl flex flex-col gap-10">
-        {/* <TelegramMentions
+        <TelegramMentions
           keyword={keywords[0]}
           onlyData={onlyData}
           search={search}
@@ -111,9 +119,9 @@ const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
           keywords={keywords}
           onlyData={onlyData}
           search={search}
-        /> */}
+        />
 
-        {/* <FacebookMentions
+        <FacebookMentions
           keyword={keywords[0]}
           onlyData={onlyData}
           search={search}
@@ -123,9 +131,9 @@ const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
           keyword={keywords[0]}
           onlyData={onlyData}
           search={search}
-        /> */}
+        />
 
-        {/*<TwitterMentions
+        <TwitterMentions
           keywords={keywords}
           onlyData={onlyData}
           search={search}
@@ -142,7 +150,7 @@ const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
           keywords={keywords}
           onlyData={onlyData}
           search={search}
-        /> */}
+        />
 
         {/* <Boardreader
           keyword={keywords[0]}
@@ -150,15 +158,15 @@ const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
           search={search}
         /> */}
 
-        {/* <Breachforum keyword={keywords[0]} search={search} onlyData={true} />
+        <Breachforum keyword={keywords[0]} search={search} onlyData={true} />
         <SearchRamp keyword={keywords[0]} search={search} onlyData={true} />
 
         <SearchExploit keyword={keywords[0]} search={search} onlyData={true} />
-        */}
-        {/* <SearchXss keyword={keywords[0]} search={search} onlyData={true} /> */}
 
-        {/*<Threads keyword={keywords[0]} onlyData={true} search={search} />
-         */}
+        <SearchXss keyword={keywords[0]} search={search} onlyData={true} />
+
+        <Threads keyword={keywords[0]} onlyData={true} search={search} />
+
         <DarkWebSearch keyword={keywords[0]} search={search} onlyData={true} />
 
         <DarkWebPosts keyword={keywords[0]} onlyData={onlyData} />
