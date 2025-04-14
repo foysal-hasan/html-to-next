@@ -33,7 +33,7 @@ const SearchXss = ({ keyword, search, onlyData }) => {
             start_date: '2025-01-01',
             end_date: new Date().toISOString().split('T')[0],
           },
-          url: 'http://107.189.26.43:5003/search_xss',
+          url: 'http://45.61.160.154:5000/search_xss',
         }),
       });
 
@@ -43,6 +43,8 @@ const SearchXss = ({ keyword, search, onlyData }) => {
         setLoading(false);
         return;
       }
+
+      console.log(postsResponse);
 
       const normalizedPosts = normalizePosts(postsResponse, 'darkWebPosts');
       // console.log('normalized: ', normalizedPosts);

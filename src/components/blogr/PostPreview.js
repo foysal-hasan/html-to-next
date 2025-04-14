@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 const icons = {
   darkweb: '/assets/dark-web.png',
@@ -23,10 +23,10 @@ const getIconBySource = (source) => {
     case 'darkweb':
     case 'searchXss':
     case 'darkWebPosts':
+    case 'darkwebfacebook':
       return (
         <Image src={icons.darkweb} alt="darkweb Icon" width={50} height={50} />
       );
-    case 'darkwebfacebook':
     case 'facebook':
       return (
         <Image
@@ -70,12 +70,23 @@ const getIconBySource = (source) => {
   }
 };
 
+function addNewLinesEvery500Chars(text) {
+  let result = '';
+  for (let i = 0; i < text.length; i += 500) {
+    result += text.slice(i, i + 500) + '<br/><br/>';
+  }
+  return result.trim();
+}
+
 const PostPreview = ({ post }) => {
   const [selectedTab, setSelectedTab] = useState('en');
   const [title, setTitle] = useState(post?.title);
   const [content, setContent] = useState(post?.content);
   const [isTranslating, setIsTranslating] = useState(false);
   const [isTranslatingTitle, setIsTranslatingTitle] = useState(false);
+  const [summary, setSummary] = useState('This is a summary of the post');
+  const [showSummary, setShowSummary] = useState(false);
+  const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
 
   // const [translations, setTranslations] = useState({
   //   english: post?.content,
@@ -206,6 +217,7 @@ const PostPreview = ({ post }) => {
       translateTitle();
     }
   }, [selectedTab, post?.title]);
+
   if (!post) return null;
 
   // const renderContent = () => {
@@ -612,7 +624,7 @@ const PostPreview = ({ post }) => {
             <p
               className="break-all"
               dangerouslySetInnerHTML={{
-                __html: content,
+                __html: addNewLinesEvery500Chars(content),
               }}
             />
           ) : (
@@ -647,21 +659,51 @@ const PostPreview = ({ post }) => {
           </div>
         )}
 
-        {/* Link to Original Post */}
-        {post?.link && (
-          <Link
-            href={
-              post?.link.startsWith('http')
-                ? post?.link
-                : `https://${post?.link}`
-            }
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block mt-4 px-6 py-2 bg-blue-600  hover:bg-blue-700 transition-colors bg-gradient-to-r from-teal-400 to-blue-600 text-white font-semibold rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-teal-500"
+        {/* Action Buttons */}
+        <div className="flex flex-wrap gap-4">
+          {post?.link && (
+            <Link
+              href={
+                post?.link.startsWith('http')
+                  ? post?.link
+                  : `https://${post?.link}`
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block px-6 py-2 bg-gradient-to-r from-teal-400 to-blue-600 text-white font-semibold rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-teal-500"
+            >
+              View Original Post
+            </Link>
+          )}
+
+          {/* <button
+            onClick={() => {
+              // if (!showSummary) {
+              //   // generateSummary();
+              // } else {
+              //   setShowSummary(false);
+              // }
+              setShowSummary((prev) => !prev);
+            }}
+            className="inline-block px-6 py-2 bg-gradient-to-r from-purple-400 to-indigo-600 text-white font-semibold rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-purple-500"
           >
-            View Original Post
-          </Link>
-        )}
+            {showSummary ? 'Hide Summary' : 'Summary'}
+          </button> */}
+        </div>
+
+        {/* Summary Content */}
+        {/* {showSummary && (
+          <div className="bg-gray-700/50 p-4 rounded-lg mt-4">
+            <strong className="block text-gray-300 mb-2">Summary</strong>
+            {isGeneratingSummary ? (
+              <div className="flex items-center justify-center py-4">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+              </div>
+            ) : (
+              <p className="break-all">{summary && summary}</p>
+            )}
+          </div>
+        )} */}
       </div>
     </div>
   );

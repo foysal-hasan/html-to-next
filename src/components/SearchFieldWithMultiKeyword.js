@@ -14,7 +14,7 @@ const SearchFieldWithMultiKeyword = () => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   // Determine if we're on a blogr page
-  const isBlogrPage = pathname.includes('/blogr');
+  const isBlogrPage = pathname.includes('/blogr') || pathname.includes('/map');
 
   // Use different validation based on page type
   const domainRegex =
