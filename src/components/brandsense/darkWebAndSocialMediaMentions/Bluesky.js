@@ -11,7 +11,7 @@ import SectionTitle from '../SectionTitle';
 import checkSearchQuery from '@/utils/checkSearchQuery';
 import { useCallback } from 'react';
 
-const Posts = ({ keywords, search, onlyData }) => {
+const BlueSky = ({ keywords, search, onlyData }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -48,7 +48,7 @@ const Posts = ({ keywords, search, onlyData }) => {
         return;
       }
 
-      const normalizedPosts = normalizePosts(postsResponse, 'posts');
+      const normalizedPosts = normalizePosts(postsResponse, 'bluesky');
       // console.log('normalized: ', normalizedPosts);
 
       const classifiedPosts = await classifyPosts(normalizedPosts);
@@ -75,7 +75,7 @@ const Posts = ({ keywords, search, onlyData }) => {
   if (onlyData) {
     return null;
   }
-  if (loading) return <SectionLoader sectionTitle={'Posts Mentions'} />;
+  if (loading) return <SectionLoader sectionTitle={'Bluesky Mentions'} />;
 
   if (!posts || posts.length === 0 || onlyData) {
     return null;
@@ -83,7 +83,7 @@ const Posts = ({ keywords, search, onlyData }) => {
 
   return (
     <div>
-      <SectionTitle>Posts Mentions</SectionTitle>
+      <SectionTitle>Bluesky Mentions</SectionTitle>
       {posts.map((post, index) => (
         <DarkWebAndSocialMediaMentionsCard key={index} {...post} />
       ))}
@@ -91,4 +91,4 @@ const Posts = ({ keywords, search, onlyData }) => {
   );
 };
 
-export default Posts;
+export default BlueSky;

@@ -121,7 +121,7 @@ export default function RenderPostsPage({ domain }) {
               />
 
               {/* category drop down: malware, fraud, exploits, violent, politics, hate speech, active threats, crypto, law and crime, other */}
-              {/* <select className="bg-gray-700 text-white border-gray-600 p-2 rounded-md flex-1 sm:flex-none min-w-[140px] focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              <select className="bg-gray-700 text-white border-gray-600 p-2 rounded-md flex-1 sm:flex-none min-w-[140px] focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                 <option value="">All Category</option>
                 <option value="malware">Malware</option>
                 <option value="fraud">Fraud</option>
@@ -134,7 +134,7 @@ export default function RenderPostsPage({ domain }) {
                 <option value="law">Law</option>
                 <option value="crime">Crime</option>
                 <option value="other">Other</option>
-              </select> */}
+              </select>
               <select
                 className="bg-gray-700 text-white border-gray-600 p-2 rounded-md flex-1 sm:flex-none min-w-[140px] focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 onChange={(e) =>
@@ -167,7 +167,7 @@ export default function RenderPostsPage({ domain }) {
                 <option value="vk">VK</option>
                 {/* <option value="darkweb">Dark Web Stealer</option>
                 <option value="darkwebxss">Dark Web XSS</option> */}
-                <option value="posts">Posts</option>
+                <option value="bluesky">Bluesky</option>
                 {/* <option value="searchExploit">Search Exploit</option>
                 <option value="searchXss">Search XSS</option>
                 <option value="breachforum">Breachforum</option> */}

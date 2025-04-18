@@ -13,10 +13,10 @@ export default function Layout({ children }) {
     >
       <div className="layout-container flex h-full grow flex-col">
         {/* <BlogrHeader /> */}
-        {/* <Header /> */}
-        {/* {children} */}
+        <Header />
+        {children}
 
-        <h1>Map Page</h1>
+        {/* <h1>Map Page</h1> */}
       </div>
     </div>
   );

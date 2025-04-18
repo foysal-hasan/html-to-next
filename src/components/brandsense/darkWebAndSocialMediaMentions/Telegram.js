@@ -106,7 +106,7 @@ const TelegramMentions = ({ keyword, search, onlyData }) => {
     if (checkSearchQuery(searchQuery, search)) {
       setPosts(telegramMentions.slice(0, 3));
     } else {
-      console.log(searchQuery, search);
+      // console.log(searchQuery, search);
 
       fetchTelegramPosts();
     }

@@ -9,6 +9,8 @@ const icons = {
   twitter: '/assets/x.png',
   telegram: '/assets/telegram.png',
   threads: '/assets/threads.png',
+  bluesky: '/assets/bluesky-icon.png',
+  vk: '/assets/vk.png',
   default: '/assets/post.png',
 };
 
@@ -63,6 +65,15 @@ const getIconBySource = (source) => {
       return (
         <Image src={icons.threads} alt="threads Icon" width={50} height={50} />
       );
+
+    case 'vk':
+      return <Image src={icons.vk} alt="threads Icon" width={50} height={50} />;
+
+    case 'bluesky':
+      return (
+        <Image src={icons.bluesky} alt="threads Icon" width={50} height={50} />
+      );
+
     default:
       return (
         <Image src={icons.default} alt="Link Icon" width={50} height={50} />
@@ -537,7 +548,7 @@ const PostPreview = ({ post }) => {
           post?.media?.file_url) ? (
           <div className="bg-gray-700/50  rounded-lg">
             <div
-              className={`grid ${
+              className={`flex flex-wrap ${
                 post?.images?.length > 1 ||
                 (post?.media &&
                   Array.isArray(post?.media) &&
@@ -676,7 +687,7 @@ const PostPreview = ({ post }) => {
             </Link>
           )}
 
-          {/* <button
+          <button
             onClick={() => {
               // if (!showSummary) {
               //   // generateSummary();
@@ -688,11 +699,11 @@ const PostPreview = ({ post }) => {
             className="inline-block px-6 py-2 bg-gradient-to-r from-purple-400 to-indigo-600 text-white font-semibold rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-purple-500"
           >
             {showSummary ? 'Hide Summary' : 'Summary'}
-          </button> */}
+          </button>
         </div>
 
         {/* Summary Content */}
-        {/* {showSummary && (
+        {showSummary && (
           <div className="bg-gray-700/50 p-4 rounded-lg mt-4">
             <strong className="block text-gray-300 mb-2">Summary</strong>
             {isGeneratingSummary ? (
@@ -703,7 +714,7 @@ const PostPreview = ({ post }) => {
               <p className="break-all">{summary && summary}</p>
             )}
           </div>
-        )} */}
+        )}
       </div>
     </div>
   );

@@ -18,7 +18,7 @@ import Breachforum from './darkWebAndSocialMediaMentions/Breachforum';
 import SearchRamp from './darkWebAndSocialMediaMentions/SearchRamp';
 import InstagramMentions from './darkWebAndSocialMediaMentions/Instagram';
 import TwitterMentions from './darkWebAndSocialMediaMentions/TwitterMentions';
-import Posts from './darkWebAndSocialMediaMentions/Posts';
+import BlueSky from './darkWebAndSocialMediaMentions/Bluesky';
 import DarkwebFacebookPosts from './darkWebAndSocialMediaMentions/DarkwebFacebookPosts';
 import VKPostsScraper from './darkWebAndSocialMediaMentions/VKPostsScraper';
 // import DarkwebXSSPosts from './darkWebAndSocialMediaMentions/DarkwebXss';
@@ -115,6 +115,7 @@ const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
           onlyData={onlyData}
           search={search}
         />
+
         <InstagramMentions
           keywords={keywords}
           onlyData={onlyData}
@@ -127,18 +128,12 @@ const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
           search={search}
         />
 
-        <FacebookMentionsAll
-          keyword={keywords[0]}
-          onlyData={onlyData}
-          search={search}
-        />
-
         <TwitterMentions
           keywords={keywords}
           onlyData={onlyData}
           search={search}
         />
-        <Posts keywords={keywords} onlyData={onlyData} search={search} />
+        <BlueSky keywords={keywords} onlyData={onlyData} search={search} />
 
         <DarkwebFacebookPosts
           keyword={keywords[0]}
