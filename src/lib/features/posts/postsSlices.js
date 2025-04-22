@@ -117,7 +117,7 @@ const postsSlice = createSlice({
       updateAllPosts(state, action.payload);
     },
     setTelegramMentions(state, action) {
-      state.telegramMentions = action.payload;
+      state.telegramMentions = [...state.telegramMentions, ...action.payload];
       updateRiskAnalysis(state, action.payload || []);
       updateLanguageAnalysis(state, action.payload || []);
       updateAllPosts(state, action.payload || []);

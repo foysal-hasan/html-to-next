@@ -57,6 +57,7 @@ export default function RenderPostsPage({ domain }) {
     startDate: '',
     endDate: '',
     riskLevel: '',
+    category: '',
     source: '',
   });
 
@@ -121,7 +122,12 @@ export default function RenderPostsPage({ domain }) {
               />
 
               {/* category drop down: malware, fraud, exploits, violent, politics, hate speech, active threats, crypto, law and crime, other */}
-              <select className="bg-gray-700 text-white border-gray-600 p-2 rounded-md flex-1 sm:flex-none min-w-[140px] focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              <select
+                className="bg-gray-700 text-white border-gray-600 p-2 rounded-md flex-1 sm:flex-none min-w-[140px] focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onChange={(e) =>
+                  setFilters({ ...filters, category: e.target.value })
+                }
+              >
                 <option value="">All Category</option>
                 <option value="malware">Malware</option>
                 <option value="fraud">Fraud</option>

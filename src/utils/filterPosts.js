@@ -1,5 +1,5 @@
 const filterPosts = (posts, filters = {}, limit = null) => {
-  const { startDate, endDate, riskLevel, source } = filters;
+  const { startDate, endDate, riskLevel, source, category } = filters;
 
   const filtered = posts.filter((post) => {
     const postDate = new Date(post.date);
@@ -55,6 +55,7 @@ const filterPosts = (posts, filters = {}, limit = null) => {
 
     if (source && post.source !== source) return false;
     if (riskLevel && post.risk !== riskLevel) return false;
+    if (category && post.category !== category) return false;
     return true;
   });
 
