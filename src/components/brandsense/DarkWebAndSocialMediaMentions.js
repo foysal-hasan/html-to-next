@@ -7,6 +7,8 @@ import TelegramMentions from './darkWebAndSocialMediaMentions/Telegram';
 import ExportRiskPDF from './download';
 import SectionTitle from './SectionTitle';
 import ViewMoreButton from './ViewMoreButton';
+import InstagramMentions from './darkWebAndSocialMediaMentions/Instagram';
+import TwitterMentions from './darkWebAndSocialMediaMentions/TwitterMentions';
 // import DarkwebXSSPosts from './darkWebAndSocialMediaMentions/DarkwebXss';
 
 const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
@@ -96,29 +98,30 @@ const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
       )}
 
       <div className="max-w-4xl flex flex-col gap-10">
-        <TelegramMentions
+         <TelegramMentions
           keyword={keywords[0]}
           onlyData={onlyData}
           search={search}
-        />
+        /> 
 
-        {/* <InstagramMentions
+         {/* <InstagramMentions
           keywords={keywords}
           onlyData={onlyData}
           search={search}
         />
-
-        <FacebookMentions
+        
+          <FacebookMentions
           keyword={keywords[0]}
           onlyData={onlyData}
           search={search}
-        />
+        /> 
 
         <TwitterMentions
           keywords={keywords}
           onlyData={onlyData}
           search={search}
         />
+       
         <BlueSky keywords={keywords} onlyData={onlyData} search={search} />
 
         <DarkwebFacebookPosts

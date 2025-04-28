@@ -95,87 +95,40 @@ const PostPreview = ({ post }) => {
   const [content, setContent] = useState(post?.content);
   const [isTranslating, setIsTranslating] = useState(false);
   const [isTranslatingTitle, setIsTranslatingTitle] = useState(false);
-  const [summary, setSummary] = useState('This is a summary of the post');
+  const [summary, setSummary] = useState(null);
   const [showSummary, setShowSummary] = useState(false);
   const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
 
-  // const [translations, setTranslations] = useState({
-  //   english: post?.content,
-  //   russian: '',
-  //   arabic: '',
-  // });
-  // const [isTranslating, setIsTranslating] = useState(false);
-  // const [translatedTitles, setTranslatedTitles] = useState({
-  //   english: post?.title,
-  //   russian: '',
-  //   arabic: '',
-  // });
 
-  // const [isTranslatingTitle, setIsTranslatingTitle] = useState(false);
+  const generateSummary = async () => {
+    try {
+      setIsGeneratingSummary(true);
+      setShowSummary(true);
+      const response = await fetch('/api/generate-summary', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: post?.content,
+        }),
+      });
+      const data = await response.json();
+      // console.log(data);
+      
+      setSummary(data.summary);
+    } catch (error) {
+      console.error('Error generating summary:', error);
+    } finally {
+      setIsGeneratingSummary(false);
+    }
+  };
 
-  // useEffect(() => {
-  //   const translateContent = async () => {
-  //     try {
-  //       setIsTranslating(true);
-  //       const response = await fetch('/api/translate-language', {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify({
-  //           content: post?.content,
-  //         }),
-  //       });
+  useEffect(() => {
+    setSummary(null);
+    setShowSummary(false);
+  }, [post?.id]); 
 
-  //       const data = await response.json();
-  //       // console.log('from post preview', data);
-  //       setTranslations({
-  //         english: data.english,
-  //         russian: data.russian,
-  //         arabic: data.arabic,
-  //       });
-  //     } catch (error) {
-  //       console.error('Translation error:', error);
-  //     } finally {
-  //       setIsTranslating(false);
-  //     }
-  //   };
-
-  //   if (post?.content) {
-  //     translateContent();
-  //   }
-  // }, [post?.content]);
-
-  // useEffect(() => {
-  //   const translateTitle = async () => {
-  //     setIsTranslatingTitle(true);
-  //     try {
-  //       const response = await fetch('/api/translate-tittle', {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify({
-  //           title: post?.title,
-  //         }),
-  //       });
-  //       const data = await response.json();
-  //       setTranslatedTitles({
-  //         english: data.english,
-  //         russian: data.russian,
-  //         arabic: data.arabic,
-  //       });
-  //     } catch (err) {
-  //       console.error('Translation error:', err);
-  //     } finally {
-  //       setIsTranslatingTitle(false);
-  //     }
-  //   };
-
-  //   if (post?.title) {
-  //     translateTitle();
-  //   }
-  // }, [post?.title]);
 
   useEffect(() => {
     const translateContent = async () => {
@@ -202,6 +155,9 @@ const PostPreview = ({ post }) => {
       translateContent();
     }
   }, [selectedTab, post?.content]);
+
+
+  
 
   useEffect(() => {
     const translateTitle = async () => {
@@ -689,12 +645,13 @@ const PostPreview = ({ post }) => {
 
           <button
             onClick={() => {
-              // if (!showSummary) {
-              //   // generateSummary();
-              // } else {
-              //   setShowSummary(false);
-              // }
-              setShowSummary((prev) => !prev);
+              console.log("summary", summary);
+              
+              if (!showSummary && !summary) {
+                generateSummary();
+              } else {
+                setShowSummary((prev) => !prev);
+              }
             }}
             className="inline-block px-6 py-2 bg-gradient-to-r from-purple-400 to-indigo-600 text-white font-semibold rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-purple-500"
           >

@@ -53,13 +53,13 @@ export default async function Blogr({ searchParams }) {
           <ChartBar />
         </div>
       </div>
-      <div
+      {/* <div
         className="container h-[500px] sm:h-[400px] md:h-[600px] mx-auto mt-5 sm:mt-10 rounded-xl overflow-hidden
       px-4 sm:px-6 lg:px-8
       "
       >
         <Heatmap />
-      </div>
+      </div> */}
       <DarkWebAndSocialMediaMentions
         domains={keywordsArray}
         search={keywords}

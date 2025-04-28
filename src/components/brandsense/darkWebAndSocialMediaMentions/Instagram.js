@@ -18,6 +18,7 @@ const InstagramMentions = ({ keywords, search, onlyData }) => {
   const instagramMentions = useAppSelector(
     (state) => state.posts.instagramMentions,
   );
+  
   const dispatch = useAppDispatch();
 
   const fetchInstagramPosts = useCallback(async () => {
@@ -36,7 +37,7 @@ const InstagramMentions = ({ keywords, search, onlyData }) => {
       });
 
       const rawPosts = await res.json();
-      // console.log('rawPosts', rawPosts);
+      console.log('rawPosts', rawPosts);
       if (!rawPosts || rawPosts.length === 0) {
         setLoading(false);
         return;
