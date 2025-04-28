@@ -3,12 +3,19 @@ import { reset } from '@/lib/features/posts/postsSlices';
 import { setSearchQuery } from '@/lib/features/search/searchSlices';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { useEffect } from 'react';
+import InstagramMentions from './darkWebAndSocialMediaMentions/Instagram';
 import TelegramMentions from './darkWebAndSocialMediaMentions/Telegram';
+import TwitterMentions from './darkWebAndSocialMediaMentions/TwitterMentions';
 import ExportRiskPDF from './download';
 import SectionTitle from './SectionTitle';
 import ViewMoreButton from './ViewMoreButton';
-import InstagramMentions from './darkWebAndSocialMediaMentions/Instagram';
-import TwitterMentions from './darkWebAndSocialMediaMentions/TwitterMentions';
+import FacebookMentions from './darkWebAndSocialMediaMentions/FacebookMentions';
+import BlueSky from './darkWebAndSocialMediaMentions/Bluesky';
+import DarkwebFacebookPosts from './darkWebAndSocialMediaMentions/DarkwebFacebookPosts';
+import VKPostsScraper from './darkWebAndSocialMediaMentions/VKPostsScraper';
+import SearchXss from './darkWebAndSocialMediaMentions/SearchXss';
+import Breachforum from './darkWebAndSocialMediaMentions/Breachforum';
+import SearchRamp from './darkWebAndSocialMediaMentions/SearchRamp';
 // import DarkwebXSSPosts from './darkWebAndSocialMediaMentions/DarkwebXss';
 
 const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
@@ -104,7 +111,7 @@ const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
           search={search}
         /> 
 
-         {/* <InstagramMentions
+         <InstagramMentions
           keywords={keywords}
           onlyData={onlyData}
           search={search}
@@ -134,7 +141,7 @@ const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
           keywords={keywords}
           onlyData={onlyData}
           search={search}
-        /> */}
+        />
 
         {/* <Boardreader
           keyword={keywords[0]}
@@ -142,18 +149,14 @@ const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
           search={search}
         /> */}
 
-        {/* <Breachforum keyword={keywords[0]} search={search} onlyData={true} />
+        <Breachforum keyword={keywords[0]} search={search} onlyData={true} />
         <SearchRamp keyword={keywords[0]} search={search} onlyData={true} />
-
         <SearchExploit keyword={keywords[0]} search={search} onlyData={true} />
-
         <SearchXss keyword={keywords[0]} search={search} onlyData={true} />
-
         <Threads keyword={keywords[0]} onlyData={true} search={search} />
-
         <DarkWebSearch keyword={keywords[0]} search={search} onlyData={true} />
 
-        <DarkWebPosts keyword={keywords[0]} onlyData={onlyData} /> */}
+        <DarkWebPosts keyword={keywords[0]} onlyData={onlyData} />
       </div>
       <div
         className={`flex gap-5 items-center  ${
