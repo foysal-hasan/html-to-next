@@ -25,34 +25,114 @@ const FacebookMentions = ({ keyword, search, onlyData }) => {
   const fetchPosts = useCallback(async () => {
     try {
       setLoading(true);
-      // facebook
-      const facebookRes = await fetch('/api/facebookPosts', {
+
+      // First fetch a small batch to display quickly
+      let initialResponse = await fetch('/api/facebookPosts', {
         method: 'POST',
         body: JSON.stringify({
           keyword: keyword,
         }),
       });
 
-      let facebookPosts = await facebookRes.json();
-      // console.log('facebook posts: ', facebookPosts);
-      facebookPosts = facebookPosts?.posts;
-
-      if (!facebookPosts || facebookPosts.length === 0) {
+      let initialPosts = await initialResponse.json();
+      console.log(initialPosts);
+      if (!initialPosts) {
         setLoading(false);
         return;
       }
 
-      const normalizedPosts = normalizePosts(facebookPosts, 'facebook');
-      // console.log('normalized: ', normalizedPosts);
+      // Normalize and classify the initial posts for display
+      let initialNormalizedPosts = normalizePosts(
+        initialPosts?.results,
+        'facebook',
+      );
+      let initialClassifiedPosts = await classifyPosts(initialNormalizedPosts);
 
-      const classifiedPosts = await classifyPosts(normalizedPosts);
+      // // Display the first few posts immediately
+      setPosts(initialClassifiedPosts.slice(0, 3));
+      dispatch(setFacebookMentions(initialClassifiedPosts));
 
-      // console.log('classifiedPosts', classifiedPosts);
-      dispatch(setFacebookMentions(classifiedPosts));
+      if (initialNormalizedPosts?.results?.length > 0) {
+        setLoading(false);
+      }
 
-      setPosts(classifiedPosts.slice(0, 3)); // Show only 2-3 posts
+      let count = initialPosts?.results?.length;
+
+      // console.log(initialPosts?.cursor, facebookMentions?.length);
+      // console.log(count);
+
+      console.log(!initialPosts?.cursor && count < 100);
+      while (initialPosts?.cursor && count < 100) {
+        console.log('inside while');
+
+        // First fetch a small batch to display quickly
+        initialResponse = await fetch('/api/facebookPosts', {
+          method: 'POST',
+          body: JSON.stringify({
+            keyword: keyword,
+            cursor: initialPosts.cursor,
+          }),
+        });
+
+        initialPosts = await initialResponse.json();
+        if (!initialPosts) {
+          setLoading(false);
+          return;
+        }
+
+        // Normalize and classify the initial posts for display
+        initialNormalizedPosts = normalizePosts(
+          initialPosts?.results,
+          'facebook',
+        );
+        initialClassifiedPosts = await classifyPosts(initialNormalizedPosts);
+        dispatch(setFacebookMentions(initialClassifiedPosts));
+
+        count += initialPosts?.results?.length;
+      }
+
+      // initialPosts = initialPosts?.posts;
+
+      // if (!initialPosts || initialPosts.length === 0) {
+      //   setLoading(false);
+      //   return;
+      // }
+
+      // // Normalize and classify the initial posts for display
+      // const initialNormalizedPosts = normalizePosts(initialPosts, 'facebook');
+      // const initialClassifiedPosts = await classifyPosts(
+      //   initialNormalizedPosts,
+      // );
+
+      // // Display the first few posts immediately
+      // setPosts(initialClassifiedPosts.slice(0, 3));
+      // dispatch(setFacebookMentions(initialClassifiedPosts));
+
+      // Then fetch all posts in the background
+      // const fullResponse = await fetch('/api/facebookPosts', {
+      //   method: 'POST',
+      //   body: JSON.stringify({
+      //     keyword: keyword,
+      //     fetchAll: true,
+      //   }),
+      // });
+
+      // let allPosts = await fullResponse.json();
+      // allPosts = allPosts?.posts;
+
+      // if (allPosts && allPosts.length > 0) {
+      //   // Normalize and classify all posts
+      //   const allNormalizedPosts = normalizePosts(allPosts, 'facebook');
+      //   const allClassifiedPosts = await classifyPosts(allNormalizedPosts);
+
+      //   // Store all posts in Redux
+      //   dispatch(setFacebookMentions(allClassifiedPosts));
+      // } else {
+      //   // If no additional posts were found, store the initial ones
+      //   dispatch(setFacebookMentions(initialClassifiedPosts));
+      // }
     } catch (error) {
-      console.error('Instagram API Error:', error);
+      console.error('Facebook API Error:', error);
     } finally {
       setLoading(false);
     }
@@ -69,7 +149,8 @@ const FacebookMentions = ({ keyword, search, onlyData }) => {
   if (onlyData) {
     return null;
   }
-  if (loading) return <SectionLoader sectionTitle={'Facebook Mentions'} />;
+  if (posts.length == 0)
+    return <SectionLoader sectionTitle={'Facebook Mentions'} />;
 
   if (!posts || posts.length === 0 || onlyData) {
     return null;

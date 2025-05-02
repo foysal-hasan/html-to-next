@@ -25,7 +25,7 @@ const DarkwebXSSPosts = ({ keyword, search, onlyData }) => {
     try {
       setLoading(true);
       // Dark Web - XSS
-      const darkwebXssRes = await fetch('/api/darkWebPosts', {
+      const darkwebXssRes = await fetch('/api/xss', {
         method: 'POST',
         body: JSON.stringify({
           input: {
@@ -37,7 +37,7 @@ const DarkwebXSSPosts = ({ keyword, search, onlyData }) => {
         }),
       });
       const darkwebXssPosts = await darkwebXssRes.json();
-      // console.log('darkweb Xss posts: ', darkwebXssPosts);
+      console.log('darkweb Xss posts: ', darkwebXssPosts);
 
       if (!darkwebXssPosts || darkwebXssPosts.length === 0) {
         setLoading(false);

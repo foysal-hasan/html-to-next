@@ -1,7 +1,8 @@
 'use client';
 import SectionLoader from '@/components/SectionLoader';
 import { classifyPosts } from '@/lib/api/classify';
-import { setInstagramMentions } from '@/lib/features/posts/postsSlices';
+import { setPostsMentions } from '@/lib/features/posts/postsSlices';
+
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import normalizePosts from '@/utils/normalizePosts';
 import { useEffect, useState } from 'react';
@@ -10,44 +11,50 @@ import SectionTitle from '../SectionTitle';
 import checkSearchQuery from '@/utils/checkSearchQuery';
 import { useCallback } from 'react';
 
-const InstagramMentions = ({ keywords, search, onlyData }) => {
+const BlueSky = ({ keywords, search, onlyData }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
+
   const searchQuery = useAppSelector((state) => state.search.searchQuery);
 
-  const instagramMentions = useAppSelector(
-    (state) => state.posts.instagramMentions,
-  );
-  
+  const postsMentions = useAppSelector((state) => state.posts.postsMentions);
+
   const dispatch = useAppDispatch();
 
-  const fetchInstagramPosts = useCallback(async () => {
+  const fetchPosts = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await fetch('/api/fetchApifyPosts', {
+      // facebook
+      const postsRes = await fetch('/api/fetchApifyPosts', {
         method: 'POST',
         body: JSON.stringify({
           input: {
-            hashtags: keywords,
-            resultsType: 'posts',
-            resultsLimit: 100,
+            queries: keywords,
+            limit: 100,
+            sort: 'latest',
+            proxyConfiguration: {
+              useApifyProxy: true,
+              apifyProxyGroups: [],
+            },
           },
-          url: 'apify/instagram-hashtag-scraper',
+          url: 'U9JtSIIjR6gyldBIN',
         }),
       });
 
-      const rawPosts = await res.json();
-      console.log('rawPosts', rawPosts);
-      if (!rawPosts || rawPosts.length === 0) {
+      const postsResponse = await postsRes.json();
+      // console.log('facebook posts: ', postsResponse);
+      if (!postsResponse || postsResponse.length === 0) {
         setLoading(false);
         return;
       }
 
-      const normalizedPosts = normalizePosts(rawPosts || [], 'Instagram');
+      const normalizedPosts = normalizePosts(postsResponse, 'bluesky');
+      // console.log('normalized: ', normalizedPosts);
 
-      // console.log('normalizedPosts', normalizedPosts);
       const classifiedPosts = await classifyPosts(normalizedPosts);
-      dispatch(setInstagramMentions(classifiedPosts));
+
+      // console.log('classifiedPosts', classifiedPosts);
+      dispatch(setPostsMentions(classifiedPosts));
 
       setPosts(classifiedPosts.slice(0, 3)); // Show only 2-3 posts
     } catch (error) {
@@ -59,16 +66,16 @@ const InstagramMentions = ({ keywords, search, onlyData }) => {
 
   useEffect(() => {
     if (checkSearchQuery(searchQuery, search)) {
-      setPosts(instagramMentions?.slice(0, 3));
+      setPosts(postsMentions.slice(0, 3));
     } else {
-      fetchInstagramPosts();
+      fetchPosts();
     }
-  }, [search, searchQuery, instagramMentions, fetchInstagramPosts]);
+  }, [search, searchQuery, postsMentions, fetchPosts]);
 
   if (onlyData) {
     return null;
   }
-  if (loading) return <SectionLoader sectionTitle={'Instagram Mentions'} />;
+  if (loading) return <SectionLoader sectionTitle={'Bluesky Mentions'} />;
 
   if (!posts || posts.length === 0 || onlyData) {
     return null;
@@ -76,12 +83,12 @@ const InstagramMentions = ({ keywords, search, onlyData }) => {
 
   return (
     <div>
-      <SectionTitle>Instagram Mentions</SectionTitle>
-      {posts?.map((post, index) => (
+      <SectionTitle>Bluesky Mentions</SectionTitle>
+      {posts.map((post, index) => (
         <DarkWebAndSocialMediaMentionsCard key={index} {...post} />
       ))}
     </div>
   );
 };
 
-export default InstagramMentions;
+export default BlueSky;

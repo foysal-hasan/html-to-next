@@ -366,7 +366,7 @@ export async function POST(req) {
           const location = await analyzePost(post.content);
 
           // Analyze risk and language
-          const analysis = await analyzeRiskAndLanguage(post.content);
+          const analysis = await analyzeRiskCategoryAndLanguage(post.content);
 
           // Translate the title and content into English, Russian, and Arabic
           // const titleTranslations = await translateText(post.title); // Translate title
@@ -379,6 +379,7 @@ export async function POST(req) {
             location: location,
             risk: analysis.risk,
             language: analysis.language,
+            category: analysis.category,
             // translations: {
             //   title: titleTranslations, // Translated titles
             //   content: contentTranslations, // Translated content
@@ -402,7 +403,7 @@ export async function POST(req) {
 async function analyzePost(postContent) {
   try {
     const response = await openai.chat.completions.create({
-      model: 'gpt-4-turbo', // Use GPT-4 Turbo
+      model: 'o4-mini', // Use GPT-4 Turbo
       messages: [
         {
           role: 'system',
@@ -442,22 +443,73 @@ async function analyzePost(postContent) {
 }
 
 // Function to analyze risk and language
-async function analyzeRiskAndLanguage(postContent) {
+// async function analyzeRiskAndLanguage(postContent) {
+//   try {
+//     const response = await openai.chat.completions.create({
+//       model: 'o4-mini',
+//       messages: [
+//         {
+//           role: 'system',
+//           content:
+//             'You are a security analyst. Analyze the sentiment and risk level of the post and classify it as "low", "medium", or "high". Also, identify the language of the post and classify it as "russian", "arabic", "english", or "others".',
+//         },
+//         { role: 'user', content: postContent },
+//       ],
+//       functions: [
+//         {
+//           name: 'classify_post',
+//           description: 'Classify a post by risk level and language.',
+//           parameters: {
+//             type: 'object',
+//             properties: {
+//               risk: {
+//                 type: 'string',
+//                 enum: ['low', 'medium', 'high'],
+//                 description: 'The risk level of the post.',
+//               },
+//               language: {
+//                 type: 'string',
+//                 enum: ['russian', 'arabic', 'english', 'others'],
+//                 description: 'The language of the post.',
+//               },
+//             },
+//             required: ['risk', 'language'],
+//           },
+//         },
+//       ],
+//       function_call: { name: 'classify_post' }, // Explicitly call the function
+//     });
+
+//     // Parse the response
+//     const functionArgs = JSON.parse(
+//       response.choices[0]?.message?.function_call?.arguments,
+//     );
+//     return {
+//       risk: functionArgs.risk,
+//       language: functionArgs.language,
+//     };
+//   } catch (error) {
+//     console.error('Error analyzing risk and language:', error);
+//     return { risk: 'unknown', language: 'unknown' };
+//   }
+// }
+
+async function analyzeRiskCategoryAndLanguage(postContent) {
   try {
     const response = await openai.chat.completions.create({
-      model: 'gpt-4-turbo',
+      model: 'o4-mini',
       messages: [
         {
           role: 'system',
           content:
-            'You are a security analyst. Analyze the sentiment and risk level of the post and classify it as "low", "medium", or "high". Also, identify the language of the post and classify it as "russian", "arabic", "english", or "others".',
+            'You are a security analyst. Analyze the sentiment, risk level, language, and topic category of the post. Risk can be "low", "medium", or "high". Language can be "russian", "arabic", "english", or "others". Category must be one of: "malware", "fraud", "exploits", "violent", "politics", "hate speech", "active threats", "crypto", "law and crime", "other".',
         },
         { role: 'user', content: postContent },
       ],
       functions: [
         {
           name: 'classify_post',
-          description: 'Classify a post by risk level and language.',
+          description: 'Classify a post by risk level, language, and category.',
           parameters: {
             type: 'object',
             properties: {
@@ -471,25 +523,41 @@ async function analyzeRiskAndLanguage(postContent) {
                 enum: ['russian', 'arabic', 'english', 'others'],
                 description: 'The language of the post.',
               },
+              category: {
+                type: 'string',
+                enum: [
+                  'malware',
+                  'fraud',
+                  'exploits',
+                  'violent',
+                  'politics',
+                  'hate speech',
+                  'active threats',
+                  'crypto',
+                  'law and crime',
+                  'other',
+                ],
+                description: 'The topic category of the post.',
+              },
             },
-            required: ['risk', 'language'],
+            required: ['risk', 'language', 'category'],
           },
         },
       ],
-      function_call: { name: 'classify_post' }, // Explicitly call the function
+      function_call: { name: 'classify_post' },
     });
 
-    // Parse the response
     const functionArgs = JSON.parse(
       response.choices[0]?.message?.function_call?.arguments,
     );
     return {
       risk: functionArgs.risk,
       language: functionArgs.language,
+      category: functionArgs.category,
     };
   } catch (error) {
-    console.error('Error analyzing risk and language:', error);
-    return { risk: 'unknown', language: 'unknown' };
+    console.error('Error analyzing risk, language, or category:', error);
+    return { risk: 'unknown', language: 'unknown', category: 'unknown' };
   }
 }
 
@@ -497,7 +565,7 @@ async function analyzeRiskAndLanguage(postContent) {
 async function translateText(text) {
   try {
     const response = await openai.chat.completions.create({
-      model: 'gpt-4-turbo',
+      model: 'o4-mini',
       messages: [
         {
           role: 'system',

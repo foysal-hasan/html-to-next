@@ -144,6 +144,8 @@ export async function POST(req) {
     while (true) {
       const { done, value } = await reader.read();
 
+      // console.log(value);
+
       // If the stream is done, break out of the loop
       if (done) break;
 
@@ -155,6 +157,8 @@ export async function POST(req) {
         // Attempt to parse the buffer as JSON
         const jsonObject = JSON.parse(buffer);
         jsonArray.push(jsonObject); // Add the JSON object to the array
+        console.log(jsonArray);
+
         buffer = ''; // Clear the buffer after successful parsing
       } catch (parseError) {
         // If parsing fails, wait for more chunks

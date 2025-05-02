@@ -111,13 +111,13 @@ const postsSlice = createSlice({
       updateAllPosts(state, action.payload);
     },
     setFacebookMentions(state, action) {
-      state.facebookMentions = action.payload;
+      state.facebookMentions = [...state.facebookMentions, ...action.payload];
       updateRiskAnalysis(state, action.payload);
       updateLanguageAnalysis(state, action.payload);
       updateAllPosts(state, action.payload);
     },
     setTelegramMentions(state, action) {
-      state.telegramMentions = action.payload;
+      state.telegramMentions = [...state.telegramMentions, ...action.payload];
       updateRiskAnalysis(state, action.payload || []);
       updateLanguageAnalysis(state, action.payload || []);
       updateAllPosts(state, action.payload || []);

@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 const icons = {
   darkweb: '/assets/dark-web.png',
@@ -9,6 +9,8 @@ const icons = {
   twitter: '/assets/x.png',
   telegram: '/assets/telegram.png',
   threads: '/assets/threads.png',
+  bluesky: '/assets/bluesky-icon.png',
+  vk: '/assets/vk.png',
   default: '/assets/post.png',
 };
 
@@ -23,10 +25,10 @@ const getIconBySource = (source) => {
     case 'darkweb':
     case 'searchXss':
     case 'darkWebPosts':
+    case 'darkwebfacebook':
       return (
         <Image src={icons.darkweb} alt="darkweb Icon" width={50} height={50} />
       );
-    case 'darkwebfacebook':
     case 'facebook':
       return (
         <Image
@@ -63,6 +65,15 @@ const getIconBySource = (source) => {
       return (
         <Image src={icons.threads} alt="threads Icon" width={50} height={50} />
       );
+
+    case 'vk':
+      return <Image src={icons.vk} alt="threads Icon" width={50} height={50} />;
+
+    case 'bluesky':
+      return (
+        <Image src={icons.bluesky} alt="threads Icon" width={50} height={50} />
+      );
+
     default:
       return (
         <Image src={icons.default} alt="Link Icon" width={50} height={50} />
@@ -70,90 +81,54 @@ const getIconBySource = (source) => {
   }
 };
 
+function addNewLinesEvery500Chars(text) {
+  let result = '';
+  for (let i = 0; i < text.length; i += 500) {
+    result += text.slice(i, i + 500) + '<br/><br/>';
+  }
+  return result.trim();
+}
+
 const PostPreview = ({ post }) => {
   const [selectedTab, setSelectedTab] = useState('en');
   const [title, setTitle] = useState(post?.title);
   const [content, setContent] = useState(post?.content);
   const [isTranslating, setIsTranslating] = useState(false);
   const [isTranslatingTitle, setIsTranslatingTitle] = useState(false);
+  const [summary, setSummary] = useState(null);
+  const [showSummary, setShowSummary] = useState(false);
+  const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
 
-  // const [translations, setTranslations] = useState({
-  //   english: post?.content,
-  //   russian: '',
-  //   arabic: '',
-  // });
-  // const [isTranslating, setIsTranslating] = useState(false);
-  // const [translatedTitles, setTranslatedTitles] = useState({
-  //   english: post?.title,
-  //   russian: '',
-  //   arabic: '',
-  // });
 
-  // const [isTranslatingTitle, setIsTranslatingTitle] = useState(false);
+  const generateSummary = async () => {
+    try {
+      setIsGeneratingSummary(true);
+      setShowSummary(true);
+      const response = await fetch('/api/generate-summary', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: post?.content,
+        }),
+      });
+      const data = await response.json();
+      // console.log(data);
+      
+      setSummary(data.summary);
+    } catch (error) {
+      console.error('Error generating summary:', error);
+    } finally {
+      setIsGeneratingSummary(false);
+    }
+  };
 
-  // useEffect(() => {
-  //   const translateContent = async () => {
-  //     try {
-  //       setIsTranslating(true);
-  //       const response = await fetch('/api/translate-language', {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify({
-  //           content: post?.content,
-  //         }),
-  //       });
+  useEffect(() => {
+    setSummary(null);
+    setShowSummary(false);
+  }, [post?.id]); 
 
-  //       const data = await response.json();
-  //       // console.log('from post preview', data);
-  //       setTranslations({
-  //         english: data.english,
-  //         russian: data.russian,
-  //         arabic: data.arabic,
-  //       });
-  //     } catch (error) {
-  //       console.error('Translation error:', error);
-  //     } finally {
-  //       setIsTranslating(false);
-  //     }
-  //   };
-
-  //   if (post?.content) {
-  //     translateContent();
-  //   }
-  // }, [post?.content]);
-
-  // useEffect(() => {
-  //   const translateTitle = async () => {
-  //     setIsTranslatingTitle(true);
-  //     try {
-  //       const response = await fetch('/api/translate-tittle', {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify({
-  //           title: post?.title,
-  //         }),
-  //       });
-  //       const data = await response.json();
-  //       setTranslatedTitles({
-  //         english: data.english,
-  //         russian: data.russian,
-  //         arabic: data.arabic,
-  //       });
-  //     } catch (err) {
-  //       console.error('Translation error:', err);
-  //     } finally {
-  //       setIsTranslatingTitle(false);
-  //     }
-  //   };
-
-  //   if (post?.title) {
-  //     translateTitle();
-  //   }
-  // }, [post?.title]);
 
   useEffect(() => {
     const translateContent = async () => {
@@ -181,6 +156,9 @@ const PostPreview = ({ post }) => {
     }
   }, [selectedTab, post?.content]);
 
+
+  
+
   useEffect(() => {
     const translateTitle = async () => {
       try {
@@ -206,6 +184,7 @@ const PostPreview = ({ post }) => {
       translateTitle();
     }
   }, [selectedTab, post?.title]);
+
   if (!post) return null;
 
   // const renderContent = () => {
@@ -525,7 +504,7 @@ const PostPreview = ({ post }) => {
           post?.media?.file_url) ? (
           <div className="bg-gray-700/50  rounded-lg">
             <div
-              className={`grid ${
+              className={`flex flex-wrap ${
                 post?.images?.length > 1 ||
                 (post?.media &&
                   Array.isArray(post?.media) &&
@@ -612,7 +591,7 @@ const PostPreview = ({ post }) => {
             <p
               className="break-all"
               dangerouslySetInnerHTML={{
-                __html: content,
+                __html: addNewLinesEvery500Chars(content),
               }}
             />
           ) : (
@@ -647,20 +626,51 @@ const PostPreview = ({ post }) => {
           </div>
         )}
 
-        {/* Link to Original Post */}
-        {post?.link && (
-          <Link
-            href={
-              post?.link.startsWith('http')
-                ? post?.link
-                : `https://${post?.link}`
-            }
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block mt-4 px-6 py-2 bg-blue-600  hover:bg-blue-700 transition-colors bg-gradient-to-r from-teal-400 to-blue-600 text-white font-semibold rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-teal-500"
+        {/* Action Buttons */}
+        <div className="flex flex-wrap gap-4">
+          {post?.link && (
+            <Link
+              href={
+                post?.link.startsWith('http')
+                  ? post?.link
+                  : `https://${post?.link}`
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block px-6 py-2 bg-gradient-to-r from-teal-400 to-blue-600 text-white font-semibold rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-teal-500"
+            >
+              View Original Post
+            </Link>
+          )}
+
+          <button
+            onClick={() => {
+              console.log("summary", summary);
+              
+              if (!showSummary && !summary) {
+                generateSummary();
+              } else {
+                setShowSummary((prev) => !prev);
+              }
+            }}
+            className="inline-block px-6 py-2 bg-gradient-to-r from-purple-400 to-indigo-600 text-white font-semibold rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-purple-500"
           >
-            View Original Post
-          </Link>
+            {showSummary ? 'Hide Summary' : 'Summary'}
+          </button>
+        </div>
+
+        {/* Summary Content */}
+        {showSummary && (
+          <div className="bg-gray-700/50 p-4 rounded-lg mt-4">
+            <strong className="block text-gray-300 mb-2">Summary</strong>
+            {isGeneratingSummary ? (
+              <div className="flex items-center justify-center py-4">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+              </div>
+            ) : (
+              <p className="break-all">{summary && summary}</p>
+            )}
+          </div>
         )}
       </div>
     </div>

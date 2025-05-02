@@ -17,10 +17,11 @@ export default function Header() {
       <div className="px-4 sm:px-6 lg:px-10 py-3">
         {/* Desktop Header */}
         <div className="flex items-center justify-between">
+          <Image src="/assets/logo-2.jpg" alt="Logo" width={130} height={130} />
           {/* Logo and Brand - Always Visible */}
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-4 text-white">
-              {/* <div className="size-4">
+          {/* <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 text-white "> */}
+          {/* <div className="size-4">
                 <svg
                   viewBox="0 0 48 48"
                   fill="none"
@@ -34,19 +35,19 @@ export default function Header() {
                   ></path>
                 </svg>
               </div> */}
-              {/* <h2 className="text-white text-lg font-bold leading-tight tracking-[-0.015em]">
+          {/* <h2 className="text-white text-lg font-bold leading-tight tracking-[-0.015em]">
                 BrandSense
               </h2> */}
-              <Image
+          {/* <Image
                 src="/assets/logo-2.jpg"
                 alt="Logo"
-                width={110}
-                height={110}
+                width={130}
+                height={130}
               />
-            </div>
+            </div> */}
 
-            {/* Desktop Navigation */}
-            {/* <nav className="hidden xl:flex items-center gap-6 ml-8">
+          {/* Desktop Navigation */}
+          {/* <nav className="hidden xl:flex items-center gap-6 ml-8">
               {[
                 'Acme Inc.',
                 'Hacker Report',
@@ -65,7 +66,7 @@ export default function Header() {
                 </a>
               ))}
             </nav> */}
-          </div>
+          {/* </div> */}
           <div className="w-full max-w-[900px] hidden md:block mx-4">
             <SearchFieldWrapper />
           </div>
@@ -95,11 +96,11 @@ export default function Header() {
                   href="/blogr"
                 >
                   <CiViewTable className="text-lg" />
-                  <span>Blog</span>
+                  <span>Monitor</span>
                 </Link>
                 <Link
                   className="text-white text-sm font-medium leading-normal flex items-center gap-1"
-                  href="#"
+                  href="/map"
                 >
                   <FiMapPin className="text-lg" />
                   <span>Map</span>
@@ -178,11 +179,11 @@ export default function Header() {
               href="#"
             >
               <CiViewTable className="text-lg" />
-              <span>Blog</span>
+              <span>Monitor</span>
             </Link>
             <Link
               className="text-white text-sm font-medium leading-normal flex items-center gap-1"
-              href="#"
+              href="/map"
             >
               <FiMapPin className="text-lg" />
               <span>Map</span>

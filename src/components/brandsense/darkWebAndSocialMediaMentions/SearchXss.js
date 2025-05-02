@@ -25,26 +25,31 @@ const SearchXss = ({ keyword, search, onlyData }) => {
     try {
       setLoading(true);
       // facebook
-      const postsRes = await fetch('/api/stream', {
+      const postsRes = await fetch('/api/xss', {
         method: 'POST',
         body: JSON.stringify({
           input: {
             keyword: keyword,
-            start_date: '2025-01-01',
-            end_date: new Date().toISOString().split('T')[0],
+            // start_date: '2025-01-01',
+            // end_date: new Date().toISOString().split('T')[0],
           },
-          url: 'http://107.189.26.43:5003/search_xss',
+          url: `http://144.172.92.117:7800/search?keyword=${keyword}`,
         }),
       });
 
       const postsResponse = await postsRes.json();
-      // console.log('search xss posts: ', postsResponse);
+      console.log('search xss posts: ', postsResponse);
       if (!postsResponse || postsResponse?.length === 0) {
         setLoading(false);
         return;
       }
 
-      const normalizedPosts = normalizePosts(postsResponse, 'darkWebPosts');
+      console.log(postsResponse[0].results);
+
+      const normalizedPosts = normalizePosts(
+        postsResponse[0].results,
+        'darkWebPosts',
+      );
       // console.log('normalized: ', normalizedPosts);
 
       // content is array make it string

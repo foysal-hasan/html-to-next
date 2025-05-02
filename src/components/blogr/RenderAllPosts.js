@@ -57,6 +57,7 @@ export default function RenderPostsPage({ domain }) {
     startDate: '',
     endDate: '',
     riskLevel: '',
+    category: '',
     source: '',
   });
 
@@ -119,6 +120,27 @@ export default function RenderPostsPage({ domain }) {
                   setFilters({ ...filters, endDate: e.target.value })
                 }
               />
+
+              {/* category drop down: malware, fraud, exploits, violent, politics, hate speech, active threats, crypto, law and crime, other */}
+              <select
+                className="bg-gray-700 text-white border-gray-600 p-2 rounded-md flex-1 sm:flex-none min-w-[140px] focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onChange={(e) =>
+                  setFilters({ ...filters, category: e.target.value })
+                }
+              >
+                <option value="">All Category</option>
+                <option value="malware">Malware</option>
+                <option value="fraud">Fraud</option>
+                <option value="exploits">Exploits</option>
+                <option value="violent">Violent</option>
+                <option value="politics">Politics</option>
+                <option value="hate speech">Hate Speech</option>
+                <option value="active threats">Active Threats </option>
+                <option value="crypto">Crypto</option>
+                <option value="law">Law</option>
+                <option value="crime">Crime</option>
+                <option value="other">Other</option>
+              </select>
               <select
                 className="bg-gray-700 text-white border-gray-600 p-2 rounded-md flex-1 sm:flex-none min-w-[140px] focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 onChange={(e) =>
@@ -151,7 +173,7 @@ export default function RenderPostsPage({ domain }) {
                 <option value="vk">VK</option>
                 {/* <option value="darkweb">Dark Web Stealer</option>
                 <option value="darkwebxss">Dark Web XSS</option> */}
-                <option value="posts">Posts</option>
+                <option value="bluesky">Bluesky</option>
                 {/* <option value="searchExploit">Search Exploit</option>
                 <option value="searchXss">Search XSS</option>
                 <option value="breachforum">Breachforum</option> */}

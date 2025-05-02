@@ -1,3 +1,7 @@
+
+
+
+
 'use client';
 import SectionLoader from '@/components/SectionLoader';
 import { classifyPosts } from '@/lib/api/classify';
@@ -47,12 +51,25 @@ const TelegramMentions = ({ keyword, search, onlyData }) => {
       const normalizedPosts = normalizePosts(rawPosts, 'telegram');
       // console.log('normalized: ', normalizedPosts);
 
-      const classifiedPosts = await classifyPosts(normalizedPosts);
+      let isFirst = true;
+      // write a for loop to classify 10 posts at a time
+      for (let i = 0; i < normalizedPosts.length; i += 10) {
+        const classifiedPosts = await classifyPosts(
+          normalizedPosts.slice(i, i + 10),
+        );
+        // console.log('classifiedPosts', classifiedPosts);
+        if (isFirst) {
+          isFirst = false;
+          setPosts(classifiedPosts.slice(0, 3)); // Show only 2-3 posts
+          setLoading(false);
+        }
+        dispatch(setTelegramMentions(classifiedPosts));
+      }
+
+      // const classifiedPosts = await classifyPosts(normalizedPosts);
 
       // console.log('classifiedPosts', classifiedPosts);
-      dispatch(setTelegramMentions(classifiedPosts));
-
-      setPosts(classifiedPosts.slice(0, 3)); // Show only 2-3 posts
+      // dispatch(setTelegramMentions(classifiedPosts));
     } catch (error) {
       console.error('Telegram API Error:', error);
     } finally {
@@ -106,7 +123,7 @@ const TelegramMentions = ({ keyword, search, onlyData }) => {
     if (checkSearchQuery(searchQuery, search)) {
       setPosts(telegramMentions.slice(0, 3));
     } else {
-      console.log(searchQuery, search);
+      // console.log(searchQuery, search);
 
       fetchTelegramPosts();
     }

@@ -35,7 +35,7 @@ const TwitterMentions = ({ keywords, search, onlyData }) => {
         }),
       });
       const twitterPosts = await twitterRes.json();
-      // console.log('twitter posts: ', twitterPosts);
+      console.log('twitter posts: ', twitterPosts);
       if (!twitterPosts || twitterPosts.length === 0) {
         setLoading(false);
         return;
