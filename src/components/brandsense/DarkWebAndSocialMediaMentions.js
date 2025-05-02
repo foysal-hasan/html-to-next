@@ -9,16 +9,6 @@ import TwitterMentions from './darkWebAndSocialMediaMentions/TwitterMentions';
 import ExportRiskPDF from './download';
 import SectionTitle from './SectionTitle';
 import ViewMoreButton from './ViewMoreButton';
-import FacebookMentions from './darkWebAndSocialMediaMentions/FacebookMentions';
-import BlueSky from './darkWebAndSocialMediaMentions/Bluesky';
-import DarkwebFacebookPosts from './darkWebAndSocialMediaMentions/DarkwebFacebookPosts';
-import VKPostsScraper from './darkWebAndSocialMediaMentions/VKPostsScraper';
-import SearchXss from './darkWebAndSocialMediaMentions/SearchXss';
-import Breachforum from './darkWebAndSocialMediaMentions/Breachforum';
-import SearchRamp from './darkWebAndSocialMediaMentions/SearchRamp';
-import DarkWebSearch from './darkWebAndSocialMediaMentions/DarkWebSearch';
-import DarkWebPosts from './darkWebAndSocialMediaMentions/DarkWebPosts';
-import SearchExploit from './darkWebAndSocialMediaMentions/SearchExploit';
 // import DarkwebXSSPosts from './darkWebAndSocialMediaMentions/DarkwebXss';
 
 const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
@@ -156,7 +146,9 @@ const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
         <SearchRamp keyword={keywords[0]} search={search} onlyData={true} />
         <SearchExploit keyword={keywords[0]} search={search} onlyData={true} />
         <SearchXss keyword={keywords[0]} search={search} onlyData={true} />
-        {/* <Threads keyword={keywords[0]} onlyData={true} search={search} /> */}
+
+        <Threads keyword={keywords[0]} onlyData={true} search={search} />
+
         <DarkWebSearch keyword={keywords[0]} search={search} onlyData={true} />
 
         <DarkWebPosts keyword={keywords[0]} onlyData={onlyData} />
