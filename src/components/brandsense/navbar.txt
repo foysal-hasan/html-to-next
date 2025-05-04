@@ -1,8 +1,8 @@
 'use client';
 import Link from 'next/link';
+
 import Image from 'next/image';
 import { useState } from 'react';
-import { usePathname } from 'next/navigation';
 import { CiViewTable } from 'react-icons/ci';
 import { FiMapPin } from 'react-icons/fi';
 import { HiMenu, HiX } from 'react-icons/hi';
@@ -11,16 +11,6 @@ import SearchFieldWrapper from '../SearchFieldWithMultiKeyword';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const pathname = usePathname();
-
-  const isActive = (path) => pathname === path;
-
-  const linkClass = (path) =>
-    `text-sm font-medium leading-normal flex items-center gap-1 px-3 py-2 rounded-lg ${
-      isActive(path)
-        ? 'bg-gradient-to-r from-teal-400 to-blue-600 text-white'
-        : 'text-white hover:bg-[#283139] transition-all'
-    }`;
 
   return (
     <header className="border-b border-solid border-b-[#283139] px-10 py-3">
@@ -28,38 +18,108 @@ export default function Header() {
         {/* Desktop Header */}
         <div className="flex items-center justify-between">
           <Image src="/assets/logo-2.jpg" alt="Logo" width={130} height={130} />
-          
+          {/* Logo and Brand - Always Visible */}
+          {/* <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 text-white "> */}
+          {/* <div className="size-4">
+                <svg
+                  viewBox="0 0 48 48"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M24 4H6V17.3333V30.6667H24V44H42V30.6667V17.3333H24V4Z"
+                    fill="currentColor"
+                  ></path>
+                </svg>
+              </div> */}
+          {/* <h2 className="text-white text-lg font-bold leading-tight tracking-[-0.015em]">
+                BrandSense
+              </h2> */}
+          {/* <Image
+                src="/assets/logo-2.jpg"
+                alt="Logo"
+                width={130}
+                height={130}
+              />
+            </div> */}
+
+          {/* Desktop Navigation */}
+          {/* <nav className="hidden xl:flex items-center gap-6 ml-8">
+              {[
+                'Acme Inc.',
+                'Hacker Report',
+                'Dashboard',
+                'Alerts',
+                'Reports',
+                'API',
+                'Docs',
+              ].map((item) => (
+                <a
+                  key={item}
+                  href="#"
+                  className="text-white text-sm font-medium hover:text-gray-300 transition-colors"
+                >
+                  {item}
+                </a>
+              ))}
+            </nav> */}
+          {/* </div> */}
           <div className="w-full max-w-[900px] hidden md:block mx-4">
             <SearchFieldWrapper />
           </div>
 
           {/* Right Section - Search, Help, Profile */}
           <div className="flex items-center gap-4">
+            {/* Search - Hidden on Mobile */}
             <div className="hidden lg:flex items-center min-w-[200px] lg:min-w-[300px] h-10">
-              <div className="items-center gap-4 ml-4 flex">
+              {/* <BiSearch className="text-[#9dabb9] ml-4" size={20} /> */}
+              {/* <SearchFieldWrapper /> */}
+              {/* <input
+                type="text"
+                placeholder="Search"
+                className="w-full bg-transparent border-none text-white placeholder-[#9dabb9] focus:ring-0 text-sm"
+              /> */}
+
+              <div className="items-center gap-8 ml-4 flex">
                 <Link
-                  className={linkClass('/graph')}
+                  className="text-white text-sm font-medium leading-normal flex items-center gap-1"
                   href="/graph"
                 >
                   <SlGraph className="text-lg" />
                   <span>Graph</span>
                 </Link>
                 <Link
-                  className={linkClass('/blogr')}
+                  className="text-white text-sm font-medium leading-normal flex items-center gap-1"
                   href="/blogr"
                 >
                   <CiViewTable className="text-lg" />
                   <span>Monitor</span>
                 </Link>
                 <Link
-                  className={linkClass('/map')}
+                  className="text-white text-sm font-medium leading-normal flex items-center gap-1"
                   href="/map"
                 >
                   <FiMapPin className="text-lg" />
                   <span>Map</span>
                 </Link>
+
+                {/* <Link
+                  className="text-white text-sm font-medium leading-normal flex items-center gap-1"
+                  href="#"
+                >
+                  <SlPlus className="text-lg" />
+                  <span>New Search</span>
+                </Link> */}
               </div>
             </div>
+
+            {/* Help Button */}
+            {/* <button className="hidden sm:flex items-center justify-center h-10 px-3 bg-[#283139] text-white rounded-xl hover:bg-[#343d47] transition-colors">
+              <IoHelpCircleOutline size={20} />
+            </button> */}
 
             {/* Profile Picture */}
             <div
@@ -82,38 +142,65 @@ export default function Header() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <nav className="lg:hidden py-4 space-y-2">
+          <nav className="lg:hidden py-4 space-y-4">
+            {/* Mobile Search */}
+            {/* <div className="flex items-center h-10  mb-4"> */}
+            {/* <BiSearch className="text-[#9dabb9] ml-4" size={20} />
+              <input
+                type="text"
+                placeholder="Search"
+                className="w-full bg-transparent border-none text-white placeholder-[#9dabb9] focus:ring-0 text-sm"
+              /> */}
+            {/* </div> */}
             <div className="md:hidden">
               <SearchFieldWrapper />
             </div>
 
+            {/* Mobile Navigation Links */}
+            {/* {['Acme Inc.', 'Hacker Report', 'Dashboard', 'Alerts', 'Reports', 'API', 'Docs'].map((item) => (
+              <a
+                key={item}
+                href="#"
+                className="block px-4 py-2 text-white hover:bg-[#283139] rounded-lg transition-colors text-sm font-medium"
+              >
+                {item}
+              </a>
+            ))} */}
+
             <Link
-              className={linkClass('/graph')}
+              className="text-white text-sm font-medium leading-normal flex items-center gap-1"
               href="/graph"
             >
               <SlGraph className="text-lg" />
               <span>Graph</span>
             </Link>
             <Link
-              className={linkClass('/blogr')}
-              href="/blogr"
+              className="text-white text-sm font-medium leading-normal flex items-center gap-1"
+              href="#"
             >
               <CiViewTable className="text-lg" />
               <span>Monitor</span>
             </Link>
             <Link
-              className={linkClass('/map')}
+              className="text-white text-sm font-medium leading-normal flex items-center gap-1"
               href="/map"
             >
               <FiMapPin className="text-lg" />
               <span>Map</span>
             </Link>
+            {/* <Link
+              className="text-white text-sm font-medium leading-normal hidden md:inline"
+              href="#"
+            >
+              New Search
+            </Link> */}
           </nav>
         )}
       </div>
     </header>
   );
 }
+
 // export default function Header() {
 //   return (
 //     <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#283139] px-10 py-3">
