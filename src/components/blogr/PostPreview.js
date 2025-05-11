@@ -261,8 +261,9 @@ const PostPreview = ({ post }) => {
               Source
             </strong>
             <p>
-              {post?.source?.slice(0, 1)?.toUpperCase() +
-                post?.source?.slice(1)}
+              {post?.source === 'darkwebfacebook' 
+                ? 'Dark Web'
+                : post?.source?.slice(0, 1)?.toUpperCase() + post?.source?.slice(1)}
             </p>
           </div>
           <div className="flex-1">
