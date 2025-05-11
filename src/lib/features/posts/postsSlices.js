@@ -130,10 +130,10 @@ const postsSlice = createSlice({
       updateAllPosts(state, action.payload);
     },
     setDarkWebFacebookMentions(state, action) {
-      state.darkWebFacebookMentions = action.payload;
-      updateRiskAnalysis(state, action.payload);
-      updateLanguageAnalysis(state, action.payload);
-      updateAllPosts(state, action.payload);
+      state.darkWebFacebookMentions = [...state.darkWebFacebookMentions, ...action.payload];
+      updateRiskAnalysis(state, action.payload || []);
+      updateLanguageAnalysis(state, action.payload || []);
+      updateAllPosts(state, action.payload || []);
     },
     setDarkWebStealerMentions(state, action) {
       state.darkWebStealerMentions = action.payload;

@@ -132,9 +132,9 @@ const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
           search={search}
         />
        
-        <BlueSky keywords={keywords} onlyData={onlyData} search={search} />
+        <BlueSky keywords={keywords} onlyData={onlyData} search={search} /> 
 
-        <DarkwebFacebookPosts
+         <DarkwebFacebookPosts
           keyword={keywords[0]}
           onlyData={onlyData}
           search={search}
@@ -146,11 +146,7 @@ const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
           search={search}
         />
 
-        {/* <Boardreader
-          keyword={keywords[0]}
-          onlyData={onlyData}
-          search={search}
-        /> */}
+ 
 
         <Breachforum keyword={keywords[0]} search={search} onlyData={true} />
         <SearchRamp keyword={keywords[0]} search={search} onlyData={true} />
@@ -160,7 +156,6 @@ const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
         {/* <Threads keyword={keywords[0]} onlyData={true} search={search} /> */}
 
         <DarkWebSearch keyword={keywords[0]} search={search} onlyData={true} /> 
-
         <DarkWebPosts keyword={keywords[0]} onlyData={onlyData} />
       </div>
       <div

@@ -10,6 +10,7 @@ import SectionTitle from '../SectionTitle';
 import checkSearchQuery from '@/utils/checkSearchQuery';
 import { useCallback } from 'react';
 
+
 const DarkWebSearch = ({ keyword, search, onlyData }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -22,7 +23,7 @@ const DarkWebSearch = ({ keyword, search, onlyData }) => {
   const fetchPosts = useCallback(async () => {
     try {
       setLoading(true);
-      const darkWebSearchRes = await fetch('/api/darkWebPosts', {
+      const darkWebSearchRes = await fetch('/api/darkWebSearch', {
         method: 'POST',
         body: JSON.stringify({
           keyword: keyword

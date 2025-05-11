@@ -56,11 +56,27 @@ const DarkwebFacebookPosts = ({ keyword, search, onlyData }) => {
       );
       // console.log('normalized: ', normalizedPosts);
 
-      const classifiedPosts = await classifyPosts(normalizedPosts);
-      // console.log('classifiedPosts', classifiedPosts);
-      dispatch(setDarkWebFacebookMentions(classifiedPosts));
+      // classify 10 posts at a time using the classifyPosts function
+      let isFirstBatch = true;
+      for (let i = 0; i < normalizedPosts.length; i += 10) {
+        const batch = normalizedPosts.slice(i, i + 10);
+        const classifiedPosts = await classifyPosts(batch);
+        // console.log('classifiedPosts', classifiedPosts);
+        dispatch(setDarkWebFacebookMentions(classifiedPosts));
+  
+        if (isFirstBatch) {
+          setPosts(classifiedPosts.slice(0, 3)); // Show only 2-3 posts
+          isFirstBatch = false;
+          setLoading(false);
+        }
+        
+      }
 
-      setPosts(classifiedPosts.slice(0, 3)); // Show only 2-3 posts
+      // const classifiedPosts = await classifyPosts(normalizedPosts);
+      // // console.log('classifiedPosts', classifiedPosts);
+      // dispatch(setDarkWebFacebookMentions(classifiedPosts));
+
+      // setPosts(classifiedPosts.slice(0, 3)); // Show only 2-3 posts
     } catch (error) {
       console.error('Dark Web API Error:', error);
     } finally {
@@ -71,7 +87,7 @@ const DarkwebFacebookPosts = ({ keyword, search, onlyData }) => {
   useEffect(() => {
     if (checkSearchQuery(searchQuery, search)) {
       setPosts(darkWebFacebookMentions.slice(0, 3));
-    } else if (darkWebFacebookMentions?.length == 0) {
+    } else {
       fetchPosts();
     }
   }, [search, searchQuery, darkWebFacebookMentions, fetchPosts]);
