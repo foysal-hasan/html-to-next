@@ -52,7 +52,7 @@ const Breachforum = ({ keyword, search, onlyData }) => {
       // );
 
       const normalizedPosts = normalizePosts(
-        breachforumData?.data || [],
+        breachforumData || [],
         'darkWebPosts',
         'breachforum',
       );
@@ -61,6 +61,8 @@ const Breachforum = ({ keyword, search, onlyData }) => {
 
       const classifiedPosts = await classifyPosts(normalizedPosts);
       dispatch(setDarkWebPosts(classifiedPosts));
+
+      // console.log('classifiedPosts', classifiedPosts);
 
       setPosts(classifiedPosts.slice(0, 3));
     } catch (error) {
@@ -73,7 +75,7 @@ const Breachforum = ({ keyword, search, onlyData }) => {
   useEffect(() => {
     if (checkSearchQuery(searchQuery, search)) {
       setPosts(darkWebPosts.slice(0, 3));
-    } else if (darkWebPosts?.length == 0) {
+    } else {
       fetchPosts();
     }
   }, [search, searchQuery, fetchPosts, darkWebPosts]);

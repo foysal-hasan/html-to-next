@@ -154,12 +154,12 @@ const DarkWebAndSocialMediaMentions = ({ domains, onlyData, search }) => {
 
         <Breachforum keyword={keywords[0]} search={search} onlyData={true} />
         <SearchRamp keyword={keywords[0]} search={search} onlyData={true} />
-        <SearchExploit keyword={keywords[0]} search={search} onlyData={true} />
+        <SearchExploit keyword={keywords[0]} search={search} onlyData={true} /> 
         <SearchXss keyword={keywords[0]} search={search} onlyData={true} />
 
         {/* <Threads keyword={keywords[0]} onlyData={true} search={search} /> */}
 
-        <DarkWebSearch keyword={keywords[0]} search={search} onlyData={true} />
+        <DarkWebSearch keyword={keywords[0]} search={search} onlyData={true} /> 
 
         <DarkWebPosts keyword={keywords[0]} onlyData={onlyData} />
       </div>

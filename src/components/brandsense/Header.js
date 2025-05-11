@@ -3,12 +3,13 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { CiViewTable } from 'react-icons/ci';
+import { CiViewTable, CiBoxList } from 'react-icons/ci';
 import { FiMapPin } from 'react-icons/fi';
 import { HiMenu, HiX } from 'react-icons/hi';
 import { SlGraph } from 'react-icons/sl';
 import SearchFieldWrapper from '../SearchFieldWithMultiKeyword';
 
+// this component is used in the all pages
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
@@ -43,6 +44,13 @@ export default function Header() {
                 >
                   <SlGraph className="text-lg" />
                   <span>Graph</span>
+                </Link>
+                <Link
+                  className={linkClass('/brandsense')}
+                  href="/brandsense"
+                >
+                  <CiBoxList className="text-lg" />
+                  <span>BrandSense</span>
                 </Link>
                 <Link
                   className={linkClass('/blogr')}
@@ -94,6 +102,13 @@ export default function Header() {
               <SlGraph className="text-lg" />
               <span>Graph</span>
             </Link>
+              <Link
+                  className={linkClass('/brandsense')}
+                  href="/brandsense"
+                >
+                  <CiBoxList className="text-lg" />
+                  <span>BrandSense</span>
+                </Link>
             <Link
               className={linkClass('/blogr')}
               href="/blogr"

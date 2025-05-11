@@ -28,12 +28,7 @@ const SearchXss = ({ keyword, search, onlyData }) => {
       const postsRes = await fetch('/api/xss', {
         method: 'POST',
         body: JSON.stringify({
-          input: {
             keyword: keyword,
-            // start_date: '2025-01-01',
-            // end_date: new Date().toISOString().split('T')[0],
-          },
-          url: `http://144.172.92.117:7800/search?keyword=${keyword}`,
         }),
       });
 
@@ -44,20 +39,21 @@ const SearchXss = ({ keyword, search, onlyData }) => {
         return;
       }
 
-      console.log(postsResponse[0].results);
+      // console.log(postsResponse);
 
       const normalizedPosts = normalizePosts(
-        postsResponse[0].results,
+        postsResponse || [],
         'darkWebPosts',
+        'xss'
       );
       // console.log('normalized: ', normalizedPosts);
 
       // content is array make it string
-      normalizedPosts?.forEach((post) => {
-        if (Array.isArray(post?.content)) {
-          post.content = post?.content?.join(' ');
-        }
-      });
+      // normalizedPosts?.forEach((post) => {
+      //   if (Array.isArray(post?.content)) {
+      //     post.content = post?.content?.join(' ');
+      //   }
+      // });
       // console.log('normalizedPosts', normalizedPosts);
 
       const classifiedPosts = await classifyPosts(normalizedPosts);

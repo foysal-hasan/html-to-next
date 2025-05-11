@@ -22,15 +22,10 @@ const DarkWebSearch = ({ keyword, search, onlyData }) => {
   const fetchPosts = useCallback(async () => {
     try {
       setLoading(true);
-      const darkWebSearchRes = await fetch('/api/darkWebSearch', {
+      const darkWebSearchRes = await fetch('/api/darkWebPosts', {
         method: 'POST',
         body: JSON.stringify({
-          input: {
-            q: keyword,
-            fromdate: '2025-01-01',
-            todate: new Date().toISOString().split('T')[0],
-          },
-          url: 'http://107.189.26.43:5069/search',
+          keyword: keyword
         }),
       });
 
@@ -53,7 +48,7 @@ const DarkWebSearch = ({ keyword, search, onlyData }) => {
         'darkWebSearch',
       );
 
-      // console.log('normalizedPosts', normalizedPosts);
+      console.log('normalizedPosts', normalizedPosts);
 
       const classifiedPosts = await classifyPosts(normalizedPosts);
       dispatch(setDarkWebPosts(classifiedPosts));

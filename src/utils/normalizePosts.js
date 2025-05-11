@@ -55,8 +55,6 @@ function normalizedDate(source, date, dateFormater) {
   } else if (dateFormater === 'searchRamp') {
     return convertRussianDate(date);
   } else if (dateFormater === 'darkWebSearch') {
-    // 23rd March, 2025 - 18:42
-  } else if (dateFormater === 'darkWebSearch') {
     // Parse date format like "23rd March, 2025 - 18:42"
     try {
       // Remove ordinal indicators (st, nd, rd, th)
@@ -69,13 +67,22 @@ function normalizedDate(source, date, dateFormater) {
     } catch (error) {
       return new Date().toISOString();
     }
+  } else if (dateFormater === 'xss') {
+    try {
+    const dateObj = new Date(date);
+    return dateObj.toISOString();
+      // const dateObj = new Date(`${datePart} ${timePart}`);
+      // return dateObj.toISOString();
+    } catch (error) {
+      return new Date().toISOString();
+    }
   }
   return date;
 }
 
 // Normalize posts
 const normalizePosts = (posts, source, dateFormater) => {
-  // console.log('posts from normalized', posts);
+  console.log('posts from normalized', posts);
 
   //   {
   //     "thread_title": "Traders TwitterAccounts - Badge",
@@ -100,15 +107,14 @@ const normalizePosts = (posts, source, dateFormater) => {
         post?.postItem?.text ||
         post?.caption?.text ||
         post?.link?.description ||
-        (dateFormater === 'searchRamp'
-          ? post?.content.join('\n')
-          : post?.content) ||
+        post?.content ||
         post?.text ||
         post?.caption ||
         post?.message ||
         post?.title ||
         post?.post_body ||
         post?.thread_content ||
+        post?.content_text ||
         post?.hidden_content?.join() ||
         '',
       date: normalizedDate(
@@ -121,6 +127,7 @@ const normalizePosts = (posts, source, dateFormater) => {
           post?.date_posted ||
           post?.post_date ||
           post?.posted_at ||
+          post?.posted_date ||
           new Date().toISOString(),
         dateFormater,
       ),
@@ -136,6 +143,7 @@ const normalizePosts = (posts, source, dateFormater) => {
         post?.thread_link ||
         post?.link ||
         post?.url ||
+        post?.post_url ||
         '#',
       title:
         post?.thread_title ||
@@ -150,6 +158,7 @@ const normalizePosts = (posts, source, dateFormater) => {
           post?.message ||
           post?.post_body ||
           post?.thread_content ||
+          post?.content_text ||
           post?.hidden_content?.join()
         )?.substring(0, 80) ||
         '',
