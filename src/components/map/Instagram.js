@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import normalizePosts from '@/utils/normalizePosts';
 import { useCallback, useEffect, useState } from 'react';
 import checkSearchQuery from '@/utils/checkSearchQuery';
+import { enhancePostsWithLocation } from '@/lib/locationUtils';
 
 const InstagramMentions = ({ keywords, search }) => {
   const [posts, setPosts] = useState([]);
@@ -45,7 +46,10 @@ const InstagramMentions = ({ keywords, search }) => {
         const classifiedPosts = await classifyLocations(
           normalizedPosts.slice(i, i + 10),
         );
-        dispatch(setInstagramMentions(classifiedPosts));
+        const postsWithLocations = await enhancePostsWithLocation(
+          classifiedPosts,
+        );
+        dispatch(setInstagramMentions(postsWithLocations));
       }
 
     } catch (error) {

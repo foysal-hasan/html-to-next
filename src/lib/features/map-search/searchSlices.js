@@ -23,5 +23,5 @@ const searchSlice = createSlice({
   },
 });
 
-export const { setSearchQuery } = searchSlice.actions;
+export const { setMapPageSearchQuery } = searchSlice.actions;
 export default searchSlice.reducer;

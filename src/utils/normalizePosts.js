@@ -82,7 +82,7 @@ function normalizedDate(source, date, dateFormater) {
 
 // Normalize posts
 const normalizePosts = (posts, source, dateFormater) => {
-  console.log('posts from normalized', posts);
+  // console.log('posts from normalized', posts);
 
   //   {
   //     "thread_title": "Traders TwitterAccounts - Badge",
@@ -93,8 +93,14 @@ const normalizePosts = (posts, source, dateFormater) => {
   //     "thread_content": "4 Accounts in total\nVerification badge, Access to email and some socials (github, facebook, youtube)\n400.0K - 800.0k Followers\nGeo (US)\n  Price can be negotiated / %"
   // }
 
+  // filter duplicates
+  const uniquePosts = posts.filter((post, index, self) =>
+    index === self.findIndex((p) => p.id === post.id)
+  );
+
+
   // console.log(posts);
-  return posts?.map((post) => {
+  return uniquePosts?.map((post) => {
     const id =
       post.id ||
       post.post_id ||

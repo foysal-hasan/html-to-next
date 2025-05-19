@@ -1,12 +1,4 @@
-
-import BlueSky from '@/components/map/Bluesky';
-import FacebookMentions from '@/components/map/Facebook';
-import InstagramMentions from '@/components/map/Instagram';
-import RenderPostAndMap from '@/components/map/RenderPostAndMap';
-import TelegramMentions from '@/components/map/Telegram';
-import TwitterMentions from '@/components/map/TwitterMentions';
-import VKPostsScraper from '@/components/map/VKPostsScraper';
-
+import MapPageSearchHandle from "@/components/map/SearchHandle";
 
 export default async function MapPage({ searchParams }) {
 
@@ -26,13 +18,9 @@ export default async function MapPage({ searchParams }) {
 
   const keywordsArray = keywords.split(',');
   return <>
-    <RenderPostAndMap keywords={keywordsArray} />
-    <TelegramMentions keyword={keywordsArray[0]} search={keywords} /> 
-    <FacebookMentions keyword={keywordsArray[0]}  search={keywords} /> 
-    <InstagramMentions keywords={keywordsArray}  search={keywords} />
-    <TwitterMentions keywords={keywordsArray}  search={keywords} />  
-    <VKPostsScraper keywords={keywordsArray}  search={keywords} />
-    <BlueSky keywords={keywords}  search={keywords} />
-    
+    <MapPageSearchHandle
+      domains={keywordsArray}
+      search={keywords} 
+    />
   </>;
 }
