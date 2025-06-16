@@ -79,10 +79,10 @@
 import { classifyLocations } from '@/lib/api/classifyLocation';
 import { setVkMentions } from '@/lib/features/posts/mapPagePostsSlices';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
-import normalizePosts from '@/utils/normalizePosts';
 import { enhancePostsWithLocation } from '@/lib/locationUtils'; // ✅ Make sure this exists
-import { useCallback, useEffect, useState } from 'react';
 import checkSearchQuery from '@/utils/checkSearchQuery';
+import normalizePosts from '@/utils/normalizePosts';
+import { useCallback, useEffect, useState } from 'react';
 
 const VKPostsScraper = ({ keywords, search }) => {
   const dispatch = useAppDispatch();

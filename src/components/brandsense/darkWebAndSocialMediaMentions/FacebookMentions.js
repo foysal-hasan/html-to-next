@@ -61,8 +61,8 @@ const FacebookMentions = ({ keyword, search, onlyData }) => {
       // console.log(initialPosts?.cursor, facebookMentions?.length);
       // console.log(count);
 
-      console.log(!initialPosts?.cursor && count < 100);
-      while (initialPosts?.cursor && count < 100) {
+      console.log(!initialPosts?.cursor && count < 500);
+      while (initialPosts?.cursor && count < 500) {
         console.log('inside while');
 
         // First fetch a small batch to display quickly

@@ -93,8 +93,7 @@ export async function POST(req) {
       `https://facebook-scraper3.p.rapidapi.com/search/posts?query=${body?.keyword}`,
       {
         headers: {
-          'x-rapidapi-key':
-            'JCencKsLCumshFl94505UMz3fVOjp1GA57EjsnaTRyaHjVY8Z7',
+          'x-rapidapi-key': process.env.rapidapi_key,
           'x-rapidapi-host': 'facebook-scraper3.p.rapidapi.com',
         },
       },

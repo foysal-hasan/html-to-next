@@ -149,7 +149,7 @@ const FacebookMentions = ({ keywords, search }) => {
           // allPosts.push(...enhanced);
           dispatch(setFacebookMentions(enhanced));
         }
-      } while (cursor && totalCount < 100);
+      } while (cursor && totalCount < 500);
 
       // dispatch(setFacebookMentions(allPosts));
     } catch (error) {

@@ -41,10 +41,10 @@ const Boardreader = ({ keyword, search, onlyData }) => {
       }
 
       const normalizedXssPosts = normalizePosts(darkwebXssPosts, 'darkwebxss');
-      console.log('normalized Xss: ', normalizedXssPosts);
+      // console.log('normalized Xss: ', normalizedXssPosts);
 
       const classifiedXssPosts = await classifyPosts(normalizedXssPosts);
-      console.log(classifiedXssPosts);
+      // console.log(classifiedXssPosts);
 
       setPosts(classifiedXssPosts?.slice(0, 3));
       dispatch(setBoardreader(classifiedXssPosts));

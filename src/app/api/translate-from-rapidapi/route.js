@@ -13,7 +13,7 @@ export async function POST(req) {
       headers: {
         'x-rapidapi-host': 'deep-translate1.p.rapidapi.com',
         'Content-Type': 'application/json',
-        'x-rapidapi-key': 'JCencKsLCumshFl94505UMz3fVOjp1GA57EjsnaTRyaHjVY8Z7',
+        'x-rapidapi-key': process.env.rapidapi_key,
       },
       body: JSON.stringify({
         q: text,

@@ -32,7 +32,7 @@ const DarkwebFacebookPosts = ({ keyword, search, onlyData }) => {
         body: JSON.stringify({
           input: {
             keyword: keyword,
-            amount: 100,
+            amount: 500,
             from_date: '01/01/2025',
             to_date: new Date().toLocaleDateString('en-US', {
               year: 'numeric',

@@ -77,12 +77,12 @@ import { setMapPageSearchQuery } from '@/lib/features/map-search/searchSlices';
 import { resetMapPagePosts } from '@/lib/features/posts/mapPagePostsSlices';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { useEffect } from 'react';
-import TwitterMentions from './TwitterMentions';
-import TelegramMentions from './Telegram';
-import VKPostsScraper from './VKPostsScraper';
 import BlueSky from './Bluesky';
 import FacebookMentions from './Facebook';
 import InstagramMentions from './Instagram';
+import TelegramMentions from './Telegram';
+import TwitterMentions from './TwitterMentions';
+import VKPostsScraper from './VKPostsScraper';
 
 const MapPageSearchHandle = ({ domains, search }) => {
   const dispatch = useAppDispatch();

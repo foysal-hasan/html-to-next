@@ -29,7 +29,7 @@ const TwitterMentions = ({ keywords, search, onlyData }) => {
           input: {
             searchTerms: keywords,
             sort: 'Latest',
-            maxItems: 100,
+            maxItems: 500,
           },
           url: 'apidojo/twitter-scraper-lite',
         }),

@@ -7,8 +7,7 @@ export async function POST(req) {
       `https://real-time-instagram-scraper-api1.p.rapidapi.com/v1/posts_by_keyword?query=${body.query}`,
       {
         headers: {
-          'x-rapidapi-key':
-            'JCencKsLCumshFl94505UMz3fVOjp1GA57EjsnaTRyaHjVY8Z7',
+          'x-rapidapi-key': process.env.rapidapi_key,
           'x-rapidapi-host': 'real-time-instagram-scraper-api1.p.rapidapi.com',
         },
       },

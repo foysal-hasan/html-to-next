@@ -26,7 +26,7 @@ const InstagramMentions = ({ keywords, search }) => {
           input: {
             hashtags: keywords,
             resultsType: 'posts',
-            resultsLimit: 100,
+            resultsLimit: 500,
           },
           url: 'apify/instagram-hashtag-scraper',
         }),

@@ -30,7 +30,7 @@ const BlueSky = ({ keywords, search, onlyData }) => {
         body: JSON.stringify({
           input: {
             queries: keywords,
-            limit: 100,
+            limit: 500,
             sort: 'latest',
             proxyConfiguration: {
               useApifyProxy: true,
