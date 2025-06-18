@@ -1,13 +1,13 @@
 'use client';
+import SectionLoader from '@/components/SectionLoader';
 import { classifyPosts } from '@/lib/api/classify';
 import { setTwitterMentions } from '@/lib/features/posts/postsSlices';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
+import checkSearchQuery from '@/utils/checkSearchQuery';
 import normalizePosts from '@/utils/normalizePosts';
 import { useCallback, useEffect, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsCard';
 import SectionTitle from '../SectionTitle';
-import SectionLoader from '@/components/SectionLoader';
-import checkSearchQuery from '@/utils/checkSearchQuery';
 
 const TwitterMentions = ({ keywords, search, onlyData }) => {
   const [posts, setPosts] = useState([]);

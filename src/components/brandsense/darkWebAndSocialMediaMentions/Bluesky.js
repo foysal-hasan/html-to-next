@@ -4,12 +4,11 @@ import { classifyPosts } from '@/lib/api/classify';
 import { setPostsMentions } from '@/lib/features/posts/postsSlices';
 
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
+import checkSearchQuery from '@/utils/checkSearchQuery';
 import normalizePosts from '@/utils/normalizePosts';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import DarkWebAndSocialMediaMentionsCard from '../DarkWebAndSocialMediaMentionsCard';
 import SectionTitle from '../SectionTitle';
-import checkSearchQuery from '@/utils/checkSearchQuery';
-import { useCallback } from 'react';
 
 const BlueSky = ({ keywords, search, onlyData }) => {
   const [posts, setPosts] = useState([]);

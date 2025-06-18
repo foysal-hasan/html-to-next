@@ -179,7 +179,7 @@ export async function POST(req) {
     // Send the complete JSON array as a response to the client
     return NextResponse.json(jsonArray);
   } catch (error) {
-    // console.error('Error:', error);
+    console.error('Error:', error);
     // return NextResponse.json(
     //   { error: error.message || 'Failed to fetch or process data' },
     //   { status: 500 }
